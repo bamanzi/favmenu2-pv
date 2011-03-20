@@ -28,7 +28,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.0"
+	Favmenu_version    := "2.04"
 	Favmenu_configFile := "Config.ini"
 	
 	;set GUIs
