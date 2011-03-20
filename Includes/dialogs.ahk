@@ -35,7 +35,7 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}
 	
-	if (class = "Emacs")
+	if ( (class = "Emacs") Or (class = "MicroEmacsClass") Or (class = "XEmacs" ) )
 	{
 		FavMenu_dlgType := "Emacs"
 		return 1
@@ -211,6 +211,8 @@ Favmenu_DialogGetPath_Console()
 
 Favmenu_DialogGetPath_Emacs()
 {
+	;;TODO: ensure compatibility of XEmacs
+  
 	WinGetActiveTitle,Title
 
 	;; cancel current thing if any
@@ -221,8 +223,15 @@ Favmenu_DialogGetPath_Emacs()
 	SendInput ^a
 
 	;; set-mark
-	SendInput ^+2  ;; C-@
-	
+	if InStr(Title, " MicroEmacs")>1
+	{
+		;;tested on MicroEmacs-jasspa
+		SendInput {Esc}{Space}
+	}
+	Else
+	{
+		SendInput ^+2  ;; C-@
+	}
 	;; move-end-of-line
 	SendInput ^e
 
@@ -345,6 +354,7 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 	FileReadLine prev, c:\favmenu_contmp, 1
 
 	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
+	{
 		SendInput %prev%
 	FileDelete c:\favmenu_contmp
 	}
@@ -356,7 +366,9 @@ FavMenu_DialogSetPath_Emacs(path)
 	;; find-file
 	SendInput ^x^f
 	;; beginning-of-line, kill-line
+	Sleep 100
 	SendInput ^a^k
+	Sleep 100
 	
 	SendInput %path%{ENTER}
 
