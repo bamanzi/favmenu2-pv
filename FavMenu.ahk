@@ -232,12 +232,16 @@ FavMenu_skip:
 
 	; add "add current dir"
 	if (FavMenu_Options_ShowAddDirs)
+	{
 		if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
 		{
 			Menu, Favmenu_sub1, add
 			separator := true
 			Menu, Favmenu_sub1, add, &Add current dir, FavMenu_FullMenuHandlerDispatch
+		    
+			Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
 		}
+	}
 
 
 	; add editor
@@ -321,7 +325,22 @@ FavMenu_AddCurrentDir()
 
 	return true
 }
-	
+
+FavMenu_CopyCurrentPath()
+{
+	global
+	local curDir
+
+	curDir := FavMenu_DialogGetPath()
+	if curDir =
+	{
+		MsgBox Can not get the folder name.`nYou probably selected virtual folder.
+		return
+	}
+
+	clipboard = %curDir%
+}
+
 ;---------------------------------------------------------------------------
 
 FavMenu_FullMenuHandler()
@@ -343,6 +362,8 @@ FavMenu_FullMenuHandler()
 	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current dir")
 		return FavMenu_AddCurrentDir()
 
+	if ( A_ThisMenuItem = "Copy current &path")
+		return FavMenu_CopyCurrentPath()
 	
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
