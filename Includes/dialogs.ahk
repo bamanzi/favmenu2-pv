@@ -34,6 +34,12 @@ FavMenu_DialogGetActive(hw=0)
 		FavMenu_dlgType := "TC"
 		return 1
 	}
+	
+	if (class = "Emacs")
+	{
+		FavMenu_dlgType := "Emacs"
+		return 1
+	}
 
 	Favmenu_dlgType := "System"
 	Favmenu_dlgHwnd := 0
@@ -152,6 +158,9 @@ FavMenu_DialogGetPath()
 	
 	if Favmenu_dlgType = Console
 		return Favmenu_DialogGetPath_Console()
+	
+	if Favmenu_dlgType = Emacs
+		return Favmenu_DialogGetPath_Emacs()
 
 }
 
@@ -200,6 +209,36 @@ Favmenu_DialogGetPath_Console()
 	return curDir
 }
 
+Favmenu_DialogGetPath_Emacs()
+{
+	WinGetActiveTitle,Title
+
+	;; cancel current thing if any
+	SendInput ^g
+	;; find-file
+	SendInput ^x^f
+	;; begging-of-line
+	SendInput ^a
+
+	;; set-mark
+	SendInput ^+2  ;; C-@
+	
+	;; move-end-of-line
+	SendInput ^e
+
+	;; kill-ring-save
+	SendInput !w
+	Sleep 100
+
+	;; cancel find-file
+	SendInput ^g
+
+	resultP = %clipboard%
+	;; OutputDebug,Clipboard content: %clipboard%
+	StringReplace,curDir,resultP,/,\,All
+	;; OutputDebug,Favmenu_DialogSetPath_Emacs returns: %curDir%
+	return curDir
+}
 ;--------------------------------------------------------------------------
 
 Favmenu_DialogGetPath_BFF()
@@ -255,6 +294,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 	
 	if FavMenu_dlgType = Console
 		FavMenu_DialogSetPath_Console(path, bTab)
+
+	if FavMenu_dlgType = Emacs
+		FavMenu_DialogSetPath_Emacs(path)
 	
 	if FavMenu_dlgType = Explorer
 		FavMenu_DialogSetPath_Explorer(path, bTab)
@@ -305,6 +347,20 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
 		SendInput %prev%
 	FileDelete c:\favmenu_contmp
+	}
+}
+
+FavMenu_DialogSetPath_Emacs(path)
+{
+	SendInput ^g
+	;; find-file
+	SendInput ^x^f
+	;; beginning-of-line, kill-line
+	SendInput ^a^k
+	
+	SendInput %path%{ENTER}
+
+	Sleep 100
 }
 
 ;--------------------------------------------------------------------------
