@@ -194,7 +194,7 @@ Favmenu_DialogGetPath_Console()
 	FileReadLine curDir, c:\favmenu_contmp, 2
 	FileDelete c:\favmenu_contmp
 	
-	if (prev != "ECHO is on.")
+	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
 		SendInput %prev%
 	
 	return curDir
@@ -302,7 +302,7 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 	Sleep 100
 	FileReadLine prev, c:\favmenu_contmp, 1
 
-	if (prev != "ECHO is on.")
+	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
 		SendInput %prev%
 	FileDelete c:\favmenu_contmp
 }
