@@ -4,8 +4,8 @@
 FavMenu_GetTCPanels( ByRef pLeft, ByRef pRight)
 {
 
-	ControlGetText pLeft,  TMyPanel5, ahk_class TTOTAL_CMD
-	ControlGetText pRight, TMyPanel9, ahk_class TTOTAL_CMD
+	ControlGetText pLeft,  TPathPanel1, ahk_class TTOTAL_CMD
+	ControlGetText pRight, TPathPanel2, ahk_class TTOTAL_CMD
 
 	StringReplace pLeft, pLeft, *.*
 	StringReplace pRight, pRight, *.*
