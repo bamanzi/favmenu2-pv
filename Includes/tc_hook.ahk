@@ -8,13 +8,28 @@ LButton up::	Click up
 Favmenu_OnTCClick()
 {
 	global Favmenu_Options_MenuPos, Favmenu_TCFlag
-
+ 
+	WinGetActiveTitle, tcTitle
 	MouseGetPos X, Y, ,tcCtrl
-	if tcCtrl not contains TMyPanel5,TMyPanel9
-	{
-		Click down
-		return
+
+	if tcTitle not Contains 7.5
+ 	{
+		if tcCtrl not contains TMyPanel5,TMyPanel9
+		{
+			Click down
+			return
+		}
 	}
+	else
+	{
+		if tcCtrl not contains TPathPanel1,TPathPanel2
+		{
+			Click down
+			return
+		}
+	}
+	  	
+	    
 
 	if !Favmenu_TCFlag
 	{

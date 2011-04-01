@@ -232,16 +232,14 @@ FavMenu_skip:
 
 	; add "add current dir"
 	if (FavMenu_Options_ShowAddDirs)
-	{
 		if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
 		{
 			Menu, Favmenu_sub1, add
 			separator := true
 			Menu, Favmenu_sub1, add, &Add current dir, FavMenu_FullMenuHandlerDispatch
-		    
-			Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
-		}
-	}
+		}		    
+
+	Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
 
 
 	; add editor
