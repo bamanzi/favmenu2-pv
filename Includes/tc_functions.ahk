@@ -3,9 +3,17 @@
 ;
 FavMenu_GetTCPanels( ByRef pLeft, ByRef pRight)
 {
-
-	ControlGetText pLeft,  TPathPanel1, ahk_class TTOTAL_CMD
-	ControlGetText pRight, TPathPanel2, ahk_class TTOTAL_CMD
+	WinGetTitle, tcTitle, ahk_class TTOTAL_CMD
+ 	if tcTitle contains 7.5
+   	{
+		ControlGetText pLeft,  TPathPanel1, ahk_class TTOTAL_CMD
+		ControlGetText pRight, TPathPanel2, ahk_class TTOTAL_CMD
+	}
+	else
+	{
+		ControlGetText pLeft,  TMyPanel5, ahk_class TTOTAL_CMD
+		ControlGetText pRight, TMyPanel9, ahk_class TTOTAL_CMD
+	}
 
 	StringReplace pLeft, pLeft, *.*
 	StringReplace pRight, pRight, *.*
@@ -15,7 +23,18 @@ FavMenu_GetTCPanels( ByRef pLeft, ByRef pRight)
 
 FavMenu_GetCurrentTCDir()
 {
-	ControlGetText src, TMyPanel2, ahk_class TTOTAL_CMD
+	WinGetActiveTitle,tcTitle
+	Loop,10 {
+		ControlGetText path, TMyPanel%A_Index%, ahk_class TTOTAL_CMD
+		StringRight, tail, path, 1
+		IfEqual, tail, >
+		{
+			FileAppend, found file path on TMyPanel%A_Index%: %path%`n,*
+			src = %path%
+			break
+		} 
+	  }
+
 	StringReplace src, src, >
 	return src
 }
