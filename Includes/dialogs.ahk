@@ -53,6 +53,18 @@ FavMenu_GetExplorerInput()
 	global
 	Favmenu_dlgInput := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "WorkerW", 0) 
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ReBarWindow32", 0) 
+	;Remember last good value. If Vista, we need the value to retry
+	Favmenu_dlgInputOriginal := Favmenu_dlgInput
+      
+	;Try Combobox. If Vista, that command fails
+	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
+   
+	if Favmenu_dlgInput = 0
+	{
+		;Perhaps Vista... ??? Use Favmenu_dlgInputOriginal
+		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInputOriginal, "Address Band Root", 0)   
+		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "msctls_progress32", 0)
+	}   
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBox", 0)
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "Edit", 0)
@@ -91,23 +103,35 @@ FavMenu_IsBrowseForFolder( dlg )
 
 FavMenu_IsOpenSave(dlg)
 {
-	global FavMenu_dlgInput, FavMenu_dlgType
-	
+	global FavMenu_dlgInput, FavMenu_dlgType, FavMenu_msctls_progress32, bread
+   
 	FavMenu_dlgType =
 
 	toolbar := FavMenu_FindWindowExID(dlg, "ToolbarWindow32", 0x440)   ;windows XP
 	if (toolbar = "0")
-	 toolbar := FavMenu_FindWindowExID(dlg, "ToolbarWindow32", 0x001)  ;windows 2k
+		toolbar := FavMenu_FindWindowExID(dlg, "ToolbarWindow32", 0x001)  ;windows 2k
+
+	; Windows 7 OpenSave
+	rebar := FavMenu_FindWindowExID(dlg, "WorkerW", 0)
+	rebar := FavMenu_FindWindowExID(rebar, "ReBarWindow32", 0)
+	rebar := FavMenu_FindWindowExID(rebar, "Address Band Root", 0)
+	rebar := FavMenu_FindWindowExID(rebar, "msctls_progress32", 0)
+	FavMenu_msctls_progress32 := rebar
+	rebar := FavMenu_FindWindowExID(rebar, "Breadcrumb Parent", 0)
+	bread := rebar
+	rebar := FavMenu_FindWindowExID(rebar, "ToolbarWindow32", 0)
 	 
 	combo  := FavMenu_FindWindowExID(dlg, "ComboBoxEx32", 0x47C) ; comboboxex field
 	button := FavMenu_FindWindowExID(dlg, "Button", 0x001)		; second button
 	 
 	edit := FavMenu_FindWindowExID(dlg, "Edit", 0x480)			; edit field
 	 
-	if (toolbar && (combo || edit) && button) 
+	if ((rebar || (toolbar && (combo || edit))) && button) 
 	{
-		FavMenu_dlgInput	:= combo + edit
-		FavMenu_dlgType		:= "OpenSave"
+		FavMenu_dlgInput   := combo + edit
+		if rebar
+			FavMenu_dlgInput   := rebar
+		FavMenu_dlgType      := "OpenSave"
 		return 1
 	}
 
@@ -182,14 +206,23 @@ Favmenu_DialogGetPath_TC()
 
 Favmenu_DialogGetPath_Explorer()
 {
-	global Favmenu_dlgHwnd
-
+	global Favmenu_dlgHwnd, Favmenu_dlgInput
 	tv := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "BaseBar", 0) 
 	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0) 
 	tv := Favmenu_FindWindowExID(tv, "SysTreeView32", 100)
 
 	TV_Initialise( FavMenu_dlgHWND, tv )
-	return TV_GetPath()
+	returnedPath := TV_GetPath()
+	if returnedPath <> 
+		return returnedPath 
+   
+	;Nothing was returned. Perhaps Vista    
+	FavMenu_GetExplorerInput()
+
+	;MsgBox, Editcontrol %Favmenu_dlgInput%
+	ControlGetText, EditCtrlPath, , ahk_id %Favmenu_dlgInput%
+	;Msgbox, %EditCtrlPath%
+	return  %EditCtrlPath%
 }
 
 ;--------------------------------------------------------------------------
@@ -407,12 +440,28 @@ FavMenu_DialogSetPath_OS(path)
 	ControlGetFocus d_f, ahk_id %FavMenu_dlgHWND%
 	ControlFocus, , ahk_id %FavMenu_dlgInput%
 
-	ControlGetText d_text, ,ahk_id %FavMenu_dlgInput%
-	ControlSetText, , %path%, ahk_id %FavMenu_dlgInput%
-	ControlSend, ,{ENTER}, ahk_id %FavMenu_dlgInput%
-	
 	Sleep 20
-	ControlSetText, ,%d_text%, ahk_id %FavMenu_dlgInput%
+	if FavMenu_msctls_progress32
+	{
+        	ControlSend, ,{Space}, ahk_id %FavMenu_dlgInput%
+		Sleep 20
+		rebar := FavMenu_FindWindowExID(FavMenu_msctls_progress32, "ComboBoxEx32", 0)
+		rebar := FavMenu_FindWindowExID(rebar, "ComboBox", 0)
+		rebar := FavMenu_FindWindowExID(rebar, "Edit", 0)
+		if rebar
+		{
+			Sleep 20
+			ControlSetText, , %path%, ahk_id %rebar%
+		ControlSend, ,{ENTER}, ahk_id %rebar%
+		}
+	}
+	else
+	{
+		ControlGetText d_text, ,ahk_id %FavMenu_dlgInput%
+		ControlSetText, , %path%, ahk_id %FavMenu_dlgInput%
+		ControlSend, ,{ENTER}, ahk_id %FavMenu_dlgInput%
+	}
+	Sleep 20
 	if (FavMenu_dlgType = "Office03")
 		ControlFocus %d_f%, ahk_id %FavMenu_dlgHWND%
 }
