@@ -12,17 +12,17 @@ Favmenu_OnTCClick()
 	WinGetActiveTitle, tcTitle
 	MouseGetPos X, Y, ,tcCtrl
 
-	if tcTitle not Contains 7.5
+	if (tcTitle not contains 6.5) AND (tcTitle not contains 7.0)
  	{
-		if tcCtrl not contains TMyPanel5,TMyPanel9
+		if tcCtrl not contains TPathPanel1,TPathPanel2
 		{
 			Click down
 			return
-		}
+		}	
 	}
 	else
 	{
-		if tcCtrl not contains TPathPanel1,TPathPanel2
+		if tcCtrl not contains TMyPanel5,TMyPanel9
 		{
 			Click down
 			return
