@@ -40,6 +40,16 @@ FavMenu_DialogGetActive(hw=0)
 		FavMenu_dlgType := "Emacs"
 		return 1
 	}
+	
+	If (class = "mintty") Or (SubStr(class, 1, 4) = "rxvt")
+	{
+		;If (title Contains MINGW32) 
+		;FavMenu_dlgType := "msys"
+		;else
+			FavMenu_dlgType := "Cygwin"
+		;
+		return 1
+	}
 
 	Favmenu_dlgType := "System"
 	Favmenu_dlgHwnd := 0
@@ -425,6 +435,14 @@ FavMenu_DialogSetPath_Emacs(path)
 	
 	SendInput %path%{ENTER}
 
+	Sleep 100
+}
+
+FavMenu_DialogSetPath_Cygwin(path)
+{
+	OutputDebug,FavMenu_DialogSetPath_Cygwin called
+	;;SendInput, cd ``cygpath -u '%path%'``{ENTER}
+	SendInput, cd '%path%'{ENTER}  ;;this works for mintty for cygwin & msys
 	Sleep 100
 }
 
