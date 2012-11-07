@@ -74,6 +74,8 @@ FavMenu_GetExplorerInput()
 		;Perhaps Vista... ??? Use Favmenu_dlgInputOriginal
 		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInputOriginal, "Address Band Root", 0)   
 		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "msctls_progress32", 0)
+		FavMenu_msctls_progress32 := Favmenu_dlgInput
+		Return
 	}   
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBox", 0)
@@ -229,9 +231,28 @@ Favmenu_DialogGetPath_Explorer()
 	;Nothing was returned. Perhaps Vista    
 	FavMenu_GetExplorerInput()
 
-	;MsgBox, Editcontrol %Favmenu_dlgInput%
-	ControlGetText, EditCtrlPath, , ahk_id %Favmenu_dlgInput%
-	;Msgbox, %EditCtrlPath%
+	If FavMenu_msctls_progress32
+	{
+		OutputDebug,FavMenu_msctls_progress32=%FavMenu_msctls_progress32%`n
+		rebar := FavMenu_FindWindowExID(FavMenu_msctls_progress32, "Breadcrumb Parent", 0)
+		bread := rebar
+		rebar := FavMenu_FindWindowExID(rebar, "ToolbarWindow32", 0)
+		
+		ControlGetText, EditCtrlPath, , ahk_id %rebar%
+		OutputDebug,EditCtrlPath=%EditCtrlPath%`n
+		pos1 := InStr(EditCtrlPath, ":")
+		If pos1
+		{
+			EditCtrlPath := SubStr(EditCtrlPath, pos1+2)
+			OutputDebug,EditCtrlPath=%EditCtrlPath%`n
+		}
+	}
+	Else
+	{
+		;MsgBox, Editcontrol %Favmenu_dlgInput%
+		ControlGetText, EditCtrlPath, , ahk_id %Favmenu_dlgInput%
+		;Msgbox, %EditCtrlPath%
+	}
 	return  %EditCtrlPath%
 }
 
@@ -383,6 +404,12 @@ FavMenu_DialogSetPath_TC(path, bTab = false)
 FavMenu_DialogSetPath_Explorer(path, bTab = false)
 {
 	global
+	
+	If FavMenu_msctls_progress32
+	{
+		FavMenu_DialogSetPath_OS(path)
+		Return
+	}
 	
 	if (Favmenu_dlgInput = 0)
 	{
