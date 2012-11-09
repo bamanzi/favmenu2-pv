@@ -204,6 +204,50 @@ FavMenu_DialogGetPath()
 	if Favmenu_dlgType = Emacs
 		return Favmenu_DialogGetPath_Emacs()
 
+	;;for other applications/dialogs, try to parse title
+	Local title
+	WinGetActiveTitle, title
+	OutputDebug,current window not recognized. try to parse directory from title: %title%`n
+	If InStr(title, ":\")>1
+	{	
+		local fstart, fend1, fend2, fend3, curDir
+		fstart := InStr(title, ":\") -1
+		if fstart <=0
+			return
+		
+		
+		fend1 := InStr(title, "]", fstart + 2)
+		fend2 := InStr(title, " ", fstart + 2)
+		fend3 := InStr(title, " - ", fstart + 2)
+		
+		local fname1, fname2, fname3
+		fname1 := SubStr(title, fstart, fend1 - fstart)
+		fname2 := SubStr(title, fstart, fend2 - fstart)
+		fname3 := SubStr(title, fstart, fend3 - fstart)
+		
+		OutputDebug `nDialogGetPath1 fname1=%fname1%`nfname2=%fname2%`nfname3=%fname3%`n
+		If FileExist(fname1) 
+			curDir := fname1
+		else if FileExist(fname2)
+			curDir := fname2
+		else if FileExist(fname3)
+			curDir := fname3
+		else
+			return
+		
+		
+		If InStr(FileExist(curDir), "D")<=0
+		{
+			fend := 0
+			OutputDebug DialogGetPath2 returns %curDir%`nfend=%fend%`n
+			fend := InStr(curDir, "\", false,-1)
+			curDir := SubStr(curDir, 1, fend)
+			OutputDebug, DialogGetPath returns %curDir%`nfend=%fend%`n
+			return curDir
+		}
+		else
+			return curDir
+	}
 }
 
 ;--------------------------------------------------------------------------
