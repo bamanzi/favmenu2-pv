@@ -232,15 +232,17 @@ FavMenu_skip:
 
 	; add "add current dir"
 	if (FavMenu_Options_ShowAddDirs)
-		if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
+	{
+		;;if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
 		{
 			Menu, Favmenu_sub1, add
 			separator := true
 			Menu, Favmenu_sub1, add, &Add current dir, FavMenu_FullMenuHandlerDispatch
-		}		    
+		}
 
-	Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
-
+		; copy current dir
+		Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
+	}
 
 	; add editor
 	if (FavMenu_Options_ShowEditor)
@@ -326,7 +328,6 @@ FavMenu_AddCurrentDir()
 
 FavMenu_CopyCurrentPath()
 {
-	global
 	local curDir
 
 	curDir := FavMenu_DialogGetPath()
@@ -337,6 +338,7 @@ FavMenu_CopyCurrentPath()
 	}
 
 	clipboard = %curDir%
+	TrayTip,FavMenu2: copy current path,%curDir%
 }
 
 ;---------------------------------------------------------------------------
