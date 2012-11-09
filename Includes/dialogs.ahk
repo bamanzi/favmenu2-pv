@@ -464,15 +464,14 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 	}
 	Else
 	{
-	StringLeft, drive, path, 2
-	SendInput, {HOME}echo {END}>c:\favmenu_contmp&%drive%&cd %path%&%Favmenu_Options_IAppend%{ENTER}
-	Sleep 100
-	FileReadLine prev, c:\favmenu_contmp, 1
+		;StringLeft, drive, path, 2
+		;SendInput, {HOME}echo {END}>c:\favmenu_contmp&%drive%&cd %path%&%Favmenu_Options_IAppend%{ENTER}
+		;Sleep 100
+		;FileReadLine prev, c:\favmenu_contmp, 1
 
-	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
-	
-		SendInput %prev%
-	FileDelete c:\favmenu_contmp
+		;if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
+			SendInput %prev%
+		;FileDelete c:\favmenu_contmp
 	}
 }
 
