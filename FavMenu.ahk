@@ -317,7 +317,7 @@ FavMenu_AddCurrentDir()
 	; add ALT 0160 if - is first char
 	StringLeft idx, name, 1
 	if idx = -
-			prefix := " "
+			prefix := ">"
 	
 	;write to ini
 	IniWrite %prefix%%name%,	%FavMenu_fmIni%, DirMenu, menu%FavMenu_mnuCnt%
