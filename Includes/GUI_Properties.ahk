@@ -54,7 +54,7 @@ Properties_OnSaveClick()
 	;check if the user specified - as a first char and add ALT 060 if so
 	StringLeft idx, Properties_eTitle, 1
 	if idx = -
-		Properties_eTitle := " " . Properties_eTitle
+		Properties_eTitle := ">" . Properties_eTitle
 
 	if txt = Submenu Title
 		prefix = -

@@ -4,7 +4,7 @@
 FavMenu_GetTCPanels( ByRef pLeft, ByRef pRight)
 {
 	WinGetTitle, tcTitle, ahk_class TTOTAL_CMD
- 	if (tcTitle not contains 6.5) AND (tcTitle not contains 7.0)
+ 	if tcTitle not contains 6.5 AND tcTitle not contains 7.0
    	{
 		ControlGetText pLeft,  TPathPanel1, ahk_class TTOTAL_CMD
 		ControlGetText pRight, TPathPanel2, ahk_class TTOTAL_CMD
