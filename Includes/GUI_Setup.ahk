@@ -2,7 +2,7 @@ Setup_Create()
 {
 	global 
 	
-	Gui, %Setup_GUI%:Add, Tab,		X0 Y0 h260 w400 +0x100 +0x400,						Configuration | Appearance | Integration
+	Gui, %Setup_GUI%:Add, Tab,		X0 Y0 h260 w500 +0x100 +0x300,						Configuration | Appearance | Integration | Help
 	
 	; --- tab 1
 	Gui, %Setup_GUI%:Add, Text,		x23  y40  w250 h17,										File Manager ( exe )
@@ -52,6 +52,14 @@ Setup_Create()
 	Gui, %Setup_GUI%:Add, CheckBox, x20  y152 w260 h30	vSetup_ITC			,				Total Commander
 	Gui, %Setup_GUI%:Add, CheckBox, x20  y200 w260 h30	vSetup_ISystem		,				System   ( redirect to file manager )
 	
+	; --- tab 4
+	Gui, %Setup_GUI%:Tab, 4
+	Gui, %Setup_GUI%:Add, Text,		x20  y40 w260 h20						,	Ctrl + Enter: 
+	Gui, %Setup_GUI%:Add, Text,		x40  y60 w260 h20						,	        Edit selected item
+	Gui, %Setup_GUI%:Add, Text,       x20  y80 w260 h20                  ,   Shift + Enter: 
+	Gui, %Setup_GUI%:Add, Text,       x40  y100 w260 h20                  ,          Open selected item in new tab
+	Gui, %Setup_GUI%:Add, Text,       x20  y120 w260 h20                  ,   CTRL + SHIFT + Enter: 
+	Gui, %Setup_GUI%:Add, Text,       x40  y140 w260 h20                  ,          Send path as text to the active window.
 	
 	; on all tabs
 	Gui, %Setup_GUI%:Tab 
