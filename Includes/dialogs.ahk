@@ -185,6 +185,7 @@ FavMenu_IsOffice03(dlg)
 FavMenu_DialogGetPath()
 {
 	global
+	OutputDebug,FavMenu_DialogGetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
 	if Favmenu_dlgType = TC
 		return Favmenu_DialogGetPath_TC()
@@ -419,6 +420,7 @@ FavMenu_DialogGetPath_OS()
 FavMenu_DialogSetPath(path, bTab = false)
 {
 	global FavMenu_dlgType
+	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
 	if FavMenu_dlgType = TC
 		FavMenu_DialogSetPath_TC(path, bTab)
@@ -437,6 +439,12 @@ FavMenu_DialogSetPath(path, bTab = false)
 	
 	if FavMenu_dlgType = Explorer
 		FavMenu_DialogSetPath_Explorer(path, bTab)
+	
+	if FavMenu_dlgType = Cygwin
+		FavMenu_DialogSetPath_Cygwin(path)
+	
+	if FavMenu_dlgType = GTK
+		FavMenu_DialogSetPath_GTK(path)
 }
 
 ;--------------------------------------------------------------------------
@@ -508,7 +516,7 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 		;; FAR manager  ;;TODO: support tabs (PanelTabs plugin)
 		SendInput ^y    ;;clear command line
 		SetKeyDelay,30  ;;FAR's auto-completion would make the keystroke not accurate
-		SendInput cd %path%{ENTER}
+		SendInput cd /d %path%{ENTER}
 		
 	}
 	Else
@@ -519,8 +527,10 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 		;FileReadLine prev, c:\favmenu_contmp, 1
 
 		;if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
-			SendInput %prev%
+		;;	SendInput %prev%
 		;FileDelete c:\favmenu_contmp
+		
+		SendInput cd /d %path%{ENTER}
 	}
 }
 
