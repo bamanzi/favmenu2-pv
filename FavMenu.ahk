@@ -12,7 +12,9 @@
 ;   2.12 Try to parse current directory from applications' title bar
 ;   2.11 Added target support for gtk open/save dialog
 ;   2.10 Added support for windows 7/vista's explorer
+;        http://www.autohotkey.com/community/viewtopic.php?t=12412&start=75#p216232
 ;   2.09 Added target support for windows 7/vista's open/save diloag
+;        http://www.autohotkey.com/community/viewtopic.php?p=322261
 ;   2.08 Added target support for mintty for msys
 ;   2.07 Fixed getting current paths from Total Commander 8.0
 ;        Added support for PowerCmd (handled as console)
@@ -49,7 +51,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.10"
+	Favmenu_version    := "2.13"
 	Favmenu_configFile := "Config.ini"
 	
 	;set GUIs
