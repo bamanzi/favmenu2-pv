@@ -5,6 +5,27 @@
 ;	Created by Miodrag Milic								Jun 2006
 ;	
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
+;
+; Hacked by Ba Manzi <bamanzi@gmail.com>
+; Change Log
+;   2.13 Add 'Command Prompt Here'
+;   2.12 Try to parse current directory from applications' title bar
+;   2.11 Added target support for gtk open/save dialog
+;   2.10 Added support for windows 7/vista's explorer
+;   2.09 Added target support for windows 7/vista's open/save diloag
+;   2.08 Added target support for mintty for msys
+;   2.07 Fixed getting current paths from Total Commander 8.0
+;        Added support for PowerCmd (handled as console)
+;   2.06 Added support for Far/ConEmu (target & source)
+;   2.05 Added target support for mintty/rxvt for Cygwin
+;   2.04 Added 'copy current path' command on menu
+;   2.03 Added target support for XEmacs & MicroEmacs-jasspa
+;   2.02 Added target support for GNU Emacs
+;   2.01 Fixed getting current paths of Total Commander >= 7.5
+; TODO:
+;   + Add support for FreeCommander/XP
+;   + Add GetPath support for cygwin/msys
+;   + Add SetPath support for cygwin/msys console
 ;**************************************************************************
 #NoEnv
 #SingleInstance force
