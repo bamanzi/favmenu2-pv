@@ -5,10 +5,11 @@ jump to them within system dialogs (Open/Save, Browse For Folder,
 Office2003 dialogs), Console (cmd.exe), Windows Explorer and Total
 Commander.
 
-http://att.newsmth.net/nForum/att/TotalCommander/45716/754
+![screenshot](http://att.newsmth.net/nForum/att/TotalCommander/45716/754)
 
 Original Author: Miodrag Milic
-http://www.totalcmd.net/plugring/TC_FavMenu2.html
+
+Download the orignal version: <http://www.totalcmd.net/plugring/TC_FavMenu2.html>
 
 ## About this fork ##
 
@@ -48,7 +49,7 @@ command, for example: `cd \\\Uninstaller\` or `cd \\\Registry\HKEY_CURRENT_USER\
 
 When you want to jump to one of your favorite folder, just bring up the
 menu.  To do this, you need to set a system-wide hotkey in
-Setup->Configuration.
+`Setup->Configuration`.
 
 If current application/dialog is supported by FavMenu, it would let the
 application jump to the folder you clicked. Otherwise, it would open
@@ -57,13 +58,15 @@ that folder in the default file manager (which is configurable in
 
 ### Advanced Usage ###
 
-The menu:
+**The menu**:
    
   * `Ctrl+Enter` on menu item: open properties dialog for the menu item
   * `Shift+Enter` on menu item: open selected folder in new tab (if target
     application supports this)
   * `Ctrl+Shift+Enter` on menu item: send path of selected item to active window
-  
+
+**Pseudo variables in path**:
+
 FavMenu supports Total Commander's pseudo variables, such as `$DESKTOP`,
 `$PERSONAL`, refer `Includes/pseudo.ahk` for detailed info.
 
