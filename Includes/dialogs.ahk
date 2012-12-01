@@ -204,6 +204,11 @@ FavMenu_DialogGetPath()
 	if Favmenu_dlgType = Emacs
 		return Favmenu_DialogGetPath_Emacs()
 
+	return Favmenu_DialogGetPath_FromTitle()
+}
+
+Favmenu_DialogGetPath_FromTitle()
+{
 	;;for other applications/dialogs, try to parse title
 	Local title
 	WinGetActiveTitle, title
@@ -538,7 +543,7 @@ FavMenu_DialogSetPath_Cygwin(path)
 {
 	OutputDebug,FavMenu_DialogSetPath_Cygwin called
 	;;SendInput, cd ``cygpath -u '%path%'``{ENTER}
-	SendInput, cd '%path%'{ENTER}  ;;this works for mintty for cygwin & msys
+	SendInput, pushd '%path%'{ENTER}  ;;this works for mintty for cygwin & msys
 	Sleep 100
 }
 
