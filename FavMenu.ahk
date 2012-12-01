@@ -241,7 +241,9 @@ FavMenu_skip:
 		}
 
 		; copy current dir
-		Menu, Favmenu_sub1, add, Copy current &path, FavMenu_FullMenuHandlerDispatch
+		Menu, Favmenu_sub1, add, &Copy current path, FavMenu_FullMenuHandlerDispatch
+		
+		Menu, Favmenu_sub1, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
 	}
 
 	; add editor
@@ -341,6 +343,19 @@ FavMenu_CopyCurrentPath()
 	TrayTip,FavMenu2: copy current path,%curDir%
 }
 
+FavMenu_CommandPromptHere()
+{
+	curDir := FavMenu_DialogGetPath()
+
+	If curDir = 
+	{
+		MsgBox Can not get the folder name.`nYou probably selected virtual folder.
+		return
+	}
+
+	Run,cmd /k "cd /d `%cd`%",%curDir%
+}
+
 ;---------------------------------------------------------------------------
 
 FavMenu_FullMenuHandler()
@@ -362,8 +377,11 @@ FavMenu_FullMenuHandler()
 	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current dir")
 		return FavMenu_AddCurrentDir()
 
-	if ( A_ThisMenuItem = "Copy current &path")
+	if ( A_ThisMenuItem = "&Copy current path")
 		return FavMenu_CopyCurrentPath()
+	
+	if ( A_ThisMenuItem = "Command &Prompt here")
+		return FavMenu_CommandPromptHere()
 	
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
