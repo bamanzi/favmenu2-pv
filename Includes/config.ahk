@@ -84,7 +84,7 @@ FavMenu_TrayHandler()
 		ExitApp
 
 	if ( A_ThisMenuItem = "Help" )
-		Run Readme.doc
+		Run FavMenu.html.
 }
 
 FavMenu_trayDispatch:
