@@ -8,6 +8,7 @@
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ; Change Log
+;   2.15 Add support for FreeCommander{,XE}
 ;   2.14 Add clipboard content as a menu item (if it is a path)
 ;   2.13 Add 'Command Prompt Here'
 ;   2.12 Try to parse current directory from applications' title bar

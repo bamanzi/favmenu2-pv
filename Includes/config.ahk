@@ -154,6 +154,8 @@ FavMenu_GetConfigData()
 	IniRead Favmenu_Options_ISystem,		%Favmenu_configFile%, TcFavMenu, ISystem,		1
 	IniRead Favmenu_Options_ICygwin,		%Favmenu_configFile%, TcFavMenu, ICygwin,		1
 	IniRead Favmenu_Options_IGTK,			%Favmenu_configFile%, TcFavMenu, IGTK,			1
+	IniRead Favmenu_Options_IFreeCommander,	%Favmenu_configFile%, TcFavMenu, IFreeCommander,	1
+
 
 	if (FavMenu_fmExe = "&") || (FavMenu_fmIni = "&") || (FavMenu_fmKey = "&")
 		return false

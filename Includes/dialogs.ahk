@@ -35,6 +35,12 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}
 	
+	If (class = "TfcForm") Or (class="FreeCommanderXE.SingleInst.1")
+	{
+		FavMenu_dlgType := "FreeCommander"
+		return 1
+	}	
+	
 	if ( (class = "Emacs") Or (class = "MicroEmacsClass") Or (class = "XEmacs" ) )
 	{
 		FavMenu_dlgType := "Emacs"
@@ -199,6 +205,9 @@ FavMenu_DialogGetPath()
 	if Favmenu_dlgType = BFF
 		return Favmenu_DialogGetPath_BFF()
 	
+	If FavMenu_dlgType = FreeCommander
+		return FavMenu_DialogGetPath_FreeCommander()
+	
 	if Favmenu_dlgType = Console
 		return Favmenu_DialogGetPath_Console()
 	
@@ -338,6 +347,35 @@ Favmenu_DialogGetPath_Console()
 	return curDir
 }
 
+Favmenu_DialogGetPath_FreeCommander()
+{
+	local title
+	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
+	;~ if class="TfcForm"
+	;~ {
+		;~ ;;FreeCommander
+		;~ Send,!g
+		;~ Sleep 100
+		;~ ControlGetText, path, TfcPathEdit
+		;~ Send {ESC}
+		;~ return path
+	;~ }else ;;if class="FreeCommanderXE.SingleInst.1"
+	;~ { ;;FreeCommanderXP
+		;~ Send,!g
+		;~ Sleep 100
+		;~ ControlGetText, path, TfcPathEdit
+		;~ Send {ESC}
+		;~ return path
+	;~ }
+	WinActivate,ahk_id %Favmenu_dlgHwnd%
+	Send,!g
+	Sleep 300
+	;;ControlGetText, fcpath, ahk_class TfcPathEdit
+	Send,^c
+	Send {ESC}
+	return %Clipboard%
+} 
+
 Favmenu_DialogGetPath_Emacs()
 {
 	;;TODO: ensure compatibility of XEmacs
@@ -440,6 +478,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 	if FavMenu_dlgType = Explorer
 		FavMenu_DialogSetPath_Explorer(path, bTab)
 	
+	If FavMenu_dlgType = FreeCommander
+		FavMenu_DialogSetPath_FreeCommander(path, bTab)
+	
 	if FavMenu_dlgType = Cygwin
 		FavMenu_DialogSetPath_Cygwin(path)
 	
@@ -504,6 +545,20 @@ FavMenu_DialogSetPath_Explorer(path, bTab = false)
 	ControlSend, ,{ENTER},ahk_id %Favmenu_dlgInput%
 }
 
+Favmenu_DialogSetPath_FreeCommander(path, bTab = false)
+{
+	WinActivate,ahk_id %Favmenu_dlgHwnd%
+	if bTab
+	{
+		Send,^t
+		Sleep,300
+	}
+	Send,!g
+	Sleep 300
+	;;ControlGetText, fcpath, ahk_class TfcPathEdit
+	SendRaw,%path%
+	Send {Enter}
+}
 ;--------------------------------------------------------------------------
 
 FavMenu_DialogSetPath_Console(path, bTab = false)
