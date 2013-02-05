@@ -40,7 +40,7 @@ FileAppend,
 	menu14=while console is active application
 	cmd14=readme.doc
 	menu15=See readme.txt for more details
-	cmd15=readme.doc
+	cmd15=FavMenu.html
 	menu16=--
 	menu17=Show Explorer Process
 	cmd17=tasklist | findstr "explorer"

@@ -8,6 +8,7 @@
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ; Change Log
+;   2.14 Add clipboard content as a menu item (if it is a path)
 ;   2.13 Add 'Command Prompt Here'
 ;   2.12 Try to parse current directory from applications' title bar
 ;   2.11 Added target support for gtk open/save dialog
@@ -224,7 +225,7 @@ FavMenu_CreateMenu()
 FavMenu_CreateFullMenu()
 {
 	global
-	local tc_left, tc_right, hwnd, separator
+	local tc_left, tc_right, hwnd, separator, clippath, attr
 
 	FavMenu_currentDir =
 	Favmenu_deltaS	= 0
@@ -260,6 +261,21 @@ FavMenu_skip:
 		{
 			Menu, Favmenu_sub1, add
 			separator := true
+
+			clippath := clipboard
+			ifExist,%clippath%
+			{
+					FileGetAttrib,attr,%clippath%
+					OutputDebug,path in clipboard %clippath%
+					IfInString,attr,D
+					{
+						Menu Favmenu_sub1, add,  *[Clipboard] %clippath% , FavMenu_FullMenuHandlerDispatch
+						; add separator 
+						Menu Favmenu_sub1, add
+						Favmenu_deltaS += 2
+					}
+			} 
+			
 			Menu, Favmenu_sub1, add, &Add current dir, FavMenu_FullMenuHandlerDispatch
 		}
 
@@ -384,7 +400,7 @@ FavMenu_CommandPromptHere()
 FavMenu_FullMenuHandler()
 {
 	global 
-	local tmp, idx
+	local tmp, idx, path
 
 	; handle editor selection
 	if (FavMenu_Options_ShowEditor && A_ThisMenuItem = "&Configure...")
@@ -409,10 +425,25 @@ FavMenu_FullMenuHandler()
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
 	{
+		if InStr(A_ThisMenuItem, "*[")==1
+		{
+			;;StringGetPos, tmp, A_ThisMenuItem, "]"  //not work??
+			tmp := InStr(A_ThisMenuItem, "]")
+			OutputDebug,tmp=%tmp%
+			if tmp > 0 
+			{
+					OutputDebug,line 436 here, path=%path%		
+					path := SubStr(A_ThisMenuItem, tmp + 2)
+					OutputDebug,line 436 here, path=%path%
+			}
+		} else 
+		{
+			path := FavMenu_command0_%A_ThisMenuItemPos%
+		}
 		;check for modifiers
 		if GetKeyState("SHIFT") && GetKeyState("CTRL")
 		{
-			SendRaw % FavMenu_command0_%A_ThisMenuItemPos%
+			SendRaw %path%
 			return
 		}
 	
