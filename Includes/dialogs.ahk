@@ -65,6 +65,12 @@ FavMenu_DialogGetActive(hw=0)
 		FavMenu_dlgType := "GTK"
 		return 1
 	}
+	
+	If (class = "ATL:ExplorerFrame")
+	{
+		FavMenu_dlgType := "Xplorer2"
+		return 1
+	}	
 
 	Favmenu_dlgType := "System"
 	Favmenu_dlgHwnd := 0
@@ -216,11 +222,14 @@ FavMenu_DialogGetPath()
 	
 	if Favmenu_dlgType = Emacs
 		return Favmenu_DialogGetPath_Emacs()
+	
+	if Favmenu_dlgType = Xplorer2
+		return FavMenu_DialogGetPath_Xplorer2()
 
-	return Favmenu_DialogGetPath_FromTitle()
+	return Favmenu_DialogGetPath_fromTitle()
 }
 
-Favmenu_DialogGetPath_FromTitle()
+Favmenu_DialogGetPath_fromTitle()
 {
 	;;for other applications/dialogs, try to parse title
 	Local title
@@ -379,6 +388,21 @@ Favmenu_DialogGetPath_FreeCommander()
 	return %Clipboard%
 } 
 
+FavMenu_DialogGetPath_Xplorer2()
+{
+	global FavMenu_dlgHwnd
+	rebar := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "ReBarWindow32", 0) 
+	toolwin := Favmenu_FindWindowExID(rebar, "ToolbarWindow32", 60160) 
+	combo := Favmenu_FindWindowExID(toolwin, "ComboBox", 0)
+		
+	if (combo)
+	{
+		ControlGetText, result, ComboBox1, ahk_id %FavMenu_dlgHwnd%
+		return result
+	}
+	
+}
+
 Favmenu_DialogGetPath_Emacs()
 {
 	;;TODO: ensure compatibility of XEmacs
@@ -492,6 +516,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 	
 	if FavMenu_dlgType = GTK
 		FavMenu_DialogSetPath_GTK(path)
+
+	if FavMenu_dlgType = Xplorer2
+		FavMenu_DialogSetPath_Xplorer2(path, bTab)
 }
 
 ;--------------------------------------------------------------------------
@@ -565,6 +592,26 @@ Favmenu_DialogSetPath_FreeCommander(path, bTab = false)
 	SendRaw,%path%
 	Send {Enter}
 }
+
+FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
+{
+	WinActivate, ahk_id %FavMenu_dlgHwnd%
+	
+	if (bTab)
+	{
+		SendInput,^{Ins}
+	}
+	
+	Sleep 100
+	
+	SendInput, {F10}{HOME}+{END} ;;{DELETE}
+
+	SendInput,%path%{ENTER}
+	
+	Sleep 100
+	
+}
+
 ;--------------------------------------------------------------------------
 FavMenu_DialogSetPath_Msys(path, bTab = false)
 {

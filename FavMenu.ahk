@@ -8,6 +8,7 @@
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ; Change Log
+;   2.17 Add support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
 ;   2.16 Add support for Msys (console,rxvt,mintty,console2,conemu...)
 ;   2.15 Add support for FreeCommander{,XE}
 ;   2.14 Add clipboard content as a menu item (if it is a path)
@@ -54,7 +55,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.16"
+	Favmenu_version    := "2.17"
 	Favmenu_configFile := "Config.ini"
 	
 	;set GUIs
