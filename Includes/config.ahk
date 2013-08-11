@@ -148,14 +148,14 @@ FavMenu_GetConfigData()
 	IniRead Favmenu_Options_IAppend,		%Favmenu_configFile%, TcFavMenu, IAppend,		dir /w /oGN
 	IniRead Favmenu_Options_IExplorer,		%Favmenu_configFile%, TcFavMenu, IExplorer,		1
 	IniRead Favmenu_Options_ITC,			%Favmenu_configFile%, TcFavMenu, ITC,			1
+	IniRead Favmenu_Options_ISystem,		%Favmenu_configFile%, TcFavMenu, ISystem,		1
 
 	IniRead Favmenu_Options_IEmacs,			%Favmenu_configFile%, TcFavMenu, IEmacs,		1
 	IniRead Favmenu_Options_IFAR,			%Favmenu_configFile%, TcFavMenu, IFAR,			1
-	IniRead Favmenu_Options_ISystem,		%Favmenu_configFile%, TcFavMenu, ISystem,		1
 	IniRead Favmenu_Options_ICygwin,		%Favmenu_configFile%, TcFavMenu, ICygwin,		1
 	IniRead Favmenu_Options_IGTK,			%Favmenu_configFile%, TcFavMenu, IGTK,			1
 	IniRead Favmenu_Options_IFreeCommander,	%Favmenu_configFile%, TcFavMenu, IFreeCommander,	1
-
+	IniRead Favmenu_Options_IMsys,			%Favmenu_configFile%, TcFavMenu, IMsys,			1
 
 	if (FavMenu_fmExe = "&") || (FavMenu_fmIni = "&") || (FavMenu_fmKey = "&")
 		return false

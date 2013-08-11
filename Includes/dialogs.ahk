@@ -5,16 +5,23 @@
 FavMenu_DialogGetActive(hw=0)
 {	
 	global 
-	local class
+	local class, title
 
 	WinGet, Favmenu_dlgHwnd, ID, A
 	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
+	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
 	
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
 	
 	if FavMenu_IsBrowseForFolder( Favmenu_dlgHwnd )
 			return 1
+
+	If (InStr(title, "MINGW32", true)>0)
+	{
+		FavMenu_dlgType := "Msys"
+		return 1
+	}
 
 	if (class = "ConsoleWindowClass") or (class = "VirtualConsoleClass")
 	{
@@ -49,11 +56,7 @@ FavMenu_DialogGetActive(hw=0)
 	
 	If (class = "mintty") Or (SubStr(class, 1, 4) = "rxvt")
 	{
-		;If (title Contains MINGW32) 
-		;FavMenu_dlgType := "msys"
-		;else
-			FavMenu_dlgType := "Cygwin"
-		;
+		FavMenu_dlgType := "Cygwin"
 		return 1
 	}
 	
@@ -469,6 +472,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 	if FavMenu_dlgType = BFF
 		FavMenu_DialogSetPath_BFF(path)
 	
+	if FavMenu_dlgType = Msys
+		FavMenu_DialogSetPath_Msys(path, bTab)
+	
 	if FavMenu_dlgType = Console
 		FavMenu_DialogSetPath_Console(path, bTab)
 
@@ -560,13 +566,39 @@ Favmenu_DialogSetPath_FreeCommander(path, bTab = false)
 	Send {Enter}
 }
 ;--------------------------------------------------------------------------
+FavMenu_DialogSetPath_Msys(path, bTab = false)
+{
+	;;other front-ends: cmd, rxvt, mintty, conemu
+	WinGetClass,klass,A
+	path1 := RegExReplace(path, "\\$", "")
+	OutputDebug,FavMenu_DialogSetPath_Msys called with klass=%klass%, path=%path1%
+	
+	If klass = Console_2_Main
+	{
+		OutputDebug,put clipboard content: "cd %path1%"
+		;;Console2 has problems when SendInput (it would change : to ;)
+		 Clipboard = cd "%path1%"
+		SendInput, +{Insert}{Enter}
+	}
+	else
+	{
+		 SendInput cd "%path%"{ENTER}
+	}
+}
 
 FavMenu_DialogSetPath_Console(path, bTab = false)
 {
 	global Favmenu_Options_IAppend
 
 	WinGetActiveTitle,Title
-	if InStr(Title, "- Far ")>1
+	WinGetClass,class
+	If class = "Console_2_Main")
+	{
+	    ;;Console2 has problems when SendInput (it would change : to ;)
+	    Clipboard = cd /d "%path%"
+	    SendInput, +{Insert}{Enter}
+	}
+	else if InStr(Title, "- Far ")>1
 	{
 		;; FAR manager  ;;TODO: support tabs (PanelTabs plugin)
 		SendInput ^y    ;;clear command line
