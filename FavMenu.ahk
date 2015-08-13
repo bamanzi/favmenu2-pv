@@ -182,7 +182,7 @@ FavMenu_CreateMenu()
 
 		;is it separator ?
 		if (mnu = "-")
-     	{ 
+		{ 
 			Menu, %submenu_id%, add 
 			cmd_cnt += 1
 			continue 
@@ -232,7 +232,7 @@ FavMenu_CreateFullMenu()
 	local tc_left, tc_right, hwnd, separator, clippath, attr
 
 	FavMenu_currentDir =
-	Favmenu_deltaS	= 0
+	Favmenu_deltaS	= 0 ;;offset of first hotdir menu item 
 	
 	; add TC Current folders 
 	if ( FavMenu_Options_ShowTCFolders )
@@ -246,7 +246,7 @@ FavMenu_CreateFullMenu()
 			Favmenu_command0_1 := tc_left
 			Favmenu_command0_2 := tc_right
 			
-			Favmenu_deltaS := FavMenu_AddTCPanels(tc_left, tc_right)
+			Favmenu_deltaS := FavMenu_AddFMCurrentPathsToMenu(tc_left, tc_right)
 		}
 
 FavMenu_skip:		
@@ -276,7 +276,6 @@ FavMenu_skip:
 						Menu Favmenu_sub1, add,  *[Clipboard] %clippath% , FavMenu_FullMenuHandlerDispatch
 						; add separator 
 						Menu Favmenu_sub1, add
-						Favmenu_deltaS += 2
 					}
 			} 
 			
@@ -287,6 +286,8 @@ FavMenu_skip:
 		Menu, Favmenu_sub1, add, &Copy current path, FavMenu_FullMenuHandlerDispatch
 		
 		Menu, Favmenu_sub1, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
+		
+		Menu, Favmenu_sub1, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
 	}
 
 	; add editor
@@ -318,6 +319,37 @@ FavMenu_Destroy()
 
 	Favmenu_mnuCnt = 0
 	Favmenu_deltaS = 0
+}
+
+FavMenu_AddFMCurrentPathsToMenu( ByRef pLeft, ByRef pRight)
+{
+	cnt := 0
+	b_same := % pLeft = pRight
+
+	; add left panel dir to the menu
+
+	StringGetPos e, pLeft, \, R
+	StringGetPos idx, pLeft, \, R, 1
+	if (idx != -1) and (idx != 2)
+		StringMid pLeft, pLeft, idx+2, e-idx-1, 
+	Menu Favmenu_sub1, add,   &1   %pLeft% , FavMenu_FullMenuHandlerDispatch
+	cnt += 1
+		
+	; If they are not the same, add right panel
+	if (! b_same)
+	{
+		StringGetPos e, pRight, \, R
+		StringGetPos idx, pRight, \, R, 1
+		if (idx != -1) and (idx != 2)
+			StringMid pRight, pRight, idx+2, e-idx-1
+		Menu Favmenu_sub1, add,   &2   %pRight% , FavMenu_FullMenuHandlerDispatch
+		cnt += 1
+	}
+
+	; add separator 
+	Menu Favmenu_sub1, add
+
+	return cnt + 1
 }
 
 ;---------------------------------------------------------------------------
@@ -399,6 +431,19 @@ FavMenu_CommandPromptHere()
 	Run,cmd /k "cd /d `%cd`%",%curDir%
 }
 
+FavMenu_OpenCurrentPathInFM()
+{
+	curDir := FavMenu_DialogGetPath()
+
+	If curDir = 
+	{
+		MsgBox Can not get the folder name.`nYou probably selected virtual folder.
+		return
+	}
+
+	FavMenu_FM_Open(curDir, false)
+}
+
 ;---------------------------------------------------------------------------
 
 FavMenu_FullMenuHandler()
@@ -422,6 +467,9 @@ FavMenu_FullMenuHandler()
 
 	if ( A_ThisMenuItem = "&Copy current path")
 		return FavMenu_CopyCurrentPath()
+		
+	if ( A_ThisMenuItem = "Open current path in File &Manager")
+		return FavMenu_OpenCurrentPathInFM()	
 	
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
@@ -429,6 +477,8 @@ FavMenu_FullMenuHandler()
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
 	{
+		path := %A_ThisMenuItem%
+		
 		if InStr(A_ThisMenuItem, "*[")==1
 		{
 			;;StringGetPos, tmp, A_ThisMenuItem, "]"  //not work??
@@ -436,9 +486,9 @@ FavMenu_FullMenuHandler()
 			OutputDebug,tmp=%tmp%
 			if tmp > 0 
 			{
-					OutputDebug,line 436 here, path=%path%		
-					path := SubStr(A_ThisMenuItem, tmp + 2)
-					OutputDebug,line 436 here, path=%path%
+				OutputDebug,line 436 here, path=%path%		
+				path := SubStr(A_ThisMenuItem, tmp + 2)
+				OutputDebug,line 436 here, path=%path%
 			}
 		} else 
 		{
@@ -454,7 +504,7 @@ FavMenu_FullMenuHandler()
 		;check if dialog is active
 		if (FavMenu_dlgHwnd)
 		{ 
-			tmp := FavMenu_command0_%A_ThisMenuItemPos%
+			tmp := path
 			StringGetPos idx, tmp,\\\
 			if (idx = -1)
 				return FavMenu_DialogSetPath(tmp)

@@ -30,7 +30,7 @@ EDITOR_Init( lastGUI=0, subMenu="", bStandalone=true )
 	Editor_GUI := lastGui + 1
 	Editor_standalone := bStandalone
 
-	Editor_configFile := "Config.ini"
+	Editor_configFile := "favmenu.ini"
 	Editor_title	  := "Menu Editor"
 	Editor_version    := "2.0"
 
