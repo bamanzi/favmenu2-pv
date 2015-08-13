@@ -7,12 +7,13 @@
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
+;
 ; Change Log
-;   2.17 Add support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
-;   2.16 Add support for Msys (console,rxvt,mintty,console2,conemu...)
-;   2.15 Add support for FreeCommander{,XE}
-;   2.14 Add clipboard content as a menu item (if it is a path)
-;   2.13 Add 'Command Prompt Here'
+;   2.17 Added support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
+;   2.16 Added support for Msys (console,rxvt,mintty,console2,conemu...)
+;   2.15 Added support for FreeCommander{,XE}
+;   2.14 Added clipboard content as a menu item (if it is a path)
+;   2.13 Added 'Command Prompt Here'
 ;   2.12 Try to parse current directory from applications' title bar
 ;   2.11 Added target support for gtk open/save dialog
 ;   2.10 Added support for windows 7/vista's explorer
