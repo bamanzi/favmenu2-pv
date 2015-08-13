@@ -12,7 +12,10 @@ FavMenu_FM_Open( p_path, p_tab )
 	global 
 
 	if FavMenu_fmExe contains TotalCmd.exe
-		return FavMenu_FM_OpenTc( p_path, p_tab )   
+		return FavMenu_FM_OpenTc( p_path, p_tab ) 
+		
+	if FavMenu_fmExe contains xplorer2
+		return FavMenu_FM_OpenXplorer2( p_path, p_tab )
 		
 	FavMenu_FM_OpenExplorer( p_path )
 }
@@ -48,6 +51,18 @@ FavMenu_FM_OpenTc(p_path, p_tab)
 		 FavMenu_FM_Run()
 		
 	FavMenu_DialogSetPath_TC(p_path, p_tab)	
+}
+
+;--------------------------------------------------------------------------
+
+FavMenu_FM_OpenXplorer2(p_path, p_tab)
+{	
+	global FavMenu_fmExe, cm_editpath
+
+	if not WinExist("ahk_class ATL:ExplorerFrame")
+		 FavMenu_FM_Run()
+		
+	FavMenu_DialogSetPath_Xplorer2(p_path, p_tab)	
 }
 
 ;--------------------------------------------------------------------------
