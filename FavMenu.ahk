@@ -31,7 +31,7 @@
 ;   2.02 Added target support for GNU Emacs
 ;   2.01 Fixed getting current paths of Total Commander >= 7.5
 ; TODO:
-;   + Add support for FreeCommander/XP
+;   + Add support for XYplorer
 ;   + Add GetPath support for cygwin/msys
 ;   + Add SetPath support for cygwin/msys console
 ;**************************************************************************
@@ -58,7 +58,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 	; for the world
 	Favmenu_title	   := "FavMenu"
 	Favmenu_version    := "2.18"
-	Favmenu_configFile := "Config.ini"
+	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
 	Properties_GUI	:= lastGUI + 1
@@ -296,8 +296,9 @@ FavMenu_skip:
 	{
 		if !separator
 			Menu, Favmenu_sub1, add
-		Menu, Favmenu_sub1, add, &Configure..., FavMenu_FullMenuHandlerDispatch
+		Menu, Favmenu_sub1, add, &Edit favorite folders..., FavMenu_FullMenuHandlerDispatch
 	}
+	Menu, Favmenu_sub1, add, &Options..., FavMenu_FullMenuHandlerDispatch
 }
 
 ;---------------------------------------------------------------------------
@@ -452,8 +453,14 @@ FavMenu_FullMenuHandler()
 	global 
 	local tmp, idx, path
 
+	if ( A_ThisMenuItem = "&Options..." ) && (!setup_visible)
+	{
+		Setup_Create()
+		return
+	}
+		
 	; handle editor selection
-	if (FavMenu_Options_ShowEditor && A_ThisMenuItem = "&Configure...")
+	if (FavMenu_Options_ShowEditor && A_ThisMenuItem = "&Edit favorite folders...")
 	{
 		if FileExist(FavMenu_Options_Editor)
 			Run %FavMenu_Options_Editor%
