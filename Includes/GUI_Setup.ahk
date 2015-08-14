@@ -49,8 +49,9 @@ Setup_Create()
 	Gui, %Setup_GUI%:Add, Text,	x40  y113 w160 h20				,				Append custom command :
 	Gui, %Setup_GUI%:Add, Edit,	x180 y110 w120 h20	vSetup_IAppend		,				dir /w
 	Gui, %Setup_GUI%:Add, CheckBox, x20  y135 w260 h20	vSetup_IExplorer 	,				Windows Explorer
-	Gui, %Setup_GUI%:Add, CheckBox, x20  y152 w260 h30	vSetup_ITC		,				Total Commander
-	Gui, %Setup_GUI%:Add, CheckBox, x20  y200 w260 h30	vSetup_ISystem		,				System   ( redirect to file manager )
+	Gui, %Setup_GUI%:Add, CheckBox, x20  y152 w260 h20	vSetup_ITC		,				Total Commander
+	Gui, %Setup_GUI%:Add, CheckBox, x20  y170 w260 h20	vSetup_IXplorer2	,				Xplorer2
+	Gui, %Setup_GUI%:Add, CheckBox, x20  y200 w260 h20	vSetup_ISystem		,				System   ( redirect to file manager )
 	
 	; --- tab 4
 	Gui, %Setup_GUI%:Tab, 4
@@ -190,6 +191,7 @@ Setup_OnSaveClick()
 	Favmenu_Options_IAppend			:= Setup_IAppend
 	Favmenu_Options_IExplorer		:= Setup_IExplorer
 	Favmenu_Options_ITC			:= Setup_ITC
+	Favmenu_Options_IXplorer2		:= Setup_IXplorer2
 	Favmenu_Options_ISystem			:= Setup_ISystem
 
 	FavMenu_SaveConfigData()
@@ -272,6 +274,7 @@ Setup_Show()
 	GuiControl, ,Setup_IAppend,   %Favmenu_Options_IAppend%			
 	GuiControl, ,Setup_IExplorer, %Favmenu_Options_IExplorer%			
 	GuiControl, ,Setup_ITC,       %Favmenu_Options_ITC%				
+	GuiControl, ,Setup_IXplorer2, %Favmenu_Options_IXplorer2%
 	GuiControl, ,Setup_ISystem,   %Favmenu_Options_ISystem%			
 
 
