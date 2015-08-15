@@ -1,6 +1,16 @@
-;; TODO: implement GetPath
-;;    (maybe: `cygpath -w -a . | clip`   but 'cygpath' is required
+;; NOTE:
+;;   * clipboard content changed
+FavMenu_DialogGetPath_Cygwin()
+{
+	global Favmenu_dlgHwnd
+	Winactivate,ahk_id %Favmenu_dlgHwnd%
 
+	clipboard=
+	Send,(cygpath -w -a . || cmd /c "cd") | clip{Enter}
+	Sleep,500
+	Stringtrimright,retvalue,clipboard,1
+	return retvalue
+}
 
 ;; Supported terminal: cmd.exe & mintty
 ;; TODO: PuTTYCyg support (?)

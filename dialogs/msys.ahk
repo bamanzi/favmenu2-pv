@@ -1,10 +1,21 @@
-;; TODO: implement GetPath
-;;    (maybe: `cygpath -w -a . | clip`   but 'cygpath' is required
+;; NOTE:
+;;   * clipboard content changed
+;;   * 'cygpath' from package 'cygutils' required 
+;;     (http://sourceforge.net/projects/mingw/files/MSYS/Extension/cygutils/)
+FavMenu_DialogGetPath_Msys()
+{
+	global Favmenu_dlgHwnd
+	Winactivate,ahk_id %Favmenu_dlgHwnd%
 
+	clipboard=
+	Send,(cygpath -w -a . || cmd /c "cd") | clip{Enter}
+	Sleep,500
+	Stringtrimright,retvalue,clipboard,1
+	return retvalue
+}
 
-;; Currently cmd.exe and console.exe supported
+;; Currently cmd.exe and console2/consolez supported
 ;; TODO: support other front-ends (such as ConEmu, Mintty, ColorConsole...)
-;; TODO: testing against ConsoleZ
 
 FavMenu_DialogSetPath_Msys(path, bTab = false)
 {
