@@ -26,13 +26,13 @@ FavMenu_DialogSetPath_Msys(path, bTab = false)
 	
 	If klass = Console_2_Main
 	{
-		OutputDebug,put clipboard content: "cd %path1%"
+		OutputDebug,put clipboard content: "pushd %path1%"
 		;;Console2 has problems when SendInput (it would change : to ;)
-		 Clipboard = cd "%path1%"
+		Clipboard = pushd "%path1%"
 		SendInput, +{Insert}{Enter}
 	}
 	else
 	{
-		 SendInput cd "%path%"{ENTER}
+		 SendInput pushd "%path%"{ENTER}
 	}
 }
