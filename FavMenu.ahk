@@ -2,13 +2,14 @@
 ;	TC FavMenu
 ;	
 ;
-;	Created by Miodrag Milic								Jun 2006
+;	Created by Miodrag Milic					Jun 2006
 ;	
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ;
 ; Change Log
+;   2.21 Added support for Double Commander
 ;   2.20 Added GetPath support for msys/cygwin
 ;   2.19 Added support for XYplorer
 ;   2.18 Now we can use xplorer2 as file manager   	
@@ -33,7 +34,7 @@
 ;   2.02 Added target support for GNU Emacs
 ;   2.01 Fixed getting current paths of Total Commander >= 7.5
 ; TODO:
-;   + Add support for Double Commander
+;   + Add support for 7-zip file manager
 ;**************************************************************************
 #NoEnv
 #SingleInstance force
@@ -57,7 +58,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.20"
+	Favmenu_version    := "2.21"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
