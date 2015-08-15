@@ -335,7 +335,7 @@ FavMenu_AddFMCurrentPathsToMenu( ByRef pLeft, ByRef pRight)
 	StringGetPos idx, pLeft, \, R, 1
 	if (idx != -1) and (idx != 2)
 		StringMid pLeft, pLeft, idx+2, e-idx-1, 
-	Menu Favmenu_sub1, add,   &1 [TC] %pLeft% , FavMenu_FullMenuHandlerDispatch
+	Menu Favmenu_sub1, add,  &1 [TC] %pLeft% , FavMenu_FullMenuHandlerDispatch
 	cnt += 1
 		
 	; If they are not the same, add right panel
@@ -345,7 +345,7 @@ FavMenu_AddFMCurrentPathsToMenu( ByRef pLeft, ByRef pRight)
 		StringGetPos idx, pRight, \, R, 1
 		if (idx != -1) and (idx != 2)
 			StringMid pRight, pRight, idx+2, e-idx-1
-		Menu Favmenu_sub1, add,   &2 [TC] %pRight% , FavMenu_FullMenuHandlerDispatch
+		Menu Favmenu_sub1, add,  &2 [TC] %pRight% , FavMenu_FullMenuHandlerDispatch
 		cnt += 1
 	}
 
@@ -486,7 +486,7 @@ FavMenu_FullMenuHandler()
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
 	{
-		path := %A_ThisMenuItem%
+		path = %A_ThisMenuItem%
 		
 		if InStr(A_ThisMenuItem, "*[")==1
 		{

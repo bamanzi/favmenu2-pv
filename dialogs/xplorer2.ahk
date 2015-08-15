@@ -15,6 +15,7 @@ FavMenu_DialogGetPath_Xplorer2()
 
 FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
 {
+	global FavMenu_dlgHwnd
 	WinActivate, ahk_id %FavMenu_dlgHwnd%
 	
 	if (bTab)
