@@ -131,43 +131,48 @@ Favmenu_DialogGetPath_fromTitle()
 	;;for other applications/dialogs, try to parse title
 	Local title
 	WinGetActiveTitle, title
-	OutputDebug,current window not recognized. try to parse directory from title: %title%`n
-	If InStr(title, ":\")>1
+	OutputDebug, try to parse directory from title: %title%`n
+	If title contains :\,\\
 	{	
 		local fstart, fend1, fend2, fend3, curDir
 		fstart := InStr(title, ":\") -1
 		if fstart <=0
-			return
+		{
+			fstart := InStr(title, "\\")
+			if fstart <=0
+				return
+		}
 		
+		fend1 := InStr(title, " - ", fstart + 2) ;; mostly used
+		fend2 := InStr(title, " * ", fstart + 2) ;; SciTE (SciTE4AHK)
+		fend2 := InStr(title, "]",   fstart + 2)
 		
-		fend1 := InStr(title, "]", fstart + 2)
-		fend2 := InStr(title, " ", fstart + 2)
-		fend3 := InStr(title, " - ", fstart + 2)
-		
-		local fname1, fname2, fname3
+		local fname1, fname2, fname3, fname4
 		fname1 := SubStr(title, fstart, fend1 - fstart)
 		fname2 := SubStr(title, fstart, fend2 - fstart)
-		fname3 := SubStr(title, fstart, fend3 - fstart)
+		fname3 := SubStr(title, fstart, fend2 - fstart)
+		fname4 := SubStr(title, fstart)
 		
-		OutputDebug `nDialogGetPath1 fname1=%fname1%`nfname2=%fname2%`nfname3=%fname3%`n
+		OutputDebug `nDialogGetPath_FromTitle: fname1=%fname1%`nfname2=%fname2%`nfname3=%fname3%`n
 		If FileExist(fname1) 
 			curDir := fname1
 		else if FileExist(fname2)
 			curDir := fname2
 		else if FileExist(fname3)
 			curDir := fname3
+		else if FileExist(fname4)
+			curDir := fname4
 		else
 			return
 		
-		
+		;; if it is not a directory
 		If InStr(FileExist(curDir), "D")<=0
 		{
-			fend := 0
-			OutputDebug DialogGetPath2 returns %curDir%`nfend=%fend%`n
-			fend := InStr(curDir, "\", false,-1)
-			curDir := SubStr(curDir, 1, fend)
-			OutputDebug, DialogGetPath returns %curDir%`nfend=%fend%`n
-			return curDir
+			Splitpath,curDir,,dirpart
+			;; add a trailing slash as SplitPath would return 'd:' for file 'd:\test.txt'
+			if (StrLen(dirpart) = 2)
+				dirpart = %dirpart%\
+			return dirpart
 		}
 		else
 			return curDir
