@@ -25,7 +25,8 @@ FavMenu_DialogGetActive(hw=0)
 	local class, title
 
 	WinGet, Favmenu_dlgHwnd, ID, A
-	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
+	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
+	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
 	
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
@@ -126,10 +127,10 @@ FavMenu_DialogGetPath()
 		return Favmenu_DialogGetPath_BFF()
 
 	if FavMenu_dlgType = Msys
-		return FavMenu_DialogSetPath_Msys()
+		return FavMenu_DialogGetPath_Msys()
 
 	if FavMenu_dlgType = Cygwin
-		return FavMenu_DialogSetPath_Cygwin()
+		return FavMenu_DialogGetPath_Cygwin()
 	
 	if Favmenu_dlgType = Console
 		return Favmenu_DialogGetPath_Console()

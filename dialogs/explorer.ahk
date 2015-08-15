@@ -1,6 +1,6 @@
 Favmenu_DialogGetPath_Explorer()
 {
-	global Favmenu_dlgHwnd, Favmenu_dlgInput
+	global Favmenu_dlgHwnd, Favmenu_dlgInput, FavMenu_msctls_progress32
 	tv := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "BaseBar", 0) 
 	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0) 
 	tv := Favmenu_FindWindowExID(tv, "SysTreeView32", 100)
