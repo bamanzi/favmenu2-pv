@@ -1,5 +1,3 @@
-;; TODO: currently we use a temp file to store the current path
-;;     maybe `cd | clip` is a better way?
 Favmenu_DialogGetPath_Console()
 {
 	WinGetActiveTitle,Title
@@ -11,17 +9,24 @@ Favmenu_DialogGetPath_Console()
 		OutputDebug,DialogGetPath_Console returns %curDir%
 		return curDir
 	}
-	SendInput {HOME}echo {END}>c:\favmenu_contmp&echo `%cd`%>>c:\favmenu_contmp{ENTER}
-	Sleep 100
+	
+	; SendInput {HOME}echo {END}>c:\favmenu_contmp&echo `%cd`%>>c:\favmenu_contmp{ENTER}
+	; Sleep 100
 
-	FileReadLine prev, c:\favmenu_contmp, 1
-	FileReadLine curDir, c:\favmenu_contmp, 2
-	FileDelete c:\favmenu_contmp
-	
-	if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
-		SendInput %prev%
-	
-	return curDir
+	; FileReadLine prev, c:\favmenu_contmp, 1
+	; FileReadLine curDir, c:\favmenu_contmp, 2
+	; FileDelete c:\favmenu_contmp
+	; 
+	; if (prev != "ECHO is on.") && (prev != "ECHO 处于打开状态。")
+	; 	SendInput %prev%
+
+	global Favmenu_dlgHwnd
+	Winactivate,ahk_id %Favmenu_dlgHwnd%
+	clipboard=
+	Send,cd | clip{Enter}
+	Sleep,300
+	Stringtrimright,retvalue,clipboard,1
+	return retvalue
 }
 
 ;; implementation: issue command 'cd /d "%path"' into the console
@@ -32,11 +37,15 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 
 	WinGetActiveTitle,Title
 	WinGetClass,class
+
+	Winactivate,ahk_id %Favmenu_dlgHwnd%
 	If class = "Console_2_Main")
 	{
-	    ;; Console2 has problems when SendInput (it would change : to ;)
-	    Clipboard = cd /d "%path%"
-	    SendInput, +{Insert}{Enter}
+		;;TODO: support bTab flag (PanelTab plugin?)
+
+		;; Console2 has problems when SendInput (it would change : to ;)
+		Clipboard = cd /d "%path%"
+		SendInput, +{Insert}{Enter}
 	}
 	else if InStr(Title, "- Far ")>1
 	{
