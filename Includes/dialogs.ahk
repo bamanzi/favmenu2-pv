@@ -9,7 +9,7 @@
 #include dialogs\free_commander.ahk
 #include dialogs\xplorer2.ahk
 #include dialogs\xyplorer.ahk
-;; Double Commander ?
+#include dialogs\double_commander.ahk
 
 #include dialogs\gtk.ahk
 #include dialogs\emacs.ahk
@@ -92,8 +92,14 @@ FavMenu_DialogGetActive(hw=0)
 	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
 	If (class = "ThunderRT6FormDC") and ((title contains " - XYplorerFree ") or (title contains " - XYplorer "))
 	{
-	    FavMenu_dlgType := "XYplorer"
-	    return 1
+		FavMenu_dlgType := "XYplorer"
+		return 1
+	}
+
+	If (class = "Window") and ("Double Commander 0"==substr(title, 1, StrLen("Double Commander ")))
+	{
+		FavMenu_dlgType := "DoubleCommander"
+		return 1
 	}
 
 	Favmenu_dlgType := "System"
@@ -140,6 +146,9 @@ FavMenu_DialogGetPath()
 	if Favmenu_dlgType = XYplorer
 		return FavMenu_DialogGetPath_XYplorer()
 
+	if Favmenu_dlgType = DoubleCommander
+		return FavMenu_DialogGetPath_DoubleCommander()
+
 	return Favmenu_DialogGetPath_fromTitle()
 }
 
@@ -183,6 +192,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 
 	if FavMenu_dlgType = XYplorer
 		FavMenu_DialogSetPath_XYplorer(path, bTab)
+
+	if FavMenu_dlgType = DoubleCommander
+		FavMenu_DialogSetPath_DoubleCommander(path, bTab)
 }
 
 ;--------------------------------------------------------------------------
