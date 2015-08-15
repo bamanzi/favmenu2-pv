@@ -9,6 +9,7 @@
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ;
 ; Change Log
+;   2.20 Added GetPath support for msys/cygwin
 ;   2.19 Added support for XYplorer
 ;   2.18 Now we can use xplorer2 as file manager   	
 ;   2.17 Added support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
@@ -32,8 +33,7 @@
 ;   2.02 Added target support for GNU Emacs
 ;   2.01 Fixed getting current paths of Total Commander >= 7.5
 ; TODO:
-;   + Add GetPath support for cygwin/msys
-;   + Add SetPath support for cygwin/msys console
+;   + Add support for Double Commander
 ;**************************************************************************
 #NoEnv
 #SingleInstance force
@@ -57,7 +57,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.18"
+	Favmenu_version    := "2.20"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs

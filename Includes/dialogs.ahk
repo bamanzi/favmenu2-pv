@@ -39,7 +39,7 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}
 
-	if (class = "ConsoleWindowClass") or (class = "VirtualConsoleClass")
+	if (class = "ConsoleWindowClass") or (class = "VirtualConsoleClass") or (class = "Console_2_main")
 	{
 		FavMenu_dlgType	 := "Console"
 		return 1
@@ -118,15 +118,21 @@ FavMenu_DialogGetPath()
 	
 	if Favmenu_dlgType = BFF
 		return Favmenu_DialogGetPath_BFF()
-	
-	If FavMenu_dlgType = FreeCommander
-		return FavMenu_DialogGetPath_FreeCommander()
+
+	if FavMenu_dlgType = Msys
+		return FavMenu_DialogSetPath_Msys()
+
+	if FavMenu_dlgType = Cygwin
+		return FavMenu_DialogSetPath_Cygwin()
 	
 	if Favmenu_dlgType = Console
 		return Favmenu_DialogGetPath_Console()
 	
 	if Favmenu_dlgType = Emacs
 		return Favmenu_DialogGetPath_Emacs()
+
+	If FavMenu_dlgType = FreeCommander
+		return FavMenu_DialogGetPath_FreeCommander()
 	
 	if Favmenu_dlgType = Xplorer2
 		return FavMenu_DialogGetPath_Xplorer2()
@@ -136,6 +142,50 @@ FavMenu_DialogGetPath()
 
 	return Favmenu_DialogGetPath_fromTitle()
 }
+
+FavMenu_DialogSetPath(path, bTab = false)
+{
+	global FavMenu_dlgType
+	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
+
+	if FavMenu_dlgType = TC
+		FavMenu_DialogSetPath_TC(path, bTab)
+
+	if FavMenu_dlgType contains OpenSave,Office03
+		FavMenu_DialogSetPath_OS(path)	
+	
+	if FavMenu_dlgType = BFF
+		FavMenu_DialogSetPath_BFF(path)
+
+	if FavMenu_dlgType = Explorer
+		FavMenu_DialogSetPath_Explorer(path, bTab)
+	
+	if FavMenu_dlgType = Msys
+		FavMenu_DialogSetPath_Msys(path, bTab)
+
+	if FavMenu_dlgType = Cygwin
+		FavMenu_DialogSetPath_Cygwin(path)
+	
+	if FavMenu_dlgType = Console
+		FavMenu_DialogSetPath_Console(path, bTab)
+
+	if FavMenu_dlgType = Emacs
+		FavMenu_DialogSetPath_Emacs(path)
+	
+	if FavMenu_dlgType = GTK
+		FavMenu_DialogSetPath_GTK(path)
+
+	If FavMenu_dlgType = FreeCommander
+		FavMenu_DialogSetPath_FreeCommander(path, bTab)
+
+	if FavMenu_dlgType = Xplorer2
+		FavMenu_DialogSetPath_Xplorer2(path, bTab)
+
+	if FavMenu_dlgType = XYplorer
+		FavMenu_DialogSetPath_XYplorer(path, bTab)
+}
+
+;--------------------------------------------------------------------------
 
 Favmenu_DialogGetPath_fromTitle()
 {
@@ -191,49 +241,6 @@ Favmenu_DialogGetPath_fromTitle()
 }
 
 
-FavMenu_DialogSetPath(path, bTab = false)
-{
-	global FavMenu_dlgType
-	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
-
-	if FavMenu_dlgType = TC
-		FavMenu_DialogSetPath_TC(path, bTab)
-
-	if FavMenu_dlgType contains OpenSave,Office03
-		FavMenu_DialogSetPath_OS(path)	
-	
-	if FavMenu_dlgType = BFF
-		FavMenu_DialogSetPath_BFF(path)
-	
-	if FavMenu_dlgType = Msys
-		FavMenu_DialogSetPath_Msys(path, bTab)
-	
-	if FavMenu_dlgType = Console
-		FavMenu_DialogSetPath_Console(path, bTab)
-
-	if FavMenu_dlgType = Emacs
-		FavMenu_DialogSetPath_Emacs(path)
-	
-	if FavMenu_dlgType = Explorer
-		FavMenu_DialogSetPath_Explorer(path, bTab)
-	
-	If FavMenu_dlgType = FreeCommander
-		FavMenu_DialogSetPath_FreeCommander(path, bTab)
-	
-	if FavMenu_dlgType = Cygwin
-		FavMenu_DialogSetPath_Cygwin(path)
-	
-	if FavMenu_dlgType = GTK
-		FavMenu_DialogSetPath_GTK(path)
-
-	if FavMenu_dlgType = Xplorer2
-		FavMenu_DialogSetPath_Xplorer2(path, bTab)
-
-	if FavMenu_dlgType = XYplorer
-		FavMenu_DialogSetPath_XYplorer(path, bTab)
-}
-
-;--------------------------------------------------------------------------
 
 FavMenu_GetSFLabel( sFolder )
 {
