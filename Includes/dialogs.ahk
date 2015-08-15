@@ -8,8 +8,8 @@
 #include dialogs\total_commander.ahk
 #include dialogs\free_commander.ahk
 #include dialogs\xplorer2.ahk
+#include dialogs\xyplorer.ahk
 ;; Double Commander ?
-;; XYplorer
 
 #include dialogs\gtk.ahk
 #include dialogs\emacs.ahk
@@ -88,6 +88,14 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}	
 
+	;; FIXME: add support for non-free version
+	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
+	If (class = "ThunderRT6FormDC") and ((title contains " - XYplorerFree ") or (title contains " - XYplorer "))
+	{
+	    FavMenu_dlgType := "XYplorer"
+	    return 1
+	}
+
 	Favmenu_dlgType := "System"
 	Favmenu_dlgHwnd := 0
 	return 0
@@ -122,6 +130,9 @@ FavMenu_DialogGetPath()
 	
 	if Favmenu_dlgType = Xplorer2
 		return FavMenu_DialogGetPath_Xplorer2()
+
+	if Favmenu_dlgType = XYplorer
+		return FavMenu_DialogGetPath_XYplorer()
 
 	return Favmenu_DialogGetPath_fromTitle()
 }
@@ -217,6 +228,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 
 	if FavMenu_dlgType = Xplorer2
 		FavMenu_DialogSetPath_Xplorer2(path, bTab)
+
+	if FavMenu_dlgType = XYplorer
+		FavMenu_DialogSetPath_XYplorer(path, bTab)
 }
 
 ;--------------------------------------------------------------------------

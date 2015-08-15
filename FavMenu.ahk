@@ -9,6 +9,7 @@
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ;
 ; Change Log
+;   2.19 Added support for XYplorer
 ;   2.18 Now we can use xplorer2 as file manager   	
 ;   2.17 Added support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
 ;   2.16 Added support for Msys (console,rxvt,mintty,console2,conemu...)
@@ -31,7 +32,6 @@
 ;   2.02 Added target support for GNU Emacs
 ;   2.01 Fixed getting current paths of Total Commander >= 7.5
 ; TODO:
-;   + Add support for XYplorer
 ;   + Add GetPath support for cygwin/msys
 ;   + Add SetPath support for cygwin/msys console
 ;**************************************************************************
