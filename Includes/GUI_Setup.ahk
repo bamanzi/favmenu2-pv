@@ -29,7 +29,7 @@ Setup_Create()
 
 	; --- tab 2
 	Gui, %Setup_GUI%:Tab, 2
-	Gui, %Setup_GUI%:Add, GroupBox,	x16  y30  w270 h130,							[Content] 
+	Gui, %Setup_GUI%:Add, GroupBox,	x16  y30  w270 h130,							[Content]
 	Gui, %Setup_GUI%:Add, Checkbox, x26  y50  w250 h20  vSetup_cShowEditor,					Show editor at the bottom of the menu   
 	Gui, %Setup_GUI%:Add, Edit,	x45  y72  w220 h20  vSetup_eEditor,		     
 	Gui, %Setup_GUI%:Add, Checkbox, x26  y100 w250 h20  vSetup_cShowTCFolders,				Show current TC folders at the top of the menu
