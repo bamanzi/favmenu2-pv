@@ -832,7 +832,7 @@ Editor_OnKeyUp(wparam, lparam)
 		StringLeft c, txt, 1
 		if strLen(txt) > 1
 			if c = -
-				 c := " " . txt 
+				 c := "*" . txt 
 			else c := txt
 
 		TV_Modify(TV_GetSelection(), "Bold", c)
