@@ -1,7 +1,7 @@
 #IfWinActive ahk_class TTOTAL_CMD
 
-Lbutton::		Favmenu_OnTCClick()
-LButton up::	Click up
++Lbutton::	Favmenu_OnTCClick()
++LButton up::	Click up
 
 #IfWinActive
 
