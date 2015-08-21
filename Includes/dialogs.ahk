@@ -27,6 +27,7 @@ FavMenu_DialogGetActive(hw=0)
 	WinGet, Favmenu_dlgHwnd, ID, A
 	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
 	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
+	OutputDebug,FaveMenu_DialogGetActive: class=|%class%|, title=|%title%|
 	
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
@@ -75,6 +76,23 @@ FavMenu_DialogGetActive(hw=0)
 	{
 		FavMenu_dlgType := "Cygwin"
 		return 1
+	}
+
+	;;MobaXterm (FIXME: besides Cygwin session, current session could also be CMD session or SSH session)
+	if  (class = "TMobaXtermForm") or (class = "TFormDetachedTab")
+	{
+		;;FIXME: this is 100% accurate, but in most cases it works, as by default Cygwin would update path to title
+		;; title example  '2. /home/mobaxterm'	'6. /drives/d
+		if title contains MobaXterm,. /
+		{
+			FavMenu_dlgType := "Cygwin"
+			return 1
+		} else 
+		;; it may be SSH session, but we don't need FavMenu2 on SSH session
+		{
+			FavMenu_dlgType := "Console"
+			return 1
+		}
 	}
 	
 	If (class = "gdkWindowToplevel")
