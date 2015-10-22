@@ -10,10 +10,12 @@
 #include dialogs\xplorer2.ahk
 #include dialogs\xyplorer.ahk
 #include dialogs\double_commander.ahk
+#include dialogs\winscp.ahk
 
 #include dialogs\gtk.ahk
 #include dialogs\emacs.ahk
-;; 7-Zip FM
+;;TODO: 7-Zip FM
+
 
 ; Explorer is seen as dialog if there is another app set as a file manager
 ; or as a File Manager if not. 
@@ -121,6 +123,12 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}
 
+	If (class = "TScpCommanderForm")
+	{
+		FavMenu_dlgType := "WinSCP"
+		return 1
+	}
+
 	Favmenu_dlgType := "System"
 	Favmenu_dlgHwnd := 0
 	return 0
@@ -168,6 +176,9 @@ FavMenu_DialogGetPath()
 	if Favmenu_dlgType = DoubleCommander
 		return FavMenu_DialogGetPath_DoubleCommander()
 
+	if Favmenu_dlgType = WinSCP
+		return FavMenu_DialogGetPath_WinSCP()
+
 	return Favmenu_DialogGetPath_fromTitle()
 }
 
@@ -214,6 +225,9 @@ FavMenu_DialogSetPath(path, bTab = false)
 
 	if FavMenu_dlgType = DoubleCommander
 		FavMenu_DialogSetPath_DoubleCommander(path, bTab)
+
+	if FavMenu_dlgType = WinSCP
+		FavMenu_DialogSetPath_WinSCP(path)
 }
 
 ;--------------------------------------------------------------------------
