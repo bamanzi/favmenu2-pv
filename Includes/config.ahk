@@ -157,6 +157,7 @@ FavMenu_GetConfigData()
 	IniRead Favmenu_Options_IFAR,			%Favmenu_configFile%, TcFavMenu, IFAR,			1
 	IniRead Favmenu_Options_IFreeCommander,		%Favmenu_configFile%, TcFavMenu, IFreeCommander,	1
 	IniRead Favmenu_Options_IDoubleCommander,	%Favmenu_configFile%, TcFavMenu, IDoubleCommander,	1
+	IniRead Favmenu_Options_IWinSCP,		%Favmenu_configFile%, TcFavMenu, IWinSCP,		1
 	IniRead Favmenu_Options_IXplorer2,		%Favmenu_configFile%, TcFavMenu, IXplorer2,		1
  	IniRead Favmenu_Options_IXYplorer,		%Favmenu_configFile%, TcFavMenu, IXYplorer,		1
 

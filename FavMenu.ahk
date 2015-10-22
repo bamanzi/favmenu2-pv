@@ -99,7 +99,7 @@ FavMenu_Create()
 	t :=  FavMenu_Options_I%FavMenu_dlgType%
 	if FavMenu_dlgType = Office03
 		t := FavMenu_Options_IOpenSave
-	if !t
+	if (0 == t)
 		return
 	
 	;ok, show the menu
