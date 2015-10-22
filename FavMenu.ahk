@@ -9,6 +9,7 @@
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ;
 ; Change Log
+;   2.23 Added support for WinSCP
 ;   2.22 Added support for MobaXterm (recognized as cygwin or console)
 ;   2.21 Added support for Double Commander
 ;   2.20 Added GetPath support for msys/cygwin
@@ -59,7 +60,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.22"
+	Favmenu_version    := "2.23"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
