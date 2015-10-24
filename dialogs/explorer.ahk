@@ -44,7 +44,7 @@ Favmenu_DialogGetAllPaths_Explorer()
 			arr.Insert(curDir)
 	}
 
-	return arr	  
+	return arr
 }
 
 ;;--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ Favmenu_DialogGetPath_Explorer_bg(hwnd_explorer)
 	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0) 
 	tv := Favmenu_FindWindowExID(tv, "SysTreeView32", 100)
 
-	TV_Initialise( FavMenu_dlgHWND, tv )
+	TV_Initialise(hwnd_explorer, tv)
 	returnedPath := TV_GetPath()
 	if returnedPath <> 
 		return returnedPath 

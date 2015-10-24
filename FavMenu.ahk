@@ -1,9 +1,9 @@
 ;**************************************************************************
 ;	TC FavMenu
-;	
+;
 ;
 ;	Created by Miodrag Milic					Jun 2006
-;	
+;
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
 ;
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
@@ -16,7 +16,7 @@
 ;   2.21 Added support for Double Commander
 ;   2.20 Added GetPath support for msys/cygwin
 ;   2.19 Added support for XYplorer
-;   2.18 Now we can use xplorer2 as file manager   	
+;   2.18 Now we can use xplorer2 as file manager
 ;   2.17 Added support for xplorer2 (only tested on xplorer-lite 1.7 & 2.1)
 ;   2.16 Added support for Msys (console,rxvt,mintty,console2,conemu...)
 ;   2.15 Added support for FreeCommander{,XE}
@@ -74,7 +74,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 	;initialise
 	if ( ! FavMenu_GetConfigData() )
 		Setup_Create()
-	else	
+	else
 		FavMenu_CheckConfigData()
 
 
@@ -128,7 +128,7 @@ FavMenu_OnOffHotkey:
 	else {
 		if FavMenu_trayMenu = Tray
 			Menu, %FavMenu_trayMenu%, icon, res\enable.ico
-	}			
+	}
 return
 
 ;--------------------------------------------------------------------------
@@ -161,7 +161,7 @@ FavMenu_CreateMenu()
 {	
 	global
 	local cmd_cnt, submenu_id, sub_num,   mnu, cmd, ico,   delta, name, sufix
-		
+
 
 	Favmenu_subCnt	+= 1
 
@@ -176,7 +176,7 @@ FavMenu_CreateMenu()
 	Menu, %submenu_id%,UseErrorLevel
 
 	Loop 
-	{	
+	{
 		;read next menu item 
 		Favmenu_mnuCnt += 1
 		IniRead, mnu, %FavMenu_fmIni%, DirMenu, menu%Favmenu_mnuCnt%, & 
@@ -206,7 +206,7 @@ FavMenu_CreateMenu()
 
 			StringMid, name, mnu, 2, 100 
 			Menu, %submenu_id%, add, %name%, % ":" . FavMenu_CreateMenu()
-			cmd_cnt += 1		
+			cmd_cnt += 1
 
 			if FileExist(ico)
 				FavMenu_AssignBitmap( submenu_id, cmd_cnt + delta, ico ) 
@@ -218,7 +218,7 @@ FavMenu_CreateMenu()
 		Menu, %submenu_id%, add, %mnu%, FavMenu_MenuHandlerDispatch
 
 		cmd_cnt += 1
-	    FavMenu_command%sub_num%_%cmd_cnt% := cmd
+		FavMenu_command%sub_num%_%cmd_cnt% := cmd
 		FavMenu_menuOrder%sub_num%_%cmd_cnt% := Favmenu_mnuCnt
 
 		if FileExist(ico)
@@ -246,7 +246,7 @@ FavMenu_CreateFullMenu()
 		Favmenu_deltaS := FavMenu_AddAllFMCurrentPathsToMenu()
 	}
 
-FavMenu_skip:		
+FavMenu_skip:
 	
 	; add menu from the ini file
 	if (! FavMenu_CreateMenu() )
@@ -321,60 +321,60 @@ FavMenu_Destroy()
 
 FavMenu_AddAllFMCurrentPathsToMenu()
 {
-    local cnt  = 0 
-    local array := Object()
+	local cnt  = 0 
+	local array := Object()
 
-    ifWinExist ahk_class TTOTAL_CMD
-    {
-        hwnd := WinExist()
-        if not (hwnd = WinActive())
-        {
-            arr := FavMenu_DialogGetAllPaths_TC()
-            cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
-        }
-    }
+	ifWinExist ahk_class TTOTAL_CMD
+	{
+		hwnd := WinExist()
+		if not (hwnd = WinActive())
+		{
+			arr := FavMenu_DialogGetAllPaths_TC()
+			cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
+		}
+	}
 
-    ifWinExist ahk_class CabinetWClass
-    {
-        hwnd := WinExist()
-        if not (hwnd = WinActive())
-        {
-            arr := FavMenu_DialogGetAllPaths_Explorer()
-            cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
-        }
-    }
+	ifWinExist ahk_class CabinetWClass
+	{
+		hwnd := WinExist()
+		if not (hwnd = WinActive())
+		{
+			arr := FavMenu_DialogGetAllPaths_Explorer()
+			cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
+		}
+	}
 
-    ifWinExist ahk_class ATL:ExplorerFrame
-    {
-        hwnd := WinExist()
-        if not (hwnd = WinActive())
-        {
-            arr := FavMenu_DialogGetAllPaths_Xlorer2()
-            cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
-        }
-    }
+	ifWinExist ahk_class ATL:ExplorerFrame
+	{
+		hwnd := WinExist()
+		if not (hwnd = WinActive())
+		{
+			arr := FavMenu_DialogGetAllPaths_Xplorer2()
+			cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
+		}
+	}
 
-    return cnt  
+	return cnt
 }
 
 FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 {
-    local
-    cnt := 0
-    for index, curPath in paths
-    {
-        ; add left panel dir to the menu
+	local
+	cnt := 0
+	for index, curPath in paths
+	{
+	    ;; use only the directory name as menu label
+		;StringGetPos e, curPath, \, R
+		;StringGetPos idx, curPath, \, R, 1
+		;if (idx != -1) and (idx != 2)
+		;	StringMid curPath, curPath, idx+2, e-idx-1,
 
-        StringGetPos e, curPath, \, R
-        StringGetPos idx, curPath, \, R, 1
-        if (idx != -1) and (idx != 2)
-        StringMid curPath, curPath, idx+2, e-idx-1, 
-        Menu Favmenu_sub1, add,  &1 [%app_prefix%] %curPath% , FavMenu_FullMenuHandlerDispatch
-        cnt += 1
-    }
-    ; add separator 
-    Menu Favmenu_sub1, add
-    cnt += 1
+		Menu Favmenu_sub1, add,	 *[%app_prefix%] %curPath% , FavMenu_FullMenuHandlerDispatch
+		cnt += 1
+	}
+	; add separator 
+	Menu Favmenu_sub1, add
+	cnt += 1
 
 	return cnt
 }
@@ -503,7 +503,7 @@ FavMenu_FullMenuHandler()
 		return FavMenu_CopyCurrentPath()
 		
 	if ( A_ThisMenuItem = "Open current path in File &Manager")
-		return FavMenu_OpenCurrentPathInFM()	
+		return FavMenu_OpenCurrentPathInFM()
 	
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
@@ -520,7 +520,7 @@ FavMenu_FullMenuHandler()
 			OutputDebug,tmp=%tmp%
 			if tmp > 0 
 			{
-				OutputDebug,line 436 here, path=%path%		
+				OutputDebug,line 436 here, path=%path%
 				path := SubStr(A_ThisMenuItem, tmp + 2)
 				OutputDebug,line 436 here, path=%path%
 			}
@@ -639,7 +639,7 @@ FavMenu_MenuHandler()
 
 ;-- No known windows active - redirect to file manager (i.e. System call)
 FavMenu_System:
-	FavMenu_FM_Open( keys, bOpenTab )   
+	FavMenu_FM_Open( keys, bOpenTab )
 }
 
 FavMenu_MenuHandlerDispatch:
