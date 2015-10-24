@@ -3,7 +3,7 @@
 
 FavMenu_DialogGetPath_Xplorer2()
 {
-    global FavMenu_dlgHwnd
+	global FavMenu_dlgHwnd
 	return FavMenu_DialogGetPath_Xplorer2_bg(FavMenu_dlgHwnd)
 }
 
@@ -28,12 +28,12 @@ FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
 
 FavMenu_DialogGetAllPaths_Xplorer2()
 {
-    local arr := Object()
+	local arr := Object()
 
-    WinGet,id,List,ahk_class ATL:ExplorerFrame
+	WinGet,id,List,ahk_class ATL:ExplorerFrame
 
-    Loop,%id%
-    {
+	Loop,%id%
+	{
 		this_id := id%A_Index%
 		WinGetTitle, this_title, ahk_id %this_id%
 
@@ -41,25 +41,24 @@ FavMenu_DialogGetAllPaths_Xplorer2()
 		OutputDebug,enum_all_paths: xplorer window=%this_id%`, title=%this_title%`, path=%curDir%    
 		if curDir
 			arr.Insert(curDir)
-    }
+	}
 
-    return arr
+	return arr
 }
 
 ;;--------------------------------------------------------------------------
 ;; internal functions
 ;;--------------------------------------------------------------------------
 
-FavMenu_DialogGetPath_Xplorer2_bg(FavMenu_dlgHwnd)
+FavMenu_DialogGetPath_Xplorer2_bg(hwnd_x2)
 {
-	rebar := Favmenu_FindWindowExId(FavMenu_dlgHwnd,  "ReBarWindow32", 0) 
+	rebar := Favmenu_FindWindowExId(hwnd_x2,  "ReBarWindow32", 0) 
 	toolwin := Favmenu_FindWindowExID(rebar, "ToolbarWindow32", 60160) 
 	combo := Favmenu_FindWindowExID(toolwin, "ComboBox", 0)
-		
+	
 	if (combo)
 	{
-		ControlGetText, result, ComboBox1, ahk_id %FavMenu_dlgHwnd%
+		ControlGetText, result, ComboBox1, ahk_id %hwnd_x2%
 		return result
 	}
-	
 }

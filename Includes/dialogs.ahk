@@ -51,7 +51,7 @@ FavMenu_DialogGetActive(hw=0)
 
 	if (class = "ExploreWClass") or (class = "CabinetWClass")
 	{
-		FavMenu_GetExplorerInput()
+		FavMenu_GetExplorerInput(FavMenu_dlgHwnd, foo, bar)
 		FavMenu_dlgType := "Explorer"
 		return 1
 	}
