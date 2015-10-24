@@ -9,6 +9,8 @@
 ; Hacked by Ba Manzi <bamanzi@gmail.com>
 ;
 ; Change Log
+;   2.24 Show all file managers' current paths in menu (currently only
+;        Total Commander, Explorer, Xplorer supported)
 ;   2.23 Added support for WinSCP
 ;   2.22 Added support for MobaXterm (recognized as cygwin or console)
 ;   2.21 Added support for Double Commander
@@ -240,18 +242,9 @@ FavMenu_CreateFullMenu()
 	
 	; add TC Current folders 
 	if ( FavMenu_Options_ShowTCFolders )
-		ifWinExist ahk_class TTOTAL_CMD
-		{
-			hwnd := WinExist()
-			if (hwnd = WinActive())
-				goto FavMenu_skip
-			
-			FavMenu_currentDir := FavMenu_GetTCPanels(tc_left, tc_right)
-			Favmenu_command0_1 := tc_left
-			Favmenu_command0_2 := tc_right
-			
-			Favmenu_deltaS := FavMenu_AddFMCurrentPathsToMenu(tc_left, tc_right)
-		}
+	{
+		Favmenu_deltaS := FavMenu_AddAllFMCurrentPathsToMenu()
+	}
 
 FavMenu_skip:		
 	
@@ -326,36 +319,66 @@ FavMenu_Destroy()
 	Favmenu_deltaS = 0
 }
 
-FavMenu_AddFMCurrentPathsToMenu( ByRef pLeft, ByRef pRight)
+FavMenu_AddAllFMCurrentPathsToMenu()
 {
-	cnt := 0
-	b_same := % pLeft = pRight
+    local cnt  = 0 
+    local array := Object()
 
-	; add left panel dir to the menu
+    ifWinExist ahk_class TTOTAL_CMD
+    {
+        hwnd := WinExist()
+        if not (hwnd = WinActive())
+        {
+            arr := FavMenu_DialogGetAllPaths_TC()
+            cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
+        }
+    }
 
-	StringGetPos e, pLeft, \, R
-	StringGetPos idx, pLeft, \, R, 1
-	if (idx != -1) and (idx != 2)
-		StringMid pLeft, pLeft, idx+2, e-idx-1, 
-	Menu Favmenu_sub1, add,  &1 [TC] %pLeft% , FavMenu_FullMenuHandlerDispatch
-	cnt += 1
-		
-	; If they are not the same, add right panel
-	if (! b_same)
-	{
-		StringGetPos e, pRight, \, R
-		StringGetPos idx, pRight, \, R, 1
-		if (idx != -1) and (idx != 2)
-			StringMid pRight, pRight, idx+2, e-idx-1
-		Menu Favmenu_sub1, add,  &2 [TC] %pRight% , FavMenu_FullMenuHandlerDispatch
-		cnt += 1
-	}
+    ifWinExist ahk_class CabinetWClass
+    {
+        hwnd := WinExist()
+        if not (hwnd = WinActive())
+        {
+            arr := FavMenu_DialogGetAllPaths_Explorer()
+            cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
+        }
+    }
 
-	; add separator 
-	Menu Favmenu_sub1, add
+    ifWinExist ahk_class ATL:ExplorerFrame
+    {
+        hwnd := WinExist()
+        if not (hwnd = WinActive())
+        {
+            arr := FavMenu_DialogGetAllPaths_Xlorer2()
+            cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
+        }
+    }
 
-	return cnt + 1
+    return cnt  
 }
+
+FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
+{
+    local
+    cnt := 0
+    for index, curPath in paths
+    {
+        ; add left panel dir to the menu
+
+        StringGetPos e, curPath, \, R
+        StringGetPos idx, curPath, \, R, 1
+        if (idx != -1) and (idx != 2)
+        StringMid curPath, curPath, idx+2, e-idx-1, 
+        Menu Favmenu_sub1, add,  &1 [%app_prefix%] %curPath% , FavMenu_FullMenuHandlerDispatch
+        cnt += 1
+    }
+    ; add separator 
+    Menu Favmenu_sub1, add
+    cnt += 1
+
+	return cnt
+}
+
 
 ;---------------------------------------------------------------------------
 FavMenu_AddCurrentDir()

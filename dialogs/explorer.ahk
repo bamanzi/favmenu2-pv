@@ -1,7 +1,61 @@
+;; Windows Explorer
+;; ahk_class CabinetWClass
+
 Favmenu_DialogGetPath_Explorer()
 {
-	global Favmenu_dlgHwnd, Favmenu_dlgInput, FavMenu_msctls_progress32
-	tv := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "BaseBar", 0) 
+	global FavMenu_dlgHwnd
+	return Favmenu_DialogGetPath_Explorer_bg(FavMenu_dlgHwnd)
+}
+
+FavMenu_DialogSetPath_Explorer(path, bTab = false)
+{
+	global
+	
+	If FavMenu_msctls_progress32
+	{
+		FavMenu_DialogSetPath_OS(path)
+		Return
+	}
+	
+	if (Favmenu_dlgInput = 0)
+	{
+		MsgBox To use FavMenu with Windows Explorer you must enable Address Bar.`nEnable it in View->Toolbars.
+		return 
+	}
+
+	ControlSetText, ,%path%, ahk_id %Favmenu_dlgInput%
+	ControlSend, ,{ENTER},ahk_id %Favmenu_dlgInput%
+}
+
+Favmenu_DialogGetAllPaths_Explorer()
+{
+	local arr := Object()
+
+	WinGet,id,List,ahk_class CabinetWClass
+
+	Loop,%id%
+	{
+		this_id := id%A_Index%
+		curDir := FavMenu_DialogGetPath_Explorer_bg(this_id)
+
+		WinGetTitle, this_title, ahk_id %this_id%
+		OutputDebug enum_all_paths: explorer window=%this_id%`, path=%curDir%`, title=%this_title%`n,*		
+		if curDir
+			arr.Insert(curDir)
+	}
+
+	return arr	  
+}
+
+;;--------------------------------------------------------------------------
+;; internal functions
+;;--------------------------------------------------------------------------
+
+
+Favmenu_DialogGetPath_Explorer_bg(hwnd_explorer)
+{
+	;;global Favmenu_dlgInput, FavMenu_msctls_progress32
+	tv := Favmenu_FindWindowExId(hwnd_explorer,  "BaseBar", 0) 
 	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0) 
 	tv := Favmenu_FindWindowExID(tv, "SysTreeView32", 100)
 
@@ -11,7 +65,7 @@ Favmenu_DialogGetPath_Explorer()
 		return returnedPath 
    
 	;Nothing was returned. Perhaps Vista    
-	FavMenu_GetExplorerInput()
+	FavMenu_GetExplorerInput(hwnd_explorer, Favmenu_dlgInput, FavMenu_msctls_progress32)
 
 	If FavMenu_msctls_progress32
 	{
@@ -38,38 +92,19 @@ Favmenu_DialogGetPath_Explorer()
 	return  %EditCtrlPath%
 }
 
-FavMenu_DialogSetPath_Explorer(path, bTab = false)
+
+
+FavMenu_GetExplorerInput(hwnd_explorer, byref Favmenu_dlgInput, byref FavMenu_msctls_progress32)
 {
-	global
-	
-	If FavMenu_msctls_progress32
-	{
-		FavMenu_DialogSetPath_OS(path)
-		Return
-	}
-	
-	if (Favmenu_dlgInput = 0)
-	{
-		MsgBox To use FavMenu with Windows Explorer you must enable Address Bar.`nEnable it in View->Toolbars.
-		return 
-	}
-
-	ControlSetText, ,%path%, ahk_id %Favmenu_dlgInput%
-	ControlSend, ,{ENTER},ahk_id %Favmenu_dlgInput%
-}
-
-
-FavMenu_GetExplorerInput()
-{
-	global
-	Favmenu_dlgInput := Favmenu_FindWindowExId(Favmenu_dlgHwnd,  "WorkerW", 0) 
+	;global
+	Favmenu_dlgInput := Favmenu_FindWindowExId(hwnd_explorer,  "WorkerW", 0) 
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ReBarWindow32", 0) 
 	;Remember last good value. If Vista, we need the value to retry
 	Favmenu_dlgInputOriginal := Favmenu_dlgInput
-      
+
 	;Try Combobox. If Vista, that command fails
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
-   
+	
 	if Favmenu_dlgInput = 0
 	{
 		;Perhaps Vista... ??? Use Favmenu_dlgInputOriginal
@@ -77,7 +112,7 @@ FavMenu_GetExplorerInput()
 		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "msctls_progress32", 0)
 		FavMenu_msctls_progress32 := Favmenu_dlgInput
 		Return
-	}   
+	}
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBox", 0)
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "Edit", 0)
