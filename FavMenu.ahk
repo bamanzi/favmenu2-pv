@@ -325,32 +325,20 @@ FavMenu_AddAllFMCurrentPathsToMenu()
 
 	ifWinExist ahk_class TTOTAL_CMD
 	{
-		hwnd := WinExist()
-		if not (hwnd = WinActive())
-		{
-			arr := FavMenu_DialogGetAllPaths_TC()
-			cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
-		}
+        arr := FavMenu_DialogGetAllPaths_TC()
+        cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
 	}
 
 	ifWinExist ahk_class CabinetWClass
 	{
-		hwnd := WinExist()
-		if not (hwnd = WinActive())
-		{
-			arr := FavMenu_DialogGetAllPaths_Explorer()
-			cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
-		}
+        arr := FavMenu_DialogGetAllPaths_Explorer()
+        cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
 	}
 
 	ifWinExist ahk_class ATL:ExplorerFrame
 	{
-		hwnd := WinExist()
-		if not (hwnd = WinActive())
-		{
-			arr := FavMenu_DialogGetAllPaths_Xplorer2()
-			cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
-		}
+        arr := FavMenu_DialogGetAllPaths_Xplorer2()
+        cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
 	}
 
 	return cnt

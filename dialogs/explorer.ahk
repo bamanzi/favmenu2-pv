@@ -30,12 +30,16 @@ FavMenu_DialogSetPath_Explorer(path, bTab = false)
 Favmenu_DialogGetAllPaths_Explorer()
 {
 	local arr := Object()
+	local hwnd_active = WinActive()
 
 	WinGet,id,List,ahk_class CabinetWClass
 
 	Loop,%id%
 	{
 		this_id := id%A_Index%
+		if this_id == hwnd_active
+			continue
+	
 		curDir := FavMenu_DialogGetPath_Explorer_bg(this_id)
 
 		WinGetTitle, this_title, ahk_id %this_id%
