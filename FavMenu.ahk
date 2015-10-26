@@ -284,6 +284,8 @@ FavMenu_skip:
 		Menu, Favmenu_sub1, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
 		
 		Menu, Favmenu_sub1, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
+
+		Menu, Favmenu_sub1, add
 	}
 
 	; add editor
@@ -356,7 +358,7 @@ FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 		;if (idx != -1) and (idx != 2)
 		;	StringMid curPath, curPath, idx+2, e-idx-1,
 
-		Menu Favmenu_sub1, add, *[%app_prefix%] &%cnt% %curPath% , FavMenu_FullMenuHandlerDispatch
+		Menu Favmenu_sub1, add, *[%app_prefix% &%cnt%] %curPath% , FavMenu_FullMenuHandlerDispatch
 		cnt += 1
 	}
 	; add separator 
@@ -486,15 +488,11 @@ FavMenu_FullMenuHandler()
 	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current dir")
 		return FavMenu_AddCurrentDir()
 
-	if ( A_ThisMenuItem = "&Copy current path")
-		return FavMenu_CopyCurrentPath()
-		
-	if ( A_ThisMenuItem = "Open current path in File &Manager")
-		return FavMenu_OpenCurrentPathInFM()
-	
-	if ( A_ThisMenuItem = "Command &Prompt here")
-		return FavMenu_CommandPromptHere()
-	
+	if ( A_ThisMenuItem = "&Copy current path") return
+		FavMenu_CopyCurrentPath() if ( A_ThisMenuItem = "Open current
+		path in File &Manager") return FavMenu_OpenCurrentPathInFM()
+		if ( A_ThisMenuItem = "Command &Prompt here") return
+		FavMenu_CommandPromptHere()
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
 	{

@@ -6,7 +6,7 @@
 ;
 ; NOTES:		This function is separated so AutoHotKey users are able to rewrite
 ;				it for file managers other then Total Commander or Windows Explorer
-;				
+;
 FavMenu_FM_Open( p_path, p_tab )
 {
 	global 
@@ -30,8 +30,9 @@ FavMenu_FM_OpenExplorer( p_path )
 	a := WinExist("ahk_class ExploreWClass")
 	b := WinExist("ahk_class CabinetWClass")
 	if a
-			c = ExploreWClass
-	else	c = CabinetWClass
+		c = ExploreWClass
+	else
+		c = CabinetWClass
 
 	if (!a or !b)
 		return FavMenu_FM_Run(p_path)
@@ -49,8 +50,11 @@ FavMenu_FM_OpenTc(p_path, p_tab)
 
 	if not WinExist("ahk_class TTOTAL_CMD")
 		 FavMenu_FM_Run()
-		
-	FavMenu_DialogSetPath_TC(p_path, p_tab)	
+
+	WinActivate,ahk_class TTOTAL_CMD
+	FavMenu_dlgHwnd := WinActive()
+
+	FavMenu_DialogSetPath_TC(p_path, p_tab)
 }
 
 ;--------------------------------------------------------------------------
@@ -62,7 +66,7 @@ FavMenu_FM_OpenXplorer2(p_path, p_tab)
 	if not WinExist("ahk_class ATL:ExplorerFrame")
 		 FavMenu_FM_Run()
 		
-	FavMenu_DialogSetPath_Xplorer2(p_path, p_tab)	
+	FavMenu_DialogSetPath_Xplorer2(p_path, p_tab)
 }
 
 ;--------------------------------------------------------------------------
