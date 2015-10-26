@@ -3,14 +3,13 @@
 ;
 ;
 ;	Created by Miodrag Milic					Jun 2006
-;
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
 ;
-; Hacked by Ba Manzi <bamanzi@gmail.com>
+;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2015
 ;
 ; Change Log
 ;   2.24 Show all file managers' current paths in menu (currently only
-;        Total Commander, Explorer, Xplorer supported)
+;        Total Commander, Explorer, Xplorer2 supported)
 ;   2.23 Added support for WinSCP
 ;   2.22 Added support for MobaXterm (recognized as cygwin or console)
 ;   2.21 Added support for Double Commander
@@ -62,7 +61,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.23"
+	Favmenu_version    := "2.24"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
@@ -357,9 +356,9 @@ FavMenu_AddAllFMCurrentPathsToMenu()
 	return cnt
 }
 
+;; TODO: add app icon here
 FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 {
-	local
 	cnt := 0
 	for index, curPath in paths
 	{
@@ -369,7 +368,7 @@ FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 		;if (idx != -1) and (idx != 2)
 		;	StringMid curPath, curPath, idx+2, e-idx-1,
 
-		Menu Favmenu_sub1, add,	 *[%app_prefix%] %curPath% , FavMenu_FullMenuHandlerDispatch
+		Menu Favmenu_sub1, add, *[%app_prefix%] &%cnt% %curPath% , FavMenu_FullMenuHandlerDispatch
 		cnt += 1
 	}
 	; add separator 
