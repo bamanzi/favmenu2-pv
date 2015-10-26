@@ -32,12 +32,15 @@ FavMenu_DialogSetPath_TC(path, bTab = false)
 FavMenu_DialogGetAllPaths_TC()
 {
 	local arr := Object()
+	local hwnd_active = WinActive()
 
 	WinGet,id,List,ahk_class TTOTAL_CMD
 
 	Loop,%id%
 	{
 		this_id := id%A_Index%
+		if this_id == hwnd_active
+			continue
 
 		WinGetTitle, this_title, ahk_id %this_id%
 

@@ -29,12 +29,16 @@ FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
 FavMenu_DialogGetAllPaths_Xplorer2()
 {
 	local arr := Object()
+	local hwnd_active = WinActive()
 
 	WinGet,id,List,ahk_class ATL:ExplorerFrame
 
 	Loop,%id%
 	{
 		this_id := id%A_Index%
+		if this_id == hwnd_active
+			continue
+
 		WinGetTitle, this_title, ahk_id %this_id%
 
 		curDir := FavMenu_DialogGetPath_Xplorer2_bg(this_id)
