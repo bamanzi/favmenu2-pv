@@ -70,7 +70,9 @@ FavMenu_FM_OpenXplorer2(p_path, p_tab)
 
 	if not WinExist("ahk_class ATL:ExplorerFrame")
 		 FavMenu_FM_Run()
-		
+
+	WinActivate,ahk_class ATL:ExplorerFrame
+	FavMenu_dlgHwnd := WinActive()
 	FavMenu_DialogSetPath_Xplorer2(p_path, p_tab)
 }
 
@@ -101,10 +103,12 @@ FavMenu_FM_Locate(p_path, p_tab)
 FavMenu_FM_LocateInExplorer( p_path, p_tab )
 {
 	;; meaning of 'p_tab' reversed here intended
+	;; i.e. use 'explorer /select' if Shift not pressed
 	if p_tab
 	{
+		;; just input the parent path (rather than the file)
 		SplitPath, p_path, ,folder
-		FavMenu_FM_OpenExplorer(p_path)
+		FavMenu_FM_OpenExplorer(folder)
 	}
 	else
 		Run,explorer /select,"%p_path%"
@@ -126,9 +130,9 @@ FavMenu_FM_LocateInTC( p_path, p_tab )
 
 FavMenu_FM_LocateInXplorer2( p_path, p_tab )
 {
-	local folder
-	SplitPath, p_path, ,folder
-
+	; if p_tab
+	; 	Run, %FavMenu_fmExe% "%p_path%", , ,PID
+	; else
 	;; FavMenu_DialogSetPath_Xplorer2 works fine with file (in addition to folder)
-	FavMenu_FM_OpenXplorer2(folder, p_tab)
+		FavMenu_FM_OpenXplorer2(folder, p_tab)
 }

@@ -62,7 +62,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.24"
+	Favmenu_version    := "2.25"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
@@ -500,14 +500,14 @@ FavMenu_FullMenuHandler()
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
 
-    if ( A_ThisMenuItem = "&Locate application executable")
-    {
-        local prcpath, stateS
-        GetKeyState, stateS, Shift
+	if ( A_ThisMenuItem = "Locate application &executable")
+	{
+		local prcpath, stateS
+		GetKeyState, stateS, Shift
 
-        WinGet, prcpath, ProcessPath, A
-        return FavMenu_FM_Locate(prcpath, stateS = "D")
-    }
+		WinGet, prcpath, ProcessPath, A
+		return FavMenu_FM_Locate(prcpath, stateS = "D")
+	}
 	
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
