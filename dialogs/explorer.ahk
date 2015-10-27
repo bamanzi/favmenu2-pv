@@ -30,7 +30,7 @@ FavMenu_DialogSetPath_Explorer(path, bTab = false)
 Favmenu_DialogGetAllPaths_Explorer()
 {
 	local arr := Object()
-	local hwnd_active = WinActive()
+	local hwnd_active := WinActive()
 
 	WinGet,id,List,ahk_class CabinetWClass
 

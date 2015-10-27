@@ -327,20 +327,20 @@ FavMenu_AddAllFMCurrentPathsToMenu()
 
 	ifWinExist ahk_class TTOTAL_CMD
 	{
-        arr := FavMenu_DialogGetAllPaths_TC()
-        cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
+		arr := FavMenu_DialogGetAllPaths_TC()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
 	}
 
 	ifWinExist ahk_class CabinetWClass
 	{
-        arr := FavMenu_DialogGetAllPaths_Explorer()
-        cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
+		arr := FavMenu_DialogGetAllPaths_Explorer()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
 	}
 
 	ifWinExist ahk_class ATL:ExplorerFrame
 	{
-        arr := FavMenu_DialogGetAllPaths_Xplorer2()
-        cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
+		arr := FavMenu_DialogGetAllPaths_Xplorer2()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
 	}
 
 	return cnt
@@ -352,7 +352,7 @@ FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 	cnt := 0
 	for index, curPath in paths
 	{
-	    ;; use only the directory name as menu label
+		;; use only the directory name as menu label
 		;StringGetPos e, curPath, \, R
 		;StringGetPos idx, curPath, \, R, 1
 		;if (idx != -1) and (idx != 2)
@@ -473,7 +473,7 @@ FavMenu_FullMenuHandler()
 		Setup_Create()
 		return
 	}
-		
+	
 	; handle editor selection
 	if (FavMenu_Options_ShowEditor && A_ThisMenuItem = "&Edit favorite folders...")
 	{
@@ -488,11 +488,15 @@ FavMenu_FullMenuHandler()
 	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current dir")
 		return FavMenu_AddCurrentDir()
 
-	if ( A_ThisMenuItem = "&Copy current path") return
-		FavMenu_CopyCurrentPath() if ( A_ThisMenuItem = "Open current
-		path in File &Manager") return FavMenu_OpenCurrentPathInFM()
-		if ( A_ThisMenuItem = "Command &Prompt here") return
-		FavMenu_CommandPromptHere()
+	if ( A_ThisMenuItem = "&Copy current path")
+		return FavMenu_CopyCurrentPath()
+		
+	if ( A_ThisMenuItem = "Open current path in File &Manager")
+		return FavMenu_OpenCurrentPathInFM()
+	
+	if ( A_ThisMenuItem = "Command &Prompt here")
+		return FavMenu_CommandPromptHere()
+	
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
 	{
@@ -534,13 +538,13 @@ FavMenu_FullMenuHandler()
 			FavMenu_SendTCCommand(cm_FocusLeft, false )
 		else
 			FavMenu_SendTCCommand(cm_FocusRight, false )
-			
+		
 		WinActivate ahk_class TTOTAL_CMD
 	}
 }
 
 FavMenu_FullMenuHandlerDispatch:
- FavMenu_FullMenuHandler()
+	FavMenu_FullMenuHandler()
 return
 
 ;--------------------------------------------------------------------------
@@ -582,14 +586,14 @@ FavMenu_MenuHandler()
 
 ;-- CTRL ENTER (open properties)
 	if (stateC = "D") || properties_visible
-	{ 
+	{
 		Properties_mnuCnt := Favmenu_mnuCnt
 		if (properties_visible)
 			Properties_Close()
 
 		Properties_Create()
 		return
-	} 
+	}
 
 ;-- SHIFT ENTER (open in new tab)
 	if (stateS = "D")
@@ -603,7 +607,7 @@ FavMenu_MenuHandler()
 	{
 		if FavMenu_dlgType = Console
 				SendInput {ESC}%keys%{ENTER}
-		else	FavMenu_ShellExecute(keys)	
+		else	FavMenu_ShellExecute(keys)
 		return
 	}
 
