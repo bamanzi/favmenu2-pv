@@ -29,7 +29,7 @@ FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
 FavMenu_DialogGetAllPaths_Xplorer2()
 {
 	local arr := Object()
-	local hwnd_active = WinActive()
+	local hwnd_active := WinActive()
 
 	WinGet,id,List,ahk_class ATL:ExplorerFrame
 

@@ -34,7 +34,7 @@ FavMenu_FM_OpenExplorer( p_path )
 	else
 		c = CabinetWClass
 
-	if (!a or !b)
+	if (!a and !b)
 		return FavMenu_FM_Run(p_path)
 	
 ;	Windows Explorer exists (this will be executed if Explorer is File Manager
