@@ -79,3 +79,45 @@ FavMenu_FM_Run( arg = "" )
 	Run %FavMenu_fmExe% %arg%, , ,PID
 	WinWait ahk_pid %PID%, ,1	;this second is added cuz of AHK bug with explorer
 }
+
+FavMenu_FM_Locate(p_path, p_tab)
+{
+    global 
+
+    if FavMenu_fmExe contains TotalCmd.exe
+        return FavMenu_FM_LocateInTC( p_path, p_tab ) 
+
+    if FavMenu_fmExe contains xplorer2
+        return FavMenu_FM_LocateInXplorer2( p_path, p_tab )
+
+    FavMenu_FM_LocateInExplorer( p_path )   
+}
+
+FavMenu_FM_LocateInExplorer( p_path )
+{
+    Run,explorer /select,"%p_path%" 
+}
+
+FavMenu_FM_LocateInTC( p_path, p_tab )
+{
+    local folder
+    SplitPath, p_path, ,folder
+    OutputDebug,locating executable: p_path=%prcpath%, folder=%folder%, p_tab=%p_tab%
+
+    ;FavMenu_FM_OpenTC(folder, false)
+
+    if p_tab
+        Run %FavMenu_fmExe% /O /T /S "%p_path%", , ,PID
+    else
+        Run %FavMenu_fmExe% /O /S "%p_path%", , ,PID
+
+}
+
+FavMenu_FM_LocateInXplorer2( p_path, p_tab )
+{
+    local folder
+    SplitPath, p_path, ,folder
+
+    ;; FavMenu_DialogSetPath_Xplorer2 works fine with file (in addition to folder)
+    FavMenu_FM_OpenXplorer2(folder, p_tab)
+}
