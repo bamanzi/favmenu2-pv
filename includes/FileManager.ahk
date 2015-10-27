@@ -9,10 +9,10 @@
 ;
 FavMenu_FM_Open( p_path, p_tab )
 {
-	global 
+	global
 
 	if FavMenu_fmExe contains TotalCmd.exe
-		return FavMenu_FM_OpenTc( p_path, p_tab ) 
+		return FavMenu_FM_OpenTC( p_path, p_tab )
 		
 	if FavMenu_fmExe contains xplorer2
 		return FavMenu_FM_OpenXplorer2( p_path, p_tab )
@@ -38,13 +38,18 @@ FavMenu_FM_OpenExplorer( p_path )
 		return FavMenu_FM_Run(p_path)
 	
 ;	Windows Explorer exists (this will be executed if Explorer is File Manager
-	WinActivate ahk_class %c%
+	WinActivate,ahk_class %c%
+
+	;; overwrite global variable!!!
+	FavMenu_dlgHWND := WinActive()
+	
+	FavMenu_GetExplorerInput(FavMenu_dlgHWND, Favmenu_dlgInput, FavMenu_msctls_progress32)
 	FavMenu_DialogSetPath_Explorer( p_path )
 }
 
 ;--------------------------------------------------------------------------
 
-FavMenu_FM_OpenTc(p_path, p_tab)
+FavMenu_FM_OpenTC(p_path, p_tab)
 {	
 	global FavMenu_fmExe, cm_editpath
 
@@ -82,42 +87,48 @@ FavMenu_FM_Run( arg = "" )
 
 FavMenu_FM_Locate(p_path, p_tab)
 {
-    global 
+	global 
 
-    if FavMenu_fmExe contains TotalCmd.exe
-        return FavMenu_FM_LocateInTC( p_path, p_tab ) 
+	if FavMenu_fmExe contains TotalCmd.exe
+		return FavMenu_FM_LocateInTC( p_path, p_tab ) 
 
-    if FavMenu_fmExe contains xplorer2
-        return FavMenu_FM_LocateInXplorer2( p_path, p_tab )
+	if FavMenu_fmExe contains xplorer2
+		return FavMenu_FM_LocateInXplorer2( p_path, p_tab )
 
-    FavMenu_FM_LocateInExplorer( p_path )   
+	FavMenu_FM_LocateInExplorer( p_path, p_tab )
 }
 
-FavMenu_FM_LocateInExplorer( p_path )
+FavMenu_FM_LocateInExplorer( p_path, p_tab )
 {
-    Run,explorer /select,"%p_path%" 
+	;; meaning of 'p_tab' reversed here intended
+	if p_tab
+	{
+		SplitPath, p_path, ,folder
+		FavMenu_FM_OpenExplorer(p_path)
+	}
+	else
+		Run,explorer /select,"%p_path%"
 }
 
 FavMenu_FM_LocateInTC( p_path, p_tab )
 {
-    local folder
-    SplitPath, p_path, ,folder
-    OutputDebug,locating executable: p_path=%prcpath%, folder=%folder%, p_tab=%p_tab%
+	local folder
+	SplitPath, p_path, ,folder
 
-    ;FavMenu_FM_OpenTC(folder, false)
+	;FavMenu_FM_OpenTC(folder, false)
 
-    if p_tab
-        Run %FavMenu_fmExe% /O /T /S "%p_path%", , ,PID
-    else
-        Run %FavMenu_fmExe% /O /S "%p_path%", , ,PID
+	if p_tab
+		Run %FavMenu_fmExe% /O /T /S "%p_path%", , ,PID
+	else
+		Run %FavMenu_fmExe% /O /S "%p_path%", , ,PID
 
 }
 
 FavMenu_FM_LocateInXplorer2( p_path, p_tab )
 {
-    local folder
-    SplitPath, p_path, ,folder
+	local folder
+	SplitPath, p_path, ,folder
 
-    ;; FavMenu_DialogSetPath_Xplorer2 works fine with file (in addition to folder)
-    FavMenu_FM_OpenXplorer2(folder, p_tab)
+	;; FavMenu_DialogSetPath_Xplorer2 works fine with file (in addition to folder)
+	FavMenu_FM_OpenXplorer2(folder, p_tab)
 }
