@@ -650,15 +650,6 @@ FavMenu_ShellExecute(ppath)
 
 ;---------------------------------------------------------------------------
 
-FavMenu_ExpandEnvVars(ppath)
-{
-	VarSetCapacity(dest, 2000) 
-	DllCall("ExpandEnvironmentStrings", "str", ppath, "str", dest, int, 1999, "Cdecl int") 
-	return dest
-}
-
-;---------------------------------------------------------------------------
-
 FavMenu_IsQuoted(str)
 {
 	StringLeft  sl, str, 1
@@ -682,7 +673,7 @@ FavMenu_IsQuoted(str)
 #include includes\tc_functions.ahk
 #include includes\tc_hook.ahk
 #include includes\tv.ahk
-#include includes\RemoteBuf.ahk
+#include includes\win_api.ahk
 
 #include includes\_Application.ahk
 #include includes\FileManager.ahk
