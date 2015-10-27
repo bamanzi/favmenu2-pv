@@ -286,6 +286,8 @@ FavMenu_skip:
 		Menu, Favmenu_sub1, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
 
 		Menu, Favmenu_sub1, add
+
+		Menu, Favmenu_sub1, add, Locate application &executable
 	}
 
 	; add editor
@@ -496,6 +498,15 @@ FavMenu_FullMenuHandler()
 	
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
+
+    if ( A_ThisMenuItem = "&Locate application executable")
+    {
+        local prcpath, stateS
+        GetKeyState, stateS, Shift
+
+        WinGet, prcpath, ProcessPath, A
+        return FavMenu_FM_Locate(prcpath, stateS = "D")
+    }
 	
 	; handle current TC folders
 	if (FavMenu_Options_ShowTCFolders)
