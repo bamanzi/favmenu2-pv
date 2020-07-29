@@ -1,4 +1,11 @@
-FavMenu_IsBrowseForFolder( dlg )
+;; - BFF (BrowseForFolder)
+;; - OpenSave (Open/Save dialog) 
+;;       - special handling: Office 2003 Open/Save dialog
+
+;; FIXME: GetPath_OpenSave not work on windows 10 open/save dialog
+
+FavMenu_DialogIsType_BFF(dlg, klass, title)
+;FavMenu_IsBrowseForFolder( dlg )
 {
 	global FavMenu_dlgInput, FavMenu_dlgType
 
@@ -20,9 +27,52 @@ FavMenu_IsBrowseForFolder( dlg )
 	}
 
 	FavMenu_dlgInput := tree
-	FavMenu_dlgType	 := "BFF"
+	;FavMenu_dlgType	 := "BFFDialog"
 
 	return 1
+}
+
+Favmenu_DialogGetPath_BFF()
+{
+	global
+
+	TV_Initialise( FavMenu_dlgHWND, FavMenu_dlgInput )
+	return TV_GetPath()
+}
+
+FavMenu_DialogSetPath_BFF( path )
+{
+	global
+
+	BFFM_SETSELECTION := 0x400 + 102
+
+	VarSetCapacity(wPath, StrLen( path ) * 2, 0)
+	Favmenu_GetUnicodeString(wPath, path)
+
+	bufID := RemoteBuf_Open(FavMenu_dlgHWND, 256)
+	RemoteBuf_Write(bufId, Path , 256)
+	adr := RemoteBuf_GetAdr(bufID)
+
+	;SendMessage BFFM_SETSELECTION, 1, adr, ,ahk_class %FavMenu_dlgHWND%
+	res := DllCall("SendMessageA"
+         , "UInt", FavMenu_dlgHWND
+         , "UInt", BFFM_SETSELECTION
+         , "UInt", 1
+         , "Uint", adr)
+
+	RemoteBuf_Close( bufId )
+}
+
+;------------------------------------------------------------------------------------------------
+
+FavMenu_DialogGetPath_OpenSave()
+{
+	return FavMenu_DialogGetPath_OS()
+}
+
+FavMenu_DialogSetPath_OpenSave(path, bTab=false)
+{
+	FavMenu_DialogSetPath_OS(path)
 }
 
 ;------------------------------------------------------------------------------------------------
@@ -64,7 +114,6 @@ FavMenu_IsOpenSave(dlg)
 	return FavMenu_IsOffice03(dlg)
 }
 
-;------------------------------------------------------------------------------------------------
 
 FavMenu_IsOffice03(dlg)
 {
@@ -86,15 +135,6 @@ FavMenu_IsOffice03(dlg)
 	}
 
 	return 0
-}
-
-
-Favmenu_DialogGetPath_BFF()
-{
-	global
-
-	TV_Initialise( FavMenu_dlgHWND, FavMenu_dlgInput )
-	return TV_GetPath()
 }
 
 FavMenu_DialogGetPath_OS()
@@ -139,7 +179,7 @@ FavMenu_DialogSetPath_OS(path)
 	Sleep 20
 	if FavMenu_msctls_progress32
 	{
-        	ControlSend, ,{Space}, ahk_id %FavMenu_dlgInput%
+		ControlSend, ,{Space}, ahk_id %FavMenu_dlgInput%
 		Sleep 20
 		rebar := FavMenu_FindWindowExID(FavMenu_msctls_progress32, "ComboBoxEx32", 0)
 		rebar := FavMenu_FindWindowExID(rebar, "ComboBox", 0)
@@ -148,7 +188,7 @@ FavMenu_DialogSetPath_OS(path)
 		{
 			Sleep 20
 			ControlSetText, , %path%, ahk_id %rebar%
-		ControlSend, ,{ENTER}, ahk_id %rebar%
+			ControlSend, ,{ENTER}, ahk_id %rebar%
 		}
 	}
 	else
@@ -162,25 +202,3 @@ FavMenu_DialogSetPath_OS(path)
 		ControlFocus %d_f%, ahk_id %FavMenu_dlgHWND%
 }
 
-FavMenu_DialogSetPath_BFF( path )
-{
-	global
-
-	BFFM_SETSELECTION := 0x400 + 102
-
-	VarSetCapacity(wPath, StrLen( path ) * 2, 0)
-	Favmenu_GetUnicodeString(wPath, path)
-
-	bufID := RemoteBuf_Open(FavMenu_dlgHWND, 256)
-	RemoteBuf_Write(bufId, Path , 256)
-	adr := RemoteBuf_GetAdr(bufID)
-
-	;SendMessage BFFM_SETSELECTION, 1, adr, ,ahk_class %FavMenu_dlgHWND%
-	res := DllCall("SendMessageA"
-         , "UInt", FavMenu_dlgHWND
-         , "UInt", BFFM_SETSELECTION
-         , "UInt", 1
-         , "Uint", adr)
-
-	RemoteBuf_Close( bufId )
-}

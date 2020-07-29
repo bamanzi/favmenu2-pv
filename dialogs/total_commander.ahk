@@ -1,6 +1,15 @@
 ;; Total Commander
 ;; ahk_class TTOTAL_CMD
 
+Favmenu_DialogIsType_TC(hwnd, klass, title)
+{
+	if (klass = "TTOTAL_CMD")
+	{
+		;FavMenu_dlgType := "TC"
+		return 1
+	}
+}
+
 Favmenu_DialogGetPath_TC()
 {
 	curDir := FavMenu_GetCurrentTCDir(FavMenu_dlgHwnd)

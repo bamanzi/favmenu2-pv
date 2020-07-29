@@ -1,3 +1,13 @@
+Favmenu_DialogIsType_Console(hwnd, klass, title)
+{
+	if (klass = "ConsoleWindowClass") or (klass = "VirtualConsoleClass") or (klass = "Console_2_main")
+	{
+		FavMenu_GetExplorerInput(FavMenu_dlgHwnd, foo, bar)
+		;FavMenu_dlgType := "Explorer"
+		return 1
+	}
+}
+
 Favmenu_DialogGetPath_Console()
 {
 	WinGetActiveTitle,Title
@@ -66,6 +76,6 @@ FavMenu_DialogSetPath_Console(path, bTab = false)
 		;;	SendInput %prev%
 		;FileDelete c:\favmenu_contmp
 		
-		SendInput cd /d %path%{ENTER}
+		SendInput cd /d "%path%"{ENTER}
 	}
 }

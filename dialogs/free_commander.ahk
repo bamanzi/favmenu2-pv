@@ -1,5 +1,14 @@
 ;; Tested in FreeCommander & FreeCommanderXE
 
+Favmenu_DialogIsType_FreeCommander(hwnd, klass, title)
+{
+	If (klass = "TfcForm") Or (klass="FreeCommanderXE.SingleInst.1")
+	{
+		;FavMenu_dlgType := "FreeCommander"
+		return 1
+	}
+}
+
 Favmenu_DialogGetPath_FreeCommander()
 {
 	local title

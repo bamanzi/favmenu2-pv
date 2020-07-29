@@ -1,5 +1,14 @@
 ;; Tested on GNU Emacs, XEmacs & MicroEmacs-jasspa
 
+Favmenu_DialogIsType_Emacs(hwnd, klass, title)
+{
+	if ( (klass = "Emacs") Or (klass = "MicroEmacsClass") Or (klass = "XEmacs" ) )
+	{
+		;FavMenu_dlgType := "Emacs"
+		return 1
+	}
+}
+
 Favmenu_DialogGetPath_Emacs()
 {
 	;;TODO: ensure compatibility of XEmacs

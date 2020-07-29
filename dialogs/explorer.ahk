@@ -1,6 +1,16 @@
 ;; Windows Explorer
 ;; ahk_class CabinetWClass
 
+Favmenu_DialogIsType_Explorer(hwnd, klass, title)
+{
+	if (class = "ExploreWClass") or (class = "CabinetWClass")
+	{
+		FavMenu_GetExplorerInput(hwnd, foo, bar)
+		;FavMenu_dlgType := "Explorer"
+		return 1
+	}
+}
+
 Favmenu_DialogGetPath_Explorer()
 {
 	global FavMenu_dlgHwnd

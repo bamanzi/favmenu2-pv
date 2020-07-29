@@ -1,5 +1,6 @@
 ;; NOTE:
 ;;   * clipboard content changed
+
 FavMenu_DialogGetPath_Cygwin()
 {
 	global Favmenu_dlgHwnd

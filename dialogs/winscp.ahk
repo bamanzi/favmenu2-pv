@@ -4,6 +4,14 @@
 ;; NOTE: Things would be easier if option 'Path in window title' set to 'Show full path'
 ;;	   (Options->Preferences->Window->Path in window title)
 
+Favmenu_DialogIsType_WinSCP(hwnd, klass, title)
+{
+	If (class = "TScpCommanderForm")
+	{
+		;FavMenu_dlgType	 := "Console"
+		return 1
+	}
+}
 
 Favmenu_DialogGetPath_WinSCP()
 {

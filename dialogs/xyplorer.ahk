@@ -1,11 +1,20 @@
-;; currently only tested on XYplorer Free 14.50
-;; it might for on XYplorer Pro, but not tested
+;; currently only tested on XYplorer Free 14.50 & 17.00
+;; TODO: fix support for XYplorer Pro
+
+Favmenu_DialogIsType_XYplorer(hwnd, klass, title)
+{
+	If (klass = "ThunderRT6FormDC") and ((title contains " - XYplorerFree ") or (title contains " - XYplorer "))
+	{
+		;FavMenu_dlgType := "XYplorer"
+		return 1
+	}
+}
 
 FavMenu_DialogGetPath_XYplorer()
 {
 	global FavMenu_dlgHwnd
 
-	;; this relies on the title bar template, by default it's '<path> - <app> <ver>'
+	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
 	;; (menu Tools -> Configuration -> Colors and Styles -> Templates -> Titlebar)
 	path := Favmenu_DialogGetPath_FromTitle()
 

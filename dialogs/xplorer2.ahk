@@ -1,6 +1,15 @@
 ;; Xplorer2
 ;; ahk_class ATL:ExplorerFrame
 
+Favmenu_DialogIsType_Xplorer2(hwnd, klass, title)
+{
+	If (klass = "ATL:ExplorerFrame")
+	{
+		;FavMenu_dlgType := "Xplorer2"
+		return 1
+	}
+}
+
 FavMenu_DialogGetPath_Xplorer2()
 {
 	global FavMenu_dlgHwnd

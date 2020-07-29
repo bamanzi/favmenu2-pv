@@ -2,8 +2,17 @@
 ;; Thus it's hard to get enough information from the UI components 
 ;; (for example, the window text of the pane header is empty.)
 
+Favmenu_DialogIsType_DoubleCmd(hwnd, klass, title)
+{
+	If (klass = "DClass") and ("Double Commander "==substr(title, 1, StrLen("Double Commander ")))
+	{
+		;FavMenu_dlgType := "Emacs"
+		return 1
+	}
+}
+
 ;; FIXME: clipboard content changed
-Favmenu_DialogGetPath_DoubleCommander()
+Favmenu_DialogGetPath_DoubleCmd()
 {
 	global Favmenu_dlgHwnd
 
@@ -11,9 +20,9 @@ Favmenu_DialogGetPath_DoubleCommander()
 	WinActivate, ahk_id %Favmenu_dlgHwnd%
 
 	Send,!c     ;;Alt+C to activate menu item Commands
-	Sleep,400
-	Send,s	    ;; menu item 'Search'
 	Sleep,200
+	Send,s	    ;; menu item 'Search'
+	Sleep,400
 	Send,!d	    ;; Activate 'Start in directory' editbox
 	Sleep,200
 	Send,^c     ;; Copy
@@ -26,8 +35,8 @@ Favmenu_DialogGetPath_DoubleCommander()
 
 }
 
-;; FIXME:
-FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
+
+FavMenu_DialogSetPath_DoubleCmd(path, bTab = false)
 {
 	global Favmenu_dlgHwnd
 

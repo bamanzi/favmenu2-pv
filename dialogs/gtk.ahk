@@ -1,3 +1,11 @@
+Favmenu_DialogIsType_GTK(hwnd, klass, title)
+{
+	If (klass = "gdkWindowToplevel")
+	{
+		;FavMenu_dlgType := "Emacs"
+		return 1
+	}
+}
 
 FavMenu_DialogSetPath_GTK(path)
 {

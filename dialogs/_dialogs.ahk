@@ -16,6 +16,35 @@
 #include dialogs\emacs.ahk
 ;;TODO: 7-Zip FM
 
+FavMenu_DialogHandler_Init()
+{
+	global FavMenu_dlgTypes
+	FavMenu_dlgTypes := Array()
+	
+	;; for each application/dialog here, there should be 3 functions
+	;;    	FavMenu_DialogIsType_XXX(hwnd, klass, title)	;; required
+	;;		FavMenu_DialogSetPath_XXX()				;; optional
+	;;		FavMenu_DialogGetPath_XXX()				;; optional
+	
+	FavMenu_dlgTypes.Push("BFF")		; Browse for Folder
+	FavMenu_dlgTypes.Push("OpenSave")	; Open/Save dialog
+	FavMenu_dlgTypes.Push("Explorer")
+	
+	FavMenu_dlgTypes.Push("TC")			; Total Commander
+	FavMenu_dlgTypes.Push("DoubleCmd")	; Double Commander
+	FavMenu_dlgTypes.Push("Console")	; Double Commander
+	;;FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
+	;;FavMenu_dlgTypes.Push("Cygwin")	;; multiple front-ends (mintty,cmd...)
+	FavMenu_dlgTypes.Push("WinSCP")
+	
+	FavMenu_dlgTypes.Push("XYplorer")
+	FavMenu_dlgTypes.Push("Xplorer2")
+	FavMenu_dlgTypes.Push("FreeCommander")
+	
+	FavMenu_dlgTypes.Push("GTK")
+
+	
+}
 
 ; Explorer is seen as dialog if there is another app set as a file manager
 ; or as a File Manager if not. 
@@ -23,54 +52,21 @@
 ;
 FavMenu_DialogGetActive(hw=0)
 {	
-	global 
-	local class, title
+	global Favmenu_dlgHwnd, FavMenu_dlgTypes, FavMenu_dlgType
 
 	WinGet, Favmenu_dlgHwnd, ID, A
 	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
 	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
 	OutputDebug,FaveMenu_DialogGetActive: class=|%class%|, title=|%title%|
 	
+	;; FIXME: special handling
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
 	
-	if FavMenu_IsBrowseForFolder( Favmenu_dlgHwnd )
-			return 1
-
-	If (InStr(title, "MINGW32", true)>0)
+	;; FIXME: a little complicated
+	If ( (InStr(title, "MINGW32", true)>0) or (InStr(title, "MINGW64", true)>0) )
 	{
 		FavMenu_dlgType := "Msys"
-		return 1
-	}
-
-	if (class = "ConsoleWindowClass") or (class = "VirtualConsoleClass") or (class = "Console_2_main")
-	{
-		FavMenu_dlgType	 := "Console"
-		return 1
-	}
-
-	if (class = "ExploreWClass") or (class = "CabinetWClass")
-	{
-		FavMenu_GetExplorerInput(FavMenu_dlgHwnd, foo, bar)
-		FavMenu_dlgType := "Explorer"
-		return 1
-	}
-
-	if (class = "TTOTAL_CMD")
-	{
-		FavMenu_dlgType := "TC"
-		return 1
-	}
-	
-	If (class = "TfcForm") Or (class="FreeCommanderXE.SingleInst.1")
-	{
-		FavMenu_dlgType := "FreeCommander"
-		return 1
-	}	
-	
-	if ( (class = "Emacs") Or (class = "MicroEmacsClass") Or (class = "XEmacs" ) )
-	{
-		FavMenu_dlgType := "Emacs"
 		return 1
 	}
 	
@@ -96,37 +92,23 @@ FavMenu_DialogGetActive(hw=0)
 			return 1
 		}
 	}
-	
-	If (class = "gdkWindowToplevel")
-	{
-		FavMenu_dlgType := "GTK"
-		return 1
-	}
-	
-	If (class = "ATL:ExplorerFrame")
-	{
-		FavMenu_dlgType := "Xplorer2"
-		return 1
-	}	
 
-	;; FIXME: add support for non-free version
-	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
-	If (class = "ThunderRT6FormDC") and ((title contains " - XYplorerFree ") or (title contains " - XYplorer "))
+	Loop % FavMenu_dlgTypes.Length()
 	{
-		FavMenu_dlgType := "XYplorer"
-		return 1
-	}
-
-	If (class = "DClass") and ("Double Commander "==substr(title, 1, StrLen("Double Commander ")))
-	{
-		FavMenu_dlgType := "DoubleCommander"
-		return 1
-	}
-
-	If (class = "TScpCommanderForm")
-	{
-		FavMenu_dlgType := "WinSCP"
-		return 1
+		dlgType := FavMenu_dlgTypes[A_Index]
+		fn := Func("Favmenu_DialogIsType_" . dlgType)
+		if fn.Name
+		{
+			okey := fn.Call(Favmenu_dlgHwnd, class, title)
+			OutputDebug,INFO: Function 'Favmenu_DialogIsType_%dlgType%' returns '%okey%'
+			if okey
+			{
+				FavMenu_dlgType := dlgType
+				return 1
+			}
+		} else {
+			OutputDebug,WARN: Function 'Favmenu_DialogIsType_%dlgType%' not exist
+		}
 	}
 
 	Favmenu_dlgType := "System"
@@ -137,47 +119,24 @@ FavMenu_DialogGetActive(hw=0)
 
 FavMenu_DialogGetPath()
 {
-	global
+	global Favmenu_dlgType, FavMenu_dlgTypes
 	OutputDebug,FavMenu_DialogGetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
-	if Favmenu_dlgType = TC
-		return Favmenu_DialogGetPath_TC()
-
-	if Favmenu_dlgType = Explorer
-		return Favmenu_DialogGetPath_Explorer()
 
 	if Favmenu_dlgType = OpenSave
 		return Favmenu_DialogGetPath_OS()
-	
-	if Favmenu_dlgType = BFF
-		return Favmenu_DialogGetPath_BFF()
 
-	if FavMenu_dlgType = Msys
-		return FavMenu_DialogGetPath_Msys()
-
-	if FavMenu_dlgType = Cygwin
-		return FavMenu_DialogGetPath_Cygwin()
-	
-	if Favmenu_dlgType = Console
-		return Favmenu_DialogGetPath_Console()
-	
-	if Favmenu_dlgType = Emacs
-		return Favmenu_DialogGetPath_Emacs()
-
-	If FavMenu_dlgType = FreeCommander
-		return FavMenu_DialogGetPath_FreeCommander()
-	
-	if Favmenu_dlgType = Xplorer2
-		return FavMenu_DialogGetPath_Xplorer2()
-
-	if Favmenu_dlgType = XYplorer
-		return FavMenu_DialogGetPath_XYplorer()
-
-	if Favmenu_dlgType = DoubleCommander
-		return FavMenu_DialogGetPath_DoubleCommander()
-
-	if Favmenu_dlgType = WinSCP
-		return FavMenu_DialogGetPath_WinSCP()
+	dlgType := FavMenu_dlgType
+	fn := Func("Favmenu_DialogGetPath_" . dlgType)
+	if fn.Name
+	{
+		path := fn.Call()
+		OutputDebug,INFO: Function 'Favmenu_DialogGetPath_%dlgType%' returns '%path%'
+		if path
+			return path
+	} else {
+		OutputDebug,WARN: Function 'Favmenu_DialogGetPath_%dlgType%' not exist
+	}
 
 	return Favmenu_DialogGetPath_fromTitle()
 }
@@ -185,49 +144,23 @@ FavMenu_DialogGetPath()
 FavMenu_DialogSetPath(path, bTab = false)
 {
 	global FavMenu_dlgType
-	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
-
-	if FavMenu_dlgType = TC
-		FavMenu_DialogSetPath_TC(path, bTab)
+	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%
 
 	if FavMenu_dlgType contains OpenSave,Office03
-		FavMenu_DialogSetPath_OS(path)	
+	{
+		FavMenu_DialogSetPath_OpenSave(path)
+		return
+	}
 	
-	if FavMenu_dlgType = BFF
-		FavMenu_DialogSetPath_BFF(path)
-
-	if FavMenu_dlgType = Explorer
-		FavMenu_DialogSetPath_Explorer(path, bTab)
-	
-	if FavMenu_dlgType = Msys
-		FavMenu_DialogSetPath_Msys(path, bTab)
-
-	if FavMenu_dlgType = Cygwin
-		FavMenu_DialogSetPath_Cygwin(path)
-	
-	if FavMenu_dlgType = Console
-		FavMenu_DialogSetPath_Console(path, bTab)
-
-	if FavMenu_dlgType = Emacs
-		FavMenu_DialogSetPath_Emacs(path)
-	
-	if FavMenu_dlgType = GTK
-		FavMenu_DialogSetPath_GTK(path)
-
-	If FavMenu_dlgType = FreeCommander
-		FavMenu_DialogSetPath_FreeCommander(path, bTab)
-
-	if FavMenu_dlgType = Xplorer2
-		FavMenu_DialogSetPath_Xplorer2(path, bTab)
-
-	if FavMenu_dlgType = XYplorer
-		FavMenu_DialogSetPath_XYplorer(path, bTab)
-
-	if FavMenu_dlgType = DoubleCommander
-		FavMenu_DialogSetPath_DoubleCommander(path, bTab)
-
-	if FavMenu_dlgType = WinSCP
-		FavMenu_DialogSetPath_WinSCP(path)
+	dlgType := FavMenu_dlgType
+	fn := Func("Favmenu_DialogSetPath_" . dlgType)
+	if fn.Name
+	{
+		OutputDebug,INFO: Function 'Favmenu_DialogSetPath_%dlgType%' dynamic calling...
+		fn.Call(path, bTab)
+	} else {
+		OutputDebug,WARN: Function 'Favmenu_DialogSetPath_%dlgType%' not exist
+	}
 }
 
 ;--------------------------------------------------------------------------

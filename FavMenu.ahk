@@ -8,6 +8,9 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2015
 ;
 ; Change Log
+;   2.30 Refactor to make adding new application easier. For most application, 
+;        add 'Foo' into array 'FavMenu_dlgTypes',
+;        then implement FavMenu_DialogIsType_Foo, FavMenu_DialogSetPath_Foo, FavMenu_DialogGetPath_Foo
 ;   2.26 Fix support for latest Double Commander
 ;   2.25 Added new command 'locate application executable' to menu
 ;   2.24 Show all file managers' current paths in menu (currently only
@@ -63,7 +66,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.25"
+	Favmenu_version    := "2.30"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
@@ -85,6 +88,9 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	
 	FavMenu_SetTrayMenu(subMenu)
+	
+	FavMenu_DialogHandler_Init()
+	
 	return lastGUI + 2
 }
 
