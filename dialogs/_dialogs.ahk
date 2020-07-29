@@ -117,7 +117,7 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}
 
-	If (class = "Window") and ("Double Commander 0"==substr(title, 1, StrLen("Double Commander ")))
+	If (class = "DClass") and ("Double Commander "==substr(title, 1, StrLen("Double Commander ")))
 	{
 		FavMenu_dlgType := "DoubleCommander"
 		return 1

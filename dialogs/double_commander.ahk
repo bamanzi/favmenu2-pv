@@ -2,8 +2,7 @@
 ;; Thus it's hard to get enough information from the UI components 
 ;; (for example, the window text of the pane header is empty.)
 
-;; Note: clipboard content changed
-
+;; FIXME: clipboard content changed
 Favmenu_DialogGetPath_DoubleCommander()
 {
 	global Favmenu_dlgHwnd
@@ -11,9 +10,13 @@ Favmenu_DialogGetPath_DoubleCommander()
 	Sleep,200   ;;wait FavMenu disappearing
 	WinActivate, ahk_id %Favmenu_dlgHwnd%
 
-	Send,!m ;;Alt+M to activate menu item Mark
+	Send,!c     ;;Alt+C to activate menu item Commands
+	Sleep,400
+	Send,s	    ;; menu item 'Search'
 	Sleep,200
-	Send,p	  ;;'Copy filename with full path'
+	Send,!d	    ;; Activate 'Start in directory' editbox
+	Sleep,200
+	Send,^c     ;; Copy
 	OutputDebug,GetPath_DoubleCommander: clipboard=%clipboard%
 
 	SplitPath,clipboard,,path
@@ -38,7 +41,7 @@ FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 	Send,+{F2}   ;;focus command line
 
 	Send,{Home}+{End}{Delete}
-	SendRaw, cd %path%
+	SendRaw, cd "%path%"
 	Send, {ENTER}
 }
 
