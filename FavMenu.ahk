@@ -679,7 +679,7 @@ FavMenu_IsQuoted(str)
 
 #include includes\msg_dispatch.ahk
 #include includes\menuIcons.ahk
-#include includes\dialogs.ahk
+#include dialogs\_dialogs.ahk
 #include includes\pseudo.ahk
 #include includes\config.ahk
 #include includes\tc_functions.ahk
