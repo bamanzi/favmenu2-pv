@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2015
 ;
 ; Change Log
+;   2.26 Fix support for latest Double Commander
 ;   2.25 Added new command 'locate application executable' to menu
 ;   2.24 Show all file managers' current paths in menu (currently only
 ;        Total Commander, Explorer, Xplorer2 supported)
