@@ -13,7 +13,13 @@ FavMenu_FM_Open( p_path, p_tab )
 
 	if FavMenu_fmExe contains TotalCmd.exe
 		return FavMenu_FM_OpenTC( p_path, p_tab )
-		
+	
+	if FavMenu_fmExe contains DoubleCmd.exe
+		return FavMenu_FM_OpenDC( p_path, p_tab )
+
+	if FavMenu_fmExe contains XYplorer
+		return FavMenu_FM_OpenXYplorer( p_path, p_tab )
+	
 	if FavMenu_fmExe contains xplorer2
 		return FavMenu_FM_OpenXplorer2( p_path, p_tab )
 		
@@ -48,6 +54,7 @@ FavMenu_FM_OpenExplorer( p_path )
 }
 
 ;--------------------------------------------------------------------------
+; Total Commander
 
 FavMenu_FM_OpenTC(p_path, p_tab)
 {	
@@ -60,6 +67,22 @@ FavMenu_FM_OpenTC(p_path, p_tab)
 	FavMenu_dlgHwnd := WinActive()
 
 	FavMenu_DialogSetPath_TC(p_path, p_tab)
+}
+
+;--------------------------------------------------------------------------
+; Double Commander
+
+FavMenu_FM_OpenDC(p_path, p_tab)
+{	
+	global FavMenu_fmExe, cm_editpath
+
+	if not WinExist("ahk_class DClass")
+		 FavMenu_FM_Run()
+
+	WinActivate,ahk_class DClass
+	FavMenu_dlgHwnd := WinActive()
+
+	FavMenu_DialogSetPath_DoubleCommander(p_path, p_tab)
 }
 
 ;--------------------------------------------------------------------------
@@ -77,6 +100,21 @@ FavMenu_FM_OpenXplorer2(p_path, p_tab)
 }
 
 ;--------------------------------------------------------------------------
+
+FavMenu_FM_OpenXYplorer(p_path, p_tab)
+{	
+	global FavMenu_fmExe, cm_editpath
+
+	;;FIXME: title
+	if not WinExist("ahk_class ThunderRT6FormDC")
+		 FavMenu_FM_Run()
+
+	WinActivate,ahk_class ThunderRT6FormDC
+	FavMenu_dlgHwnd := WinActive()
+	FavMenu_DialogSetPath_XYplorer(p_path, p_tab)
+}
+
+;--------------------------------------------------------------------------
 ; Run the file manager with given arguments (defaults to nothing)
 ;
 FavMenu_FM_Run( arg = "" )
@@ -89,10 +127,16 @@ FavMenu_FM_Run( arg = "" )
 
 FavMenu_FM_Locate(p_path, p_tab)
 {
-	global 
+	global FavMenu_fmExe 
 
 	if FavMenu_fmExe contains TotalCmd.exe
 		return FavMenu_FM_LocateInTC( p_path, p_tab ) 
+
+	if FavMenu_fmExe contains DoubleCmd.exe
+		return FavMenu_FM_LocateInDC( p_path, p_tab ) 
+	
+	if FavMenu_fmExe contains XYplorer
+		return FavMenu_FM_LocateInXYplorer( p_path, p_tab )
 
 	if FavMenu_fmExe contains xplorer2
 		return FavMenu_FM_LocateInXplorer2( p_path, p_tab )
@@ -111,28 +155,53 @@ FavMenu_FM_LocateInExplorer( p_path, p_tab )
 		FavMenu_FM_OpenExplorer(folder)
 	}
 	else
-		Run,explorer /select,"%p_path%"
+		Run,explorer /select`,"%p_path%"
 }
 
 FavMenu_FM_LocateInTC( p_path, p_tab )
 {
-	local folder
+	global FavMenu_fmExe
 	SplitPath, p_path, ,folder
 
 	;FavMenu_FM_OpenTC(folder, false)
 
 	if p_tab
-		Run %FavMenu_fmExe% /O /T /S "%p_path%", , ,PID
+		Run,%FavMenu_fmExe% /O /T /S "%p_path%", , ,PID
 	else
-		Run %FavMenu_fmExe% /O /S "%p_path%", , ,PID
-
+		Run,%FavMenu_fmExe% /O /S "%p_path%", , ,PID
 }
 
+;; Double Commander
+FavMenu_FM_LocateInDC( p_path, p_tab )
+{
+	global FavMenu_fmExe
+	SplitPath, p_path, ,folder
+
+	;FavMenu_FM_OpenTC(folder, false)
+
+	if p_tab
+		Run,%FavMenu_fmExe% -c -t "%p_path%"
+	else
+		Run,%FavMenu_fmExe% -c "%p_path%"
+}
+
+;;FIXME: Locate in existing instance
 FavMenu_FM_LocateInXplorer2( p_path, p_tab )
 {
+	global FavMenu_fmExe
 	; if p_tab
 	; 	Run, %FavMenu_fmExe% "%p_path%", , ,PID
 	; else
 	;; FavMenu_DialogSetPath_Xplorer2 works fine with file (in addition to folder)
-		FavMenu_FM_OpenXplorer2(folder, p_tab)
+		FavMenu_FM_OpenXplorer2(p_path, p_tab)
+}
+
+;;FIXME: Locate in existing instance
+FavMenu_FM_LocateInXYplorer( p_path, p_tab )
+{
+	global FavMenu_fmExe
+	; if p_tab
+	; 	Run, %FavMenu_fmExe% "%p_path%", , ,PID
+	; else
+		Run %FavMenu_fmExe% /select="%p_path%"
 }

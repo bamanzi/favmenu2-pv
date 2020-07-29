@@ -100,7 +100,7 @@ return
 
 Setup_OnBrowseClick:
 	if (A_GuiControl = "Setup_bExe")
-		FileSelectFile, tmp, 3, , Select File Manager, TotalCmd.exe;Explorer.exe 
+		FileSelectFile, tmp, 3, , Select File Manager, DoubleCmd.exe;XYplorerFree.exe;TotalCmd.exe;Explorer.exe;xplorer2.exe
 	else
 		FileSelectFile, tmp, 3, , Select Menu Definition, wincmd.ini;menu.ini
 	

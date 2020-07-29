@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2015
 ;
 ; Change Log
+;   2.27 Enable using DoubleCmd/XYplorerFree/Xplorer2 as FavMenu's default file manager
 ;   2.26 Fix support for latest Double Commander
 ;   2.25 Added new command 'locate application executable' to menu
 ;   2.24 Show all file managers' current paths in menu (currently only
@@ -63,7 +64,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "2.25"
+	Favmenu_version    := "2.27"
 	Favmenu_configFile := "favmenu.ini"
 	
 	;set GUIs
