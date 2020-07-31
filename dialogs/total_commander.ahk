@@ -92,7 +92,7 @@ FavMenu_GetCurrentTCDir(hwnd_tc)
 		StringRight, tail, path, 1
 		IfEqual, tail, >
 		{
-			FileAppend, found file path on TMyPanel%A_Index%: %path%`n,*
+			OutputDebug, found file path on TMyPanel%A_Index%: %path%
 			src = %path%
 			break
 		} 
