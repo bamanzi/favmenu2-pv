@@ -89,7 +89,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 	
 	FavMenu_SetTrayMenu(subMenu)
 	
-	FavMenu_DialogHandler_Init()
+	FavMenu_DialogHandlers_Init()
 	
 	return lastGUI + 2
 }
@@ -103,6 +103,7 @@ FavMenu_Create()
 
 	;will set globals dlgHWND, dlgType, dlgInput
 	FavMenu_DialogGetActive()
+	OutputDebug,FavMenu_DialogGetActive returned with FavMenu_dlgType='%FavMenu_dlgType%'
 
 	;check if that particular dialog is disabled in integration settings
 	t :=  FavMenu_Options_I%FavMenu_dlgType%

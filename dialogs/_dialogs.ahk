@@ -16,27 +16,27 @@
 #include dialogs\emacs.ahk
 ;;TODO: 7-Zip FM
 
-FavMenu_DialogHandler_Init()
+FavMenu_DialogHandlers_Init()
 {
 	global FavMenu_dlgTypes
 	FavMenu_dlgTypes := Array()
 	
 	;; for each application/dialog here, there should be 3 functions
-	;;    	FavMenu_DialogIsType_XXX(hwnd, klass, title)	;; required
-	;;		FavMenu_DialogSetPath_XXX()				;; optional
-	;;		FavMenu_DialogGetPath_XXX()				;; optional
+	;;	FavMenu_DialogIsType_XXX(hwnd, klass, title)	;; optional
+	;;	FavMenu_DialogSetPath_XXX()			;; optional
+	;;	FavMenu_DialogGetPath_XXX()			;; optional
 	
 	FavMenu_dlgTypes.Push("BFF")		; Browse for Folder
 	FavMenu_dlgTypes.Push("OpenSave")	; Open/Save dialog
 	FavMenu_dlgTypes.Push("Explorer")
 	
-	FavMenu_dlgTypes.Push("TC")			; Total Commander
-	FavMenu_dlgTypes.Push("DoubleCommander")	; Double Commander
+	FavMenu_dlgTypes.Push("TC")		; Total Commander
+	FavMenu_dlgTypes.Push("DoubleCommander") ; Double Commander
 	FavMenu_dlgTypes.Push("Console")	; Double Commander
 	FavMenu_dlgTypes.Push("Emacs")
 	
 	FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
-	;;FavMenu_dlgTypes.Push("Cygwin")	;; multiple front-ends (mintty,cmd...)
+	FavMenu_dlgTypes.Push("Cygwin")		; multiple front-ends (mintty,cmd...)
 	FavMenu_dlgTypes.Push("WinSCP")
 	
 	FavMenu_dlgTypes.Push("XYplorer")
@@ -102,18 +102,19 @@ FavMenu_DialogGetActive(hw=0)
 	Loop % FavMenu_dlgTypes.Length()
 	{
 		dlgType := FavMenu_dlgTypes[A_Index]
-		fn := Func("Favmenu_DialogIsType_" . dlgType)
+		funcName = "Favmenu_DialogIsType_" . dlgType
+		fn := Func(funcName)
 		if fn.Name
 		{
 			okey := fn.Call(Favmenu_dlgHwnd, class, title)
-			OutputDebug,INFO: Function 'Favmenu_DialogIsType_%dlgType%' returns '%okey%'
+			OutputDebug,INFO: Function '%funcName%' returns '%okey%'
 			if okey
 			{
 				FavMenu_dlgType := dlgType
 				return 1
 			}
 		} else {
-			OutputDebug,WARN: Function 'Favmenu_DialogIsType_%dlgType%' not exist
+			OutputDebug,WARN: Function '%funcName%' not exist
 		}
 	}
 
@@ -133,15 +134,16 @@ FavMenu_DialogGetPath()
 		return Favmenu_DialogGetPath_OS()
 
 	dlgType := FavMenu_dlgType
-	fn := Func("Favmenu_DialogGetPath_" . dlgType)
+	funcName = "Favmenu_DialogGetPath_" . dlgType
+	fn := Func(funcName)
 	if fn.Name
 	{
 		path := fn.Call()
-		OutputDebug,INFO: Function 'Favmenu_DialogGetPath_%dlgType%' returns '%path%'
+		OutputDebug,INFO: Function '%funcName%' returns '%path%'
 		if path
 			return path
 	} else {
-		OutputDebug,WARN: Function 'Favmenu_DialogGetPath_%dlgType%' not exist
+		OutputDebug,WARN: Function '%funcName%' not exist
 	}
 
 	return Favmenu_DialogGetPath_fromTitle()
@@ -159,13 +161,14 @@ FavMenu_DialogSetPath(path, bTab = false)
 	}
 	
 	dlgType := FavMenu_dlgType
-	fn := Func("Favmenu_DialogSetPath_" . dlgType)
+	funcName = "Favmenu_DialogSetPath_" . dlgType
+	fn := Func(funcName)
 	if fn.Name
 	{
-		OutputDebug,INFO: Function 'Favmenu_DialogSetPath_%dlgType%' dynamic calling...
+		OutputDebug,INFO: Function '%funcName%' dynamic calling...
 		fn.Call(path, bTab)
 	} else {
-		OutputDebug,WARN: Function 'Favmenu_DialogSetPath_%dlgType%' not exist
+		OutputDebug,WARN: Function '%funcName%' not exist
 	}
 }
 

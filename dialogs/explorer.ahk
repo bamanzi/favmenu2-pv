@@ -53,7 +53,7 @@ Favmenu_DialogGetAllPaths_Explorer()
 		curDir := FavMenu_DialogGetPath_Explorer_bg(this_id)
 
 		WinGetTitle, this_title, ahk_id %this_id%
-		OutputDebug enum_all_paths: explorer window=%this_id%`, path=%curDir%`, title=%this_title%`n,*		
+		OutputDebug enum_all_paths: explorer window=%this_id%`, path=%curDir%`, title=%this_title%
 		if curDir
 			arr.Insert(curDir)
 	}
