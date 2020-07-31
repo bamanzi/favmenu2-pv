@@ -2,7 +2,7 @@
 
 Favmenu_DialogIsType_Emacs(hwnd, klass, title)
 {
-	if ( (klass = "Emacs") Or (klass = "MicroEmacsClass") Or (klass = "XEmacs" ) )
+	if ( (klass = "Emacs") or ((klass = "joewin") and (title contains "- jmacs"))  Or (klass = "MicroEmacsClass") Or (klass = "XEmacs" ) )
 	{
 		;FavMenu_dlgType := "Emacs"
 		return 1
