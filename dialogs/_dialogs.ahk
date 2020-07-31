@@ -102,7 +102,7 @@ FavMenu_DialogGetActive(hw=0)
 	Loop % FavMenu_dlgTypes.Length()
 	{
 		dlgType := FavMenu_dlgTypes[A_Index]
-		funcName = "Favmenu_DialogIsType_" . dlgType
+		funcName := "Favmenu_DialogIsType_" . dlgType
 		fn := Func(funcName)
 		if fn.Name
 		{
@@ -134,7 +134,7 @@ FavMenu_DialogGetPath()
 		return Favmenu_DialogGetPath_OS()
 
 	dlgType := FavMenu_dlgType
-	funcName = "Favmenu_DialogGetPath_" . dlgType
+	funcName := "Favmenu_DialogGetPath_" . dlgType
 	fn := Func(funcName)
 	if fn.Name
 	{
@@ -161,7 +161,7 @@ FavMenu_DialogSetPath(path, bTab = false)
 	}
 	
 	dlgType := FavMenu_dlgType
-	funcName = "Favmenu_DialogSetPath_" . dlgType
+	funcName := "Favmenu_DialogSetPath_" . dlgType
 	fn := Func(funcName)
 	if fn.Name
 	{
