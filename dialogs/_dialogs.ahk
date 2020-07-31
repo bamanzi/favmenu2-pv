@@ -68,7 +68,7 @@ FavMenu_DialogGetActive(hw=0)
 		return 1
 	}	
 	
-	if ( (class = "Emacs") Or (class = "MicroEmacsClass") Or (class = "XEmacs" ) )
+	if ( (class = "Emacs") Or ((class = "joewin") and (title contains "- jmacs")) Or (class = "MicroEmacsClass") or (class = "XEmacs" ) )
 	{
 		FavMenu_dlgType := "Emacs"
 		return 1
