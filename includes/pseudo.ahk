@@ -35,7 +35,7 @@ FavMenu_GetCommonPath( csidl )
 
 	val = % CSIDL_%csidl%
 	VarSetCapacity(fpath, 256)
-	DllCall( "shell32\SHGetFolderPathA", "uint", 0, "int", val, "uint", 0, "int", 0, "str", fpath)
+	DllCall( "shell32\SHGetFolderPath", "uint", 0, "int", val, "uint", 0, "int", 0, "str", fpath)
 	return %fpath%
 }
 
