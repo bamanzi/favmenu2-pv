@@ -22,11 +22,23 @@ Favmenu_DialogGetPath_DoubleCommander()
 	Send,!c     ;;Alt+C to activate menu item Commands
 	Sleep,200
 	Send,s	    ;; menu item 'Search'
-	Sleep,400
+	Sleep,300
+	
+	WinWait,Find files
+	ControlGetText,vPath,Edit6,File files
+	OutputDebug,DoubleCommander ControlGetText from 'Edit6' returns: '%vPath%'
+	If vPath and SubStr(vPath,2,1) = ":"
+		return vPath
+	
+	;; try another way
+	
+	;; FIXME: clipboard content changed
 	Send,!d	    ;; Activate 'Start in directory' editbox
-	Sleep,200
+	Sleep,300
 	Send,^c     ;; Copy
+	Sleep,300
 	OutputDebug,GetPath_DoubleCommander: clipboard=%clipboard%
+	Send,{Esc}
 
 	SplitPath,clipboard,,path
 
@@ -35,13 +47,13 @@ Favmenu_DialogGetPath_DoubleCommander()
 
 }
 
-
 FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 {
 	global Favmenu_dlgHwnd
 
 	WinActivate, ahk_id %Favmenu_dlgHwnd%
 
+	;; FIXME: this reply on default keybindings. it won't work if user changed it
 	if (bTab)
 		Send,^t
 
