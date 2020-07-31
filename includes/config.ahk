@@ -70,13 +70,18 @@ FavMenu_TrayHandler()
 	if ( A_ThisMenuItem = "About" )
 	{
 		msg :=
-		msg := msg . Favmenu_title . "  " . Favmenu_version . "`n`n`n"
-		msg := msg . "Created by:`t`t    Miodrag Milic`n"
-
-		msg := msg . "e-mail:`t`t miodrag.milic@gmail.com`n`n`n"
+		msg := msg . Favmenu_title . "  " . Favmenu_version . "`n`n"
+		
+		msg := msg . "Patched by:`t`t	Ba Manzi <bamanzi@gmai.com>`n"
+		msg := msg . "https://github.com/bamanzi/favmenu-pv`n`n"
+		
+		msg := msg . "===================================`n"
+		msg := msg . "Original author:`t`t    Miodrag Milic`n"
+		msg := msg . "e-mail:`t`t miodrag.milic@gmail.com`n`"
 
 		msg := msg . "code.r-moth.com`nwww.r-moth.com`nr-moth.deviantart.com`n`n"
 		msg := msg . "Jun 2006`n"
+		msg := msg . "http://www.totalcmd.net/plugring/TC_FavMenu2.html`n"
 		MsgBox 48, About, %msg%
 	}
 
