@@ -3,7 +3,7 @@
 
 Favmenu_DialogIsType_Explorer(hwnd, klass, title)
 {
-	if (class = "ExploreWClass") or (class = "CabinetWClass")
+	if (klass = "ExploreWClass") or (klass = "CabinetWClass")
 	{
 		FavMenu_GetExplorerInput(hwnd, foo, bar)
 		;FavMenu_dlgType := "Explorer"

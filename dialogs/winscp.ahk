@@ -6,7 +6,7 @@
 
 Favmenu_DialogIsType_WinSCP(hwnd, klass, title)
 {
-	If (class = "TScpCommanderForm")
+	If (klass = "TScpCommanderForm")
 	{
 		;FavMenu_dlgType	 := "Console"
 		return 1

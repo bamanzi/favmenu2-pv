@@ -2,8 +2,7 @@ Favmenu_DialogIsType_Console(hwnd, klass, title)
 {
 	if (klass = "ConsoleWindowClass") or (klass = "VirtualConsoleClass") or (klass = "Console_2_main")
 	{
-		FavMenu_GetExplorerInput(FavMenu_dlgHwnd, foo, bar)
-		;FavMenu_dlgType := "Explorer"
+		;FavMenu_dlgType := "Console"
 		return 1
 	}
 }

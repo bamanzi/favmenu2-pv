@@ -2,17 +2,17 @@
 ;; Thus it's hard to get enough information from the UI components 
 ;; (for example, the window text of the pane header is empty.)
 
-Favmenu_DialogIsType_DoubleCmd(hwnd, klass, title)
+Favmenu_DialogIsType_DoubleCommander(hwnd, klass, title)
 {
 	If (klass = "DClass") and ("Double Commander "==substr(title, 1, StrLen("Double Commander ")))
 	{
-		;FavMenu_dlgType := "Emacs"
+		;FavMenu_dlgType := "DoubleCommander"
 		return 1
 	}
 }
 
 ;; FIXME: clipboard content changed
-Favmenu_DialogGetPath_DoubleCmd()
+Favmenu_DialogGetPath_DoubleCommander()
 {
 	global Favmenu_dlgHwnd
 
@@ -36,7 +36,7 @@ Favmenu_DialogGetPath_DoubleCmd()
 }
 
 
-FavMenu_DialogSetPath_DoubleCmd(path, bTab = false)
+FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 {
 	global Favmenu_dlgHwnd
 
