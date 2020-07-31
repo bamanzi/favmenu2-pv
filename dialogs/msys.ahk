@@ -1,3 +1,13 @@
+
+Favmenu_DialogIsType_Msys(hwnd, klass, title)
+{
+	If ( (InStr(title, "MINGW32", true)>0) or (InStr(title, "MINGW64", true)>0) )
+	{
+		;FavMenu_dlgType := "Msys"
+		return 1
+	}
+}
+
 ;; NOTE:
 ;;   * clipboard content changed
 ;;   * 'cygpath' from package 'cygutils' required 

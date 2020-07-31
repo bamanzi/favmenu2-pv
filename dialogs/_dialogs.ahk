@@ -31,9 +31,11 @@ FavMenu_DialogHandler_Init()
 	FavMenu_dlgTypes.Push("Explorer")
 	
 	FavMenu_dlgTypes.Push("TC")			; Total Commander
-	FavMenu_dlgTypes.Push("DoubleCmd")	; Double Commander
+	FavMenu_dlgTypes.Push("DoubleCommander")	; Double Commander
 	FavMenu_dlgTypes.Push("Console")	; Double Commander
-	;;FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
+	FavMenu_dlgTypes.Push("Emacs")
+	
+	FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
 	;;FavMenu_dlgTypes.Push("Cygwin")	;; multiple front-ends (mintty,cmd...)
 	FavMenu_dlgTypes.Push("WinSCP")
 	
@@ -63,16 +65,19 @@ FavMenu_DialogGetActive(hw=0)
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
 	
-	;; FIXME: a little complicated
-	If ( (InStr(title, "MINGW32", true)>0) or (InStr(title, "MINGW64", true)>0) )
-	{
-		FavMenu_dlgType := "Msys"
-		return 1
-	}
 	
 	If (class = "mintty") Or (SubStr(class, 1, 4) = "rxvt")
 	{
-		FavMenu_dlgType := "Cygwin"
+		WinGet,procpath,ProcessPath,ahk_id %Favmenu_dlgHwnd%
+		OutputDebug,process path=%procpath%
+		
+		if procpath Contains \cygwin
+		{
+			FavMenu_dlgType := "Cygwin"
+		} else {
+			;; FIXME: what if mintty for WSL?
+			FavMenu_dlgType := "Msys"
+		}
 		return 1
 	}
 
@@ -88,6 +93,7 @@ FavMenu_DialogGetActive(hw=0)
 		} else 
 		;; it may be SSH session, but we don't need FavMenu2 on SSH session
 		{
+			;; FIXME: what if WSL?
 			FavMenu_dlgType := "Console"
 			return 1
 		}

@@ -1,6 +1,9 @@
+;; No Favmenu_DialogIsType_Cygwin() here
+;; As Cygwin doesn't have visual indicator on title or windows class
+;; (it use cmd/mintty/rxvt as window, but some other things would also runs in cmd/mintty/rxvt)
+
 ;; NOTE:
 ;;   * clipboard content changed
-
 FavMenu_DialogGetPath_Cygwin()
 {
 	global Favmenu_dlgHwnd
