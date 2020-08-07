@@ -42,25 +42,31 @@ Favmenu_DialogGetPath_BFF()
 
 FavMenu_DialogSetPath_BFF( path )
 {
-	global
+	global FavMenu_dlgHWND
 
-	BFFM_SETSELECTION := 0x400 + 102
+	edit1 := FavMenu_FindWindowExID(FavMenu_dlgHWND, "Edit1", 0)
+	if edit1
+		ControlSetText, Edit1, %path%, ahk_id %FavMenu_dlgHWND%
+	else {
+		;; FIXME: this seems not work any longer
+		BFFM_SETSELECTION := 0x400 + 102
 
-	VarSetCapacity(wPath, StrLen( path ) * 2, 0)
-	Favmenu_GetUnicodeString(wPath, path)
+		VarSetCapacity(wPath, StrLen( path ) * 2, 0)
+		Favmenu_GetUnicodeString(wPath, path)
 
-	bufID := RemoteBuf_Open(FavMenu_dlgHWND, 256)
-	RemoteBuf_Write(bufId, Path , 256)
-	adr := RemoteBuf_GetAdr(bufID)
+		bufID := RemoteBuf_Open(FavMenu_dlgHWND, 256)
+		RemoteBuf_Write(bufId, Path , 256)
+		adr := RemoteBuf_GetAdr(bufID)
 
-	;SendMessage BFFM_SETSELECTION, 1, adr, ,ahk_class %FavMenu_dlgHWND%
-	res := DllCall("SendMessageA"
-         , "UInt", FavMenu_dlgHWND
-         , "UInt", BFFM_SETSELECTION
-         , "UInt", 1
-         , "Uint", adr)
+		;SendMessage BFFM_SETSELECTION, 1, adr, ,ahk_class %FavMenu_dlgHWND%
+		res := DllCall("SendMessageA"
+			 , "UInt", FavMenu_dlgHWND
+			 , "UInt", BFFM_SETSELECTION
+			 , "UInt", 1
+			 , "Uint", adr)
 
-	RemoteBuf_Close( bufId )
+		RemoteBuf_Close( bufId )
+	}
 }
 
 ;------------------------------------------------------------------------------------------------
