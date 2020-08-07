@@ -205,3 +205,53 @@ FavMenu_FM_LocateInXYplorer( p_path, p_tab )
 	; else
 		Run %FavMenu_fmExe% /select="%p_path%"
 }
+
+;--------------------------------------------------------------------------
+
+FavMenu_AddAllFMCurrentPathsToMenu()
+{
+	local cnt  = 0 
+	local array := Object()
+
+	ifWinExist ahk_class TTOTAL_CMD
+	{
+		arr := FavMenu_DialogGetAllPaths_TC()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
+	}
+
+	ifWinExist ahk_class CabinetWClass
+	{
+		arr := FavMenu_DialogGetAllPaths_Explorer()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
+	}
+
+	ifWinExist ahk_class ATL:ExplorerFrame
+	{
+		arr := FavMenu_DialogGetAllPaths_Xplorer2()
+		cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
+	}
+
+	return cnt
+}
+
+;; TODO: add app icon here
+FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
+{
+	cnt := 0
+	for index, curPath in paths
+	{
+		;; use only the directory name as menu label
+		;StringGetPos e, curPath, \, R
+		;StringGetPos idx, curPath, \, R, 1
+		;if (idx != -1) and (idx != 2)
+		;	StringMid curPath, curPath, idx+2, e-idx-1,
+
+		Menu Favmenu_sub1, add, *[%app_prefix% &%cnt%] %curPath% , FavMenu_FullMenuHandlerDispatch
+		cnt += 1
+	}
+	; add separator 
+	Menu Favmenu_sub1, add
+	cnt += 1
+
+	return cnt
+}
