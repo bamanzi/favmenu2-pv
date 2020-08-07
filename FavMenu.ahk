@@ -656,18 +656,6 @@ FavMenu_MenuHandlerDispatch:
 	FavMenu_MenuHandler()
 return
 
-;---------------------------------------------------------------------------
-
-FavMenu_ShellExecute(ppath)
-{
-	global Favmenu_title
-
-	Run %ppath%, ,UseErrorLevel
-	if (ErrorLevel = "ERROR")
-		MsgBox, 64, %Favmenu_title%, Invalid menu item. Command can not be executed:`n%ppath%
-
-	return
-}
 
 ;---------------------------------------------------------------------------
 
@@ -682,7 +670,7 @@ FavMenu_IsQuoted(str)
 }
 
 ;====================== INCLUDES ===========================================
-
+#include includes\actions.ahk
 #include includes\GUI_Properties.ahk
 #include includes\GUI_Setup.ahk
 
