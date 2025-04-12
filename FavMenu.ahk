@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
+;   3.03 Add support for 7zFM; switch to ComObj to fetch all opened paths in Windows Explorer
 ;   3.02 Move 'Current paths in FM' & 'Current path in current app' to submenu
 ;   3.01 Fix window class for Double Commander >= 0.9.6
 ;   3.0 Refactor to make adding new application easier.

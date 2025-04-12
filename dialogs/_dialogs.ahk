@@ -20,57 +20,59 @@ FavMenu_DialogHandlers_Init()
 {
 	global FavMenu_dlgTypes
 	FavMenu_dlgTypes := Array()
-	
+
 	;; for each application/dialog here, there should be 3 functions
 	;;	FavMenu_DialogIsType_XXX(hwnd, klass, title)	;; optional
 	;;	FavMenu_DialogSetPath_XXX()			;; optional
 	;;	FavMenu_DialogGetPath_XXX()			;; optional
-	
+
 	FavMenu_dlgTypes.Push("BFF")		; Browse for Folder
 	FavMenu_dlgTypes.Push("OpenSave")	; Open/Save dialog
 	FavMenu_dlgTypes.Push("Explorer")
-	
+
 	FavMenu_dlgTypes.Push("TC")		; Total Commander
 	FavMenu_dlgTypes.Push("DoubleCommander") ; Double Commander
-	FavMenu_dlgTypes.Push("Console")	; Double Commander
-	FavMenu_dlgTypes.Push("Emacs")
-	
+
+	FavMenu_dlgTypes.Push("Console")	; cmd
 	FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
 	FavMenu_dlgTypes.Push("Cygwin")		; multiple front-ends (mintty,cmd...)
-	FavMenu_dlgTypes.Push("WinSCP")
-	
+
 	FavMenu_dlgTypes.Push("XYplorer")
 	FavMenu_dlgTypes.Push("Xplorer2")
 	FavMenu_dlgTypes.Push("FreeCommander")
-	
+
+	FavMenu_dlgTypes.Push("WinSCP")
+	FavMenu_dlgTypes.Push("7zFM")
+
+	FavMenu_dlgTypes.Push("Emacs")
 	FavMenu_dlgTypes.Push("GTK")
 
-	
+
 }
 
 ; Explorer is seen as dialog if there is another app set as a file manager
-; or as a File Manager if not. 
+; or as a File Manager if not.
 ; If Explorer is current File Manager don't report it as a dialog.
 ;
 FavMenu_DialogGetActive(hw=0)
-{	
+{
 	global Favmenu_dlgHwnd, FavMenu_dlgTypes, FavMenu_dlgType
 
 	WinGet, Favmenu_dlgHwnd, ID, A
 	WinGetClass, class, ahk_id %Favmenu_dlgHwnd%
 	WinGetTitle, title, ahk_id %Favmenu_dlgHwnd%
 	OutputDebug,FaveMenu_DialogGetActive: class=|%class%|, title=|%title%|
-	
+
 	;; FIXME: special handling
 	if FavMenu_IsOpenSave( Favmenu_dlgHwnd )
 			return 1
-	
-	
+
+
 	If (class = "mintty") Or (SubStr(class, 1, 4) = "rxvt")
 	{
 		WinGet,procpath,ProcessPath,ahk_id %Favmenu_dlgHwnd%
 		OutputDebug,process path=%procpath%
-		
+
 		if procpath Contains \cygwin
 		{
 			FavMenu_dlgType := "Cygwin"

@@ -42,20 +42,14 @@ Favmenu_DialogGetAllPaths_Explorer()
 	local arr := Object()
 	local hwnd_active := WinActive()
 
-	WinGet,id,List,ahk_class CabinetWClass
-
-	Loop,%id%
+	for _instance in ComObjCreate("Shell.Application").Windows
 	{
-		this_id := id%A_Index%
-		if this_id == hwnd_active
-			continue
-	
-		curDir := FavMenu_DialogGetPath_Explorer_bg(this_id)
+		hwnd1 := _instance.hwnd
+		path1 := _instance.Document.Folder.Self.Path
+		OutputDebug, opened path in explorer: [%hwnd1%] %path1%
 
-		WinGetTitle, this_title, ahk_id %this_id%
-		OutputDebug enum_all_paths: explorer window=%this_id%`, path=%curDir%`, title=%this_title%
-		if curDir
-			arr.Insert(curDir)
+		if (hwnd_active + 1 = hwnd1)
+			continue
 	}
 
 	return arr
