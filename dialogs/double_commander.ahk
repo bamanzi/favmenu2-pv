@@ -1,51 +1,33 @@
+;; Double Commander >= 0.9.6
+
 ;; As built with Lazarus, Double Commander doesn't use normal windows controls.
-;; Thus it's hard to get enough information from the UI components 
+;; Thus it's hard to get enough information from the UI components
 ;; (for example, the window text of the pane header is empty.)
 
 Favmenu_DialogIsType_DoubleCommander(hwnd, klass, title)
 {
-	If (klass = "DClass") and ("Double Commander "==substr(title, 1, StrLen("Double Commander ")))
+	;; DC changed its window class to TTOTAL_CMD (the same as Total Commander) since 0.9.6
+
+	;; For DC < 0.9.6, change klass to 'DClass'
+	If (klass = "TTOTAL_CMD") and InStr(title, "Double Commander ")
 	{
 		;FavMenu_dlgType := "DoubleCommander"
 		return 1
 	}
 }
 
-;; FIXME: clipboard content changed
 Favmenu_DialogGetPath_DoubleCommander()
 {
 	global Favmenu_dlgHwnd
 
-	Sleep,200   ;;wait FavMenu disappearing
-	WinActivate, ahk_id %Favmenu_dlgHwnd%
+	curpath := Favmenu_DialogGetPath_DC_bg(Favmenu_dlgHwnd)
+	if (curpath=) {
+		curpath := Favmenu_DialogGetPath_DC_fg(Favmenu_dlgHwnd)
+	}
 
-	Send,!c     ;;Alt+C to activate menu item Commands
-	Sleep,200
-	Send,s	    ;; menu item 'Search'
-	Sleep,300
-	
-	WinWait,Find files
-	ControlGetText,vPath,Edit6,File files
-	OutputDebug,DoubleCommander ControlGetText from 'Edit6' returns: '%vPath%'
-	If vPath and SubStr(vPath,2,1) = ":"
-		return vPath
-	
-	;; try another way
-	
-	;; FIXME: clipboard content changed
-	Send,!d	    ;; Activate 'Start in directory' editbox
-	Sleep,300
-	Send,^c     ;; Copy
-	Sleep,300
-	OutputDebug,GetPath_DoubleCommander: clipboard=%clipboard%
-	Send,{Esc}
-
-	SplitPath,clipboard,,path
-
-	OutputDebug,GetPath_DoubleCommander: path=%path%
-	return path
-
+	return curpath
 }
+
 
 FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 {
@@ -64,5 +46,38 @@ FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 	Send,{Home}+{End}{Delete}
 	SendRaw, cd "%path%"
 	Send, {ENTER}
+}
+
+Favmenu_DialogGetPath_DC_fg(hwndDC)
+{
+	Sleep,200   ;;wait FavMenu disappearing
+	WinActivate, ahk_id %hwndDC%
+
+	;; save old text of the Command Line control
+	ControlGetText, oldcmd, Edit1, ahk_id %hwndDC%
+
+	;; cm_AddPathToCmdLine    FIXME: this relies on default keybindings
+	Send,^p     ;;Alt+C to activate menu item Commands
+	Sleep,100
+
+	ControlGetText, curpath, Edit1, ahk_id %hwndDC%
+
+	if (oldcmd<>) {
+		ControlSetText, Edit1, oldcmd, ahk_id %hwndDC%
+	}
+
+	return curpath
+}
+
+Favmenu_DialogGetPath_DC_bg(hwndDC)
+{
+	;; FIXME: by default, Double Commander won't show current path in its title
+	;; you need to enable in Options > Miscellaneous > Show current directory in the main window title bar
+	path := Favmenu_DialogGetPath_fromTitle(hwndDC)
+	;; if (path=)
+	;; {
+		;; TODO: any other way?
+	;;}
+	return path
 }
 

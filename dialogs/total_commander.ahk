@@ -3,7 +3,7 @@
 
 Favmenu_DialogIsType_TC(hwnd, klass, title)
 {
-	if (klass = "TTOTAL_CMD")
+	if (klass = "TTOTAL_CMD") and InStr(title, "Total Commander ")
 	{
 		;FavMenu_dlgType := "TC"
 		return 1
@@ -33,7 +33,11 @@ FavMenu_DialogSetPath_TC(path, bTab = false)
 	;WinActivate ahk_class TTOTAL_CMD
 	WinActivate, ahk_id %FavMenu_dlgHwnd%
 
+	if (bTab)
+		FavMenu_SendTCCommand(cm_OpenNewTab)
+
 	FavMenu_SendTCCommand(cm_editpath)
+
 	SendRaw, %path%
 	Send, {ENTER}
 }

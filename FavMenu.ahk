@@ -5,12 +5,14 @@
 ;	Created by Miodrag Milic					Jun 2006
 ;	code.r-moth.com			www.r-moth.com		r-moth.deviantart.com
 ;
-;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2015
+;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
-;   3.0 Refactor to make adding new application easier. For most application, 
-;        add 'Foo' into array 'FavMenu_dlgTypes',
-;        then implement FavMenu_DialogIsType_Foo, FavMenu_DialogSetPath_Foo, FavMenu_DialogGetPath_Foo
+;   3.0.1 Fix window class for Double Commander >= 0.9.6
+;   3.0 Refactor to make adding new application easier.
+;       For most application,
+;       - add 'Foo' into array 'FavMenu_dlgTypes' in dialogs/_dialogs.ahk
+;       - then implement FavMenu_DialogIsType_Foo, FavMenu_DialogSetPath_Foo, FavMenu_DialogGetPath_Foo in dialogs/foo.ahk
 ;   2.27 Enable using DoubleCmd/XYplorerFree/Xplorer2 as FavMenu's default file manager
 ;   2.26 Fix support for latest Double Commander
 ;   2.25 Added new command 'locate application executable' to menu
@@ -67,9 +69,9 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "3.0"
+	Favmenu_version    := "3.01"
 	Favmenu_configFile := "favmenu.ini"
-	
+
 	;set GUIs
 	Properties_GUI	:= lastGUI + 1
 	Setup_GUI		:= lastGUI + 2
