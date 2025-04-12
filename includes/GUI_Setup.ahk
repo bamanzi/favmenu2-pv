@@ -30,20 +30,20 @@ Setup_Create()
 	; --- tab 2
 	Gui, %Setup_GUI%:Tab, 2
 	Gui, %Setup_GUI%:Add, GroupBox,	x16  y30  w270 h130,							[Content]
-	Gui, %Setup_GUI%:Add, Checkbox, x26  y50  w250 h20  vSetup_cShowEditor,					Show editor at the bottom of the menu   
-	Gui, %Setup_GUI%:Add, Edit,	x45  y72  w220 h20  vSetup_eEditor,		     
-	Gui, %Setup_GUI%:Add, Checkbox, x26  y100 w250 h20  vSetup_cShowTCFolders,				Show current TC folders at the top of the menu
+	Gui, %Setup_GUI%:Add, Checkbox, x26  y50  w250 h20  vSetup_cShowEditor,					Show editor at the bottom of the menu
+	Gui, %Setup_GUI%:Add, Edit,	x45  y72  w220 h20  vSetup_eEditor,
+	Gui, %Setup_GUI%:Add, Checkbox, x26  y100 w250 h20  vSetup_cShowTCFolders,				Show current FM folders in the menu
 	Gui, %Setup_GUI%:Add, Checkbox, x26  y120 w250 h30  vSetup_cShowAddDirs,				Show "Add current directory"
 
 	Gui, %Setup_GUI%:Add, GroupBox, x16  y170 w270 h70,							[Show menu at]
-	Gui, %Setup_GUI%:Add, Radio,	x26  y187 w60  h40  vSetup_MenuPos,					mouse position 
+	Gui, %Setup_GUI%:Add, Radio,	x26  y187 w60  h40  vSetup_MenuPos,					mouse position
 	Gui, %Setup_GUI%:Add, Radio,	x106 y187 w70  h40  Checked,						cursor position
 	Gui, %Setup_GUI%:Add, Radio,	x176 y187 w100 h40,							center of the active window
 
 
 	; --- tab 3
 	Gui, %Setup_GUI%:Tab, 3
-	Gui, %Setup_GUI%:Add, CheckBox, x20  y40  w260 h20	vSetup_IOpenSave	,				Open / Save dialogs									
+	Gui, %Setup_GUI%:Add, CheckBox, x20  y40  w260 h20	vSetup_IOpenSave	,				Open / Save dialogs
 	Gui, %Setup_GUI%:Add, CheckBox, x20  y60  w260 h30	vSetup_IBFF		,				Browse For Folders dialogs
 	Gui, %Setup_GUI%:Add, CheckBox, x20  y90  w260 h20	vSetup_IConsole		,				Console (cmd.exe)
 	Gui, %Setup_GUI%:Add, Text,	x40  y113 w160 h20				,				Append custom command :

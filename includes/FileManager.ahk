@@ -76,10 +76,10 @@ FavMenu_FM_OpenDC(p_path, p_tab)
 {	
 	global FavMenu_fmExe, cm_editpath
 
-	if not WinExist("ahk_class DClass")
+	if not WinExist("ahk_class TTOTAL_CMD ahk_exe doublecmd.exe")
 		 FavMenu_FM_Run()
 
-	WinActivate,ahk_class DClass
+	WinActivate,ahk_class TTOTAL_CMD ahk_exe doublecmd.exe
 	FavMenu_dlgHwnd := WinActive()
 
 	FavMenu_DialogSetPath_DoubleCommander(p_path, p_tab)
@@ -208,34 +208,61 @@ FavMenu_FM_LocateInXYplorer( p_path, p_tab )
 
 ;--------------------------------------------------------------------------
 
-FavMenu_AddAllFMCurrentPathsToMenu()
+FavMenu_AddAllFMCurrentPathsToMenu(submenu_id)
 {
-	local cnt  = 0 
-	local array := Object()
+	local cnt  = 0
+	local subcnt = 0
 
-	ifWinExist ahk_class TTOTAL_CMD
+	ifWinExist ahk_class TTOTAL_CMD ahk_exe totalcmd64.exe
 	{
 		arr := FavMenu_DialogGetAllPaths_TC()
-		cnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr)
+		subcnt := FavMenu_AddFMCurrentPathsToMenu("TC", arr, submenu_id)
+
+		if (subcnt>0)
+		{
+			; add separator
+			Menu, submenu_id, add
+			cnt += subcnt + 1
+		}
+	}
+
+	ifWinExist ahk_class TTOTAL_CMD ahk_exe doublecmd.exe
+	{
+		arr := FavMenu_DialogGetAllPaths_DC()
+		subcnt := FavMenu_AddFMCurrentPathsToMenu("DC", arr, submenu_id)
+
+		if (subcnt>0)
+		{
+			; add separator
+			Menu, submenu_id, add
+			cnt += subcnt + 1
+		}
 	}
 
 	ifWinExist ahk_class CabinetWClass
 	{
 		arr := FavMenu_DialogGetAllPaths_Explorer()
-		cnt += FavMenu_AddFMCurrentPathsToMenu("SYS", arr)
+		subcnt := FavMenu_AddFMCurrentPathsToMenu("SYS", arr, submenu_id)
+		if (subcnt>0)
+		{
+			; add separator
+			Menu, submenu_id, add
+			cnt += subcnt + 1
+		}
 	}
 
 	ifWinExist ahk_class ATL:ExplorerFrame
 	{
 		arr := FavMenu_DialogGetAllPaths_Xplorer2()
-		cnt += FavMenu_AddFMCurrentPathsToMenu("X2", arr)
+		subcnt := FavMenu_AddFMCurrentPathsToMenu("X2", arr, submenu_id)
+		cnt += subcnt
 	}
 
 	return cnt
 }
 
 ;; TODO: add app icon here
-FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
+FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths, submenu_id)
 {
 	cnt := 0
 	for index, curPath in paths
@@ -246,12 +273,9 @@ FavMenu_AddFMCurrentPathsToMenu(app_prefix, paths)
 		;if (idx != -1) and (idx != 2)
 		;	StringMid curPath, curPath, idx+2, e-idx-1,
 
-		Menu Favmenu_sub1, add, *[%app_prefix% &%cnt%] %curPath% , FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, *[%app_prefix% &%cnt%] %curPath% , FavMenu_FullMenuHandlerDispatch
 		cnt += 1
 	}
-	; add separator 
-	Menu Favmenu_sub1, add
-	cnt += 1
 
 	return cnt
 }

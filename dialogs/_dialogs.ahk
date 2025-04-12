@@ -146,7 +146,7 @@ FavMenu_DialogGetPath()
 		OutputDebug,WARN: Function '%funcName%' not exist
 	}
 
-	return Favmenu_DialogGetPath_fromTitle()
+	return Favmenu_DialogGetPath_fromTitle(Favmenu_dlgHwnd)
 }
 
 FavMenu_DialogSetPath(path, bTab = false)
@@ -173,16 +173,44 @@ FavMenu_DialogSetPath(path, bTab = false)
 }
 
 ;--------------------------------------------------------------------------
-
-Favmenu_DialogGetPath_fromTitle()
+Favmenu_DialogGetPath_fromTitle(hwnd)
 {
-	;;for other applications/dialogs, try to parse title
-	Local title
-	WinGetActiveTitle, title
+	WinGetTitle,title,ahk_id %hwnd%
 	OutputDebug, try to parse directory from title: %title%`n
+
+	path1 := Favmenu_extract_path_from_title(title)
+	if (path1) {
+		;; in case title pointing to a file, or a path within archive
+		return Favmenu_get_parent_folder_until_dir(path1)
+	}
+	;; else return ""
+}
+
+isdir(filepath)
+{
+	FileGetAttrib,attr,%filepath%
+	return InStr(attr, "D")>0
+}
+
+Favmenu_get_parent_folder_until_dir(filepath)
+{
+	curpath := filepath
+	Loop {
+		if isdir(curpath) {
+			return curpath
+		} else {
+			SplitPath,curpath,,outDir
+			curpath := outDir
+		}
+	}
+}
+
+Favmenu_extract_path_from_title(title)
+{
+
 	If title contains :\,\\
-	{	
-		local fstart, fend1, fend2, fend3, curDir
+	{
+		;local fstart, fend1, fend2, fend3, curDir
 		fstart := InStr(title, ":\") -1
 		if fstart <=0
 		{
@@ -190,19 +218,21 @@ Favmenu_DialogGetPath_fromTitle()
 			if fstart <=0
 				return
 		}
-		
+
 		fend1 := InStr(title, " - ", fstart + 2) ;; mostly used
 		fend2 := InStr(title, " * ", fstart + 2) ;; SciTE (SciTE4AHK)
-		fend2 := InStr(title, "]",   fstart + 2)
-		
-		local fname1, fname2, fname3, fname4
+		fend3 := InStr(title, "]",   fstart + 2)
+		fend4 := InStr(title, ")",   fstart + 2)
+
+		;local fname1, fname2, fname3, fname4
 		fname1 := SubStr(title, fstart, fend1 - fstart)
 		fname2 := SubStr(title, fstart, fend2 - fstart)
-		fname3 := SubStr(title, fstart, fend2 - fstart)
-		fname4 := SubStr(title, fstart)
-		
-		OutputDebug `nDialogGetPath_FromTitle: fname1=%fname1%`nfname2=%fname2%`nfname3=%fname3%`n
-		If FileExist(fname1) 
+		fname3 := SubStr(title, fstart, fend3 - fstart)
+		fname4 := SubStr(title, fstart, fend4 - fstart)
+		fname5 := SubStr(title, fstart)
+
+		OutputDebug,Favmenu_extract_path_from_title: fname1=%fname1%, fname2=%fname2%, fname3=%fname3%
+		If FileExist(fname1)
 			curDir := fname1
 		else if FileExist(fname2)
 			curDir := fname2
@@ -210,9 +240,11 @@ Favmenu_DialogGetPath_fromTitle()
 			curDir := fname3
 		else if FileExist(fname4)
 			curDir := fname4
+		else if FileExist(fname5)
+			curDir := fname5
 		else
 			return
-		
+
 		;; if it is not a directory
 		If InStr(FileExist(curDir), "D")<=0
 		{

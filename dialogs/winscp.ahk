@@ -29,10 +29,10 @@ Favmenu_DialogGetPath_WinSCP()
 	}
 
 	;; current pane is the local filesystem
-	;; (only works when option 'Path in window title' set to 'Show full path')  
-	if (":" == SubStr(title, 2, 1)) 
+	;; (only works when option 'Path in window title' set to 'Show full path')
+	if (":" == SubStr(title, 2, 1))
 	{
-		return Favmenu_DialogGetPath_FromTitle()
+		return Favmenu_DialogGetPath_FromTitle(Favmenu_dlgHwnd)
 	}
 	else
 	{

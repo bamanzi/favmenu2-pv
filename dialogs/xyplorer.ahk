@@ -16,7 +16,7 @@ FavMenu_DialogGetPath_XYplorer()
 
 	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
 	;; (menu Tools -> Configuration -> Colors and Styles -> Templates -> Titlebar)
-	path := Favmenu_DialogGetPath_FromTitle()
+	path := Favmenu_DialogGetPath_FromTitle(FavMenu_dlgHwnd)
 
 	if FileExist(path)
 	{

@@ -8,7 +8,8 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
-;   3.0.1 Fix window class for Double Commander >= 0.9.6
+;   3.02 Move 'Current paths in FM' & 'Current path in current app' to submenu
+;   3.01 Fix window class for Double Commander >= 0.9.6
 ;   3.0 Refactor to make adding new application easier.
 ;       For most application,
 ;       - add 'Foo' into array 'FavMenu_dlgTypes' in dialogs/_dialogs.ahk
@@ -69,7 +70,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "3.01"
+	Favmenu_version    := "3.02"
 	Favmenu_configFile := "favmenu.ini"
 
 	;set GUIs
@@ -249,16 +250,10 @@ FavMenu_CreateFullMenu()
 	local tc_left, tc_right, hwnd, separator, clippath, attr
 
 	FavMenu_currentDir =
-	Favmenu_deltaS	= 0 ;;offset of first hotdir menu item 
-	
-	; add TC Current folders 
-	if ( FavMenu_Options_ShowTCFolders )
-	{
-		Favmenu_deltaS := FavMenu_AddAllFMCurrentPathsToMenu()
-	}
+	Favmenu_deltaS	= 0 ;;offset of first hotdir menu item
 
 FavMenu_skip:
-	
+
 	; add menu from the ini file
 	if (! FavMenu_CreateMenu() )
 	{
@@ -266,40 +261,65 @@ FavMenu_skip:
 		ExitApp
 	}
 
-	; add "add current dir"
+	Menu, Favmenu_sub1, add
+
+	; add TC Current folders
+	if ( FavMenu_Options_ShowTCFolders )
+	{
+		Favmenu_subCnt += 1
+		submenu_id	= Favmenu_sub%Favmenu_subCnt%
+
+		FavMenu_AddAllFMCurrentPathsToMenu(submenu_id)
+
+		Menu, Favmenu_sub1, add, Current path in File Managers, % ":" . submenu_id
+	}
+
+	WinGet, app_exe, ProcessName, A
+	OutputDebug,current application: %app_exe% (hwnd=%Favmenu_dlgHwnd%)
 	if (FavMenu_Options_ShowAddDirs)
 	{
-		;;if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
-		{
-			Menu, Favmenu_sub1, add
-			separator := true
+		Favmenu_subCnt += 1
+		submenu_id	= Favmenu_sub%Favmenu_subCnt%
 
-			clippath := clipboard
-			ifExist,%clippath%
-			{
-					FileGetAttrib,attr,%clippath%
-					OutputDebug,path in clipboard %clippath%
-					IfInString,attr,D
-					{
-						Menu Favmenu_sub1, add,  *[Clipboard] %clippath% , FavMenu_FullMenuHandlerDispatch
-						; add separator 
-						Menu Favmenu_sub1, add
-					}
-			} 
-			
-			Menu, Favmenu_sub1, add, &Add current dir, FavMenu_FullMenuHandlerDispatch
+		infomenu_title := "[INFO] current window type: generic"
+		if (Favmenu_dlgHwnd<>0)
+		{
+			infomenu_title := "[INFO] current window type: " + FavMenu_dlgType
 		}
+		Menu, %submenu_id%, add, %infomenu_title%, FavMenu_FullMenuHandlerWinType
+		Menu, %submenu_id%, Default, %infomenu_title%
+
+		Menu, %submenu_id%, add, &Add current path to FavMenu, FavMenu_FullMenuHandlerDispatch
 
 		; copy current dir
-		Menu, Favmenu_sub1, add, &Copy current path, FavMenu_FullMenuHandlerDispatch
-		
-		Menu, Favmenu_sub1, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
-		
-		Menu, Favmenu_sub1, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, &Copy current path, FavMenu_FullMenuHandlerDispatch
 
+		Menu, %submenu_id%, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
+
+		Menu, %submenu_id%, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
+
+		Menu, Favmenu_sub1, add, Current path in %app_exe%, % ":" . submenu_id
+	}
+	Menu, Favmenu_sub1, add, &Locate %app_exe%, FavMenu_FullMenuHandlerDispatch
+
+	;;if WinActive("ahk_class TTOTAL_CMD") OR Favmenu_dlgHWND
+	{
 		Menu, Favmenu_sub1, add
+		separator := true
 
-		Menu, Favmenu_sub1, add, Locate application &executable, FavMenu_FullMenuHandlerDispatch
+		clippath := clipboard
+		ifExist,%clippath%
+		{
+				FileGetAttrib,attr,%clippath%
+				OutputDebug,path in clipboard %clippath%
+				IfInString,attr,D
+				{
+					Menu Favmenu_sub1, add,  *[Clipboard] %clippath% , FavMenu_FullMenuHandlerDispatch
+					; add separator
+					Menu Favmenu_sub1, add
+				}
+		}
+
 	}
 
 	; add editor
@@ -353,24 +373,24 @@ FavMenu_FullMenuHandler()
 		if FileExist(FavMenu_Options_Editor)
 			Run %FavMenu_Options_Editor%
 		else MsgBox 16, %FavMenu_title%, Editor can not be started:`n%FavMenu_Options_Editor%
-		
+
 		return
 	}
 
 	; handle add current dir
-	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current dir")
+	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current path to FavMenu")
 		return FavMenu_AddCurrentDir()
 
 	if ( A_ThisMenuItem = "&Copy current path")
 		return FavMenu_CopyCurrentPath()
-		
+
 	if ( A_ThisMenuItem = "Open current path in File &Manager")
 		return FavMenu_OpenCurrentPathInFM()
-	
+
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
 
-	if ( A_ThisMenuItem = "Locate application &executable")
+	if InStr(A_ThisMenuItem, "&Locate ")=1
 	{
 		local prcpath, stateS
 		GetKeyState, stateS, Shift
@@ -378,12 +398,13 @@ FavMenu_FullMenuHandler()
 		WinGet, prcpath, ProcessPath, A
 		return FavMenu_FM_Locate(prcpath, stateS = "D")
 	}
-	
-	; handle current TC folders
-	if (FavMenu_Options_ShowTCFolders)
+
+	; handle current folders in file managers (and clipboard)
+	;;if (FavMenu_Options_ShowTCFolders)
+	if (true)
 	{
 		path = %A_ThisMenuItem%
-		
+
 		if InStr(A_ThisMenuItem, "*[")==1
 		{
 			;;StringGetPos, tmp, A_ThisMenuItem, "]"  //not work??
@@ -429,6 +450,10 @@ FavMenu_FullMenuHandlerDispatch:
 	FavMenu_FullMenuHandler()
 return
 
+FavMenu_FullMenuHandlerWinType:
+	if InStr(A_ThisMenuItem, " type: generic")
+		MsgBox,Current window not recognized by FavMenu2. The commands in submenu may not applicable for current window.
+return
 ;--------------------------------------------------------------------------
 ; Handle menu defintion without extra items
 ;

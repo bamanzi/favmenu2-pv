@@ -62,17 +62,39 @@ Favmenu_DialogGetPath_DC_fg(hwndDC)
 
 	ControlGetText, curpath, Edit1, ahk_id %hwndDC%
 
-	if (oldcmd<>) {
+	if (oldcmd) {
 		ControlSetText, Edit1, oldcmd, ahk_id %hwndDC%
 	}
 
 	return curpath
 }
 
+FavMenu_DialogGetAllPaths_DC()
+{
+	local arr := Object()
+	local hwnd_active := WinActive()
+
+	WinGet,id,List,ahk_class TTOTAL_CMD ahk_exe doublecmd.exe
+
+	Loop,%id%
+	{
+		this_id := id%A_Index%
+		if this_id == hwnd_active
+			continue
+
+		curpath := Favmenu_DialogGetPath_DC_bg(this_id)
+		if (curpath)
+		{
+			arr.Insert(curpath)
+		}
+	}
+	return arr
+}
+
 Favmenu_DialogGetPath_DC_bg(hwndDC)
 {
 	;; FIXME: by default, Double Commander won't show current path in its title
-	;; you need to enable in Options > Miscellaneous > Show current directory in the main window title bar
+	;; you need to enable it in Options > Miscellaneous > Show current directory in the main window title bar
 	path := Favmenu_DialogGetPath_fromTitle(hwndDC)
 	;; if (path=)
 	;; {

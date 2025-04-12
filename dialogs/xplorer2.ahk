@@ -13,7 +13,10 @@ Favmenu_DialogIsType_Xplorer2(hwnd, klass, title)
 FavMenu_DialogGetPath_Xplorer2()
 {
 	global FavMenu_dlgHwnd
-	return FavMenu_DialogGetPath_Xplorer2_bg(FavMenu_dlgHwnd)
+	curpath := FavMenu_DialogGetPath_Xplorer2_bg(FavMenu_dlgHwnd)
+	if (curpath) {
+		return Favmenu_get_parent_folder_until_dir(curpath)
+	}
 }
 
 FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
