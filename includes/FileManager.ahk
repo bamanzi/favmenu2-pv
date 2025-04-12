@@ -11,9 +11,9 @@ FavMenu_FM_Open( p_path, p_tab )
 {
 	global
 
-	if FavMenu_fmExe contains TotalCmd.exe
+	if FavMenu_fmExe contains TotalCmd
 		return FavMenu_FM_OpenTC( p_path, p_tab )
-	
+
 	if FavMenu_fmExe contains DoubleCmd.exe
 		return FavMenu_FM_OpenDC( p_path, p_tab )
 
@@ -57,13 +57,17 @@ FavMenu_FM_OpenExplorer( p_path )
 ; Total Commander
 
 FavMenu_FM_OpenTC(p_path, p_tab)
-{	
+{
 	global FavMenu_fmExe, cm_editpath
 
-	if not WinExist("ahk_class TTOTAL_CMD")
-		 FavMenu_FM_Run()
+	SplitPath, FavMenu_fmExe, exename
+	is_tc64 := InStr(exename, "totalcmd64.exe") > 0
 
-	WinActivate,ahk_class TTOTAL_CMD
+	if not WinExist("ahk_class TTOTAL_CMD ahk_exe " exename)
+			FavMenu_FM_Run()
+
+	WinActivate, ahk_class TTOTAL_CMD ahk_exe %exename%
+
 	FavMenu_dlgHwnd := WinActive()
 
 	FavMenu_DialogSetPath_TC(p_path, p_tab)
@@ -127,14 +131,14 @@ FavMenu_FM_Run( arg = "" )
 
 FavMenu_FM_Locate(p_path, p_tab)
 {
-	global FavMenu_fmExe 
+	global FavMenu_fmExe
 
-	if FavMenu_fmExe contains TotalCmd.exe
-		return FavMenu_FM_LocateInTC( p_path, p_tab ) 
+	if FavMenu_fmExe contains TotalCmd
+		return FavMenu_FM_LocateInTC( p_path, p_tab )
 
 	if FavMenu_fmExe contains DoubleCmd.exe
-		return FavMenu_FM_LocateInDC( p_path, p_tab ) 
-	
+		return FavMenu_FM_LocateInDC( p_path, p_tab )
+
 	if FavMenu_fmExe contains XYplorer
 		return FavMenu_FM_LocateInXYplorer( p_path, p_tab )
 
@@ -213,15 +217,21 @@ FavMenu_AddAllFMCurrentPathsToMenu(submenu_id)
 	local cnt  = 0
 	local subcnt = 0
 
-	ifWinExist ahk_class TTOTAL_CMD ahk_exe totalcmd64.exe
+	ifWinExist ahk_class TTOTAL_CMD ;;ahk_exe totalcmd64.exe
 	{
-		arr := FavMenu_DialogGetAllPaths_TC()
+		local hwnd_active := WinActive()
+		;; totalcmd64.exe
+		arr := FavMenu_DialogGetAllPaths_TC_bg(hwnd_active, true)
 		subcnt := FavMenu_AddFMCurrentPathsToMenu("TC", arr, submenu_id)
+
+		;; totalcmd.exe
+		arr := FavMenu_DialogGetAllPaths_TC_bg(hwnd_active, false)
+		subcnt += FavMenu_AddFMCurrentPathsToMenu("TC", arr, submenu_id)
 
 		if (subcnt>0)
 		{
 			; add separator
-			Menu, submenu_id, add
+			Menu, %submenu_id%, add
 			cnt += subcnt + 1
 		}
 	}

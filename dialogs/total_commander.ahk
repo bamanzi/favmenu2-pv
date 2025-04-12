@@ -1,5 +1,10 @@
-;; Total Commander
+;; Total Commander >= 9.0
 ;; ahk_class TTOTAL_CMD
+
+;; NOTE:
+;; - 32bit & 64bit have different control IDs (for the path panel & cmd line control)
+;; - only versions >= 9.0 supported, as a vertical toolbar was added in version 9.0,
+;;   which changed the control IDs
 
 Favmenu_DialogIsType_TC(hwnd, klass, title)
 {
@@ -12,31 +17,30 @@ Favmenu_DialogIsType_TC(hwnd, klass, title)
 
 Favmenu_DialogGetPath_TC()
 {
-	curDir := FavMenu_GetCurrentTCDir(FavMenu_dlgHwnd)
-	StringGetPos idx, curDir, \, R
+	global FavMenu_dlgHwnd
+	WinGet, exename, ProcessName, ahk_id %FavMenu_dlgHwnd%
 
-	if (idx != -1) && StrLen(curDir) > 3
-		StringMid name, curDir, idx+2, 256
+	if exename contains totalcmd64.exe
+		curDir := FavMenu_GetCurrentTCDir64(FavMenu_dlgHwnd)
 	else
-		StringMid name, curDir, 1, 2
+		if exename contains totalcmd.exe
+			curDir := FavMenu_GetCurrentTCDir32(FavMenu_dlgHwnd)
 
 	return curDir
 }
 
 FavMenu_DialogSetPath_TC(path, bTab = false)
 {
-	global 
+	global
 
-	if (bTab)
-		FavMenu_SendTCCommand(cm_OpenNewTab)
-	
 	;WinActivate ahk_class TTOTAL_CMD
 	WinActivate, ahk_id %FavMenu_dlgHwnd%
 
 	if (bTab)
-		FavMenu_SendTCCommand(cm_OpenNewTab)
+		FavMenu_SendTCCommand(cm_OpenNewTab, FavMenu_dlgHwnd)
 
-	FavMenu_SendTCCommand(cm_editpath)
+	FavMenu_SendTCCommand(cm_editpath, FavMenu_dlgHwnd)
+	sleep,200
 
 	SendRaw, %path%
 	Send, {ENTER}
@@ -44,29 +48,48 @@ FavMenu_DialogSetPath_TC(path, bTab = false)
 
 FavMenu_DialogGetAllPaths_TC()
 {
-	local arr := Object()
 	local hwnd_active := WinActive()
 
-	WinGet,id,List,ahk_class TTOTAL_CMD
+	list1 := FavMenu_DialogGetAllPaths_TC_bg(hwnd_active, true)
+	list2 := FavMenu_DialogGetAllPaths_TC_bg(hwnd_active, false)
 
-	Loop,%id%
+	for index, value in list2
+		list1.Push(value)
+	return list1
+}
+
+FavMenu_DialogGetAllPaths_TC_bg(hwnd_active, is_tc64)
+{
+	local arr := Array()
+
+    exename = totalcmd.exe
+	if is_tc64
+		exename = totalcmd64.exe
+
+	WinGet, hwnds, List, ahk_class TTOTAL_CMD ahk_exe %exename%
+
+	Loop,%hwnds%
 	{
-		this_id := id%A_Index%
-		if this_id == hwnd_active
+		this_id := hwnds%A_Index%
+		if (this_id == hwnd_active)
 			continue
 
 		WinGetTitle, this_title, ahk_id %this_id%
 
-		FavMenu_GetTCPanels(this_id, leftDir, rightDir)
+		if is_tc64
+			FavMenu_GetTCPanels64(this_id, leftDir, rightDir)
+		else
+			FavMenu_GetTCPanels32(this_id, leftDir, rightDir)
+
 		if leftDir
 		{
-            OutputDebug,enum_all_paths: tc left window=%this_id%`, title=%this_title%`, path=%leftDir%`n
-            arr.Insert(leftDir)
+            OutputDebug, enum_all_paths: tc exe=[%exename%] window=[%this_id%] title=[%this_title%] left  path=%leftDir%
+            arr.Push(leftDir)
 		}
 		if rightDir
 		{
-            OutputDebug,enum_all_paths: tc right window=%this_id%`, title=%this_title%`, path=%rightDir%`n
-            arr.Insert(rightDir)
+            OutputDebug, enum_all_paths: tc exe=[%exename%] window=[%this_id%]  title=[%this_title%] right path=%rightDir%
+            arr.Push(rightDir)
 		}
 	}
 
@@ -76,42 +99,51 @@ FavMenu_DialogGetAllPaths_TC()
 ;;--------------------------------------------------------------------------
 ;; internal functions
 ;;--------------------------------------------------------------------------
-
-; set left and right panel and return source
-;
-FavMenu_GetTCPanels(hwnd_tc, ByRef pLeft, ByRef pRight)
+FavMenu_GetTCPanels64(hwnd_tc, ByRef pLeft, ByRef pRight)
 {
 	WinGetTitle, tcTitle, ahk_id %hwnd_tc%
-	if tcTitle not contains 6.5 AND tcTitle not contains 7.0
-	{
-		ControlGetText pLeft,  TPathPanel1, ahk_id %hwnd_tc%
-		ControlGetText pRight, TPathPanel2, ahk_id %hwnd_tc%
-	}
-	else
-	{
-		ControlGetText pLeft,  TMyPanel5, ahk_id %hwnd_tc%
-		ControlGetText pRight, TMyPanel9, ahk_id %hwnd_tc%
-	}
 
-	StringReplace pLeft, pLeft, *.*
-	StringReplace pRight, pRight, *.*
+	ControlGetText pLeft,  Window10, ahk_id %hwnd_tc%
+	ControlGetText pRight, Window15, ahk_id %hwnd_tc%
+
+	;; remove trailing filter
+	;;pLeft := StrReplace(pLeft, "*.*")
+	;;pRight := StrReplace(pRight, "*.*")
+	pLeft := Favmenu_get_parent_folder_until_dir(pLeft)
+	pRight := Favmenu_get_parent_folder_until_dir(pRight)
 }
 
-FavMenu_GetCurrentTCDir(hwnd_tc)
+FavMenu_GetTCPanels32(hwnd_tc, ByRef pLeft, ByRef pRight)
 {
-	WinGetActiveTitle,tcTitle
-	Loop,10 {
-		ControlGetText path, TMyPanel%A_Index%, ahk_id %hwnd_tc%
-		StringRight, tail, path, 1
-		IfEqual, tail, >
-		{
-			OutputDebug, found file path on TMyPanel%A_Index%: %path%
-			src = %path%
-			break
-		} 
-	  }
+	WinGetTitle, tcTitle, ahk_id %hwnd_tc%
 
-	StringReplace src, src, >
-	return src
+	ControlGetText pLeft,  TPathPanel1, ahk_id %hwnd_tc%
+	ControlGetText pRight, TPathPanel2, ahk_id %hwnd_tc%
+
+	;; remove trailing filter
+	;;pLeft := StrReplace(pLeft, "*.*")
+	;;pRight := StrReplace(pRight, "*.*")
+	pLeft := Favmenu_get_parent_folder_until_dir(pLeft)
+	pRight := Favmenu_get_parent_folder_until_dir(pRight)
+}
+
+FavMenu_GetCurrentTCDir64(hwnd_tc)
+{
+	WinGetTitle,tcTitle,ahk_id %hwnd_tc%
+
+    ControlGetText curpath, Window6, ahk_id %hwnd_tc%
+
+	curpath := StrReplace(curpath, ">")
+	return curpath
+}
+
+FavMenu_GetCurrentTCDir32(hwnd_tc)
+{
+	WinGetTitle,tcTitle,ahk_id %hwnd_tc%
+
+    ControlGetText curpath, TMyPanel3, ahk_id %hwnd_tc%
+
+	curpath := StrReplace(curpath, ">")
+	return curpath
 }
 

@@ -1,4 +1,6 @@
-#IfWinActive ahk_class TTOTAL_CMD
+;; TODO: add support for Double Commander (?)
+
+#IfWinActive ahk_class TTOTAL_CMD ahk_exe totalcmd64.exe
 
 +Lbutton::	Favmenu_OnTCClick()
 +LButton up::	Click up
@@ -8,28 +10,27 @@
 Favmenu_OnTCClick()
 {
 	global Favmenu_Options_MenuPos, Favmenu_TCFlag
- 
+
 	WinGetActiveTitle, tcTitle
 	MouseGetPos X, Y, ,tcCtrl
 
-	if tcTitle not contains 6.5,7.0
+	if tcTitle contains Commander (64)
  	{
-		if tcCtrl not contains TPathPanel1,TPathPanel2
-		{
-			Click down
-			return
-		}	
-	}
-	else
-	{
-		if tcCtrl not contains TMyPanel5,TMyPanel9
+		if tcCtrl not contains Window10,Window15
 		{
 			Click down
 			return
 		}
 	}
-	  	
-	    
+	else
+	{
+		if tcCtrl not contains TPathPanel1,TPathPanel2
+		{
+			Click down
+			return
+		}
+	}
+
 
 	if !Favmenu_TCFlag
 	{
@@ -37,7 +38,7 @@ Favmenu_OnTCClick()
 		clkTime := A_TickCount
 		Click down
 	}
-	else 
+	else
 		if (A_TickCount - clkTime < 300)
 		{
 			Favmenu_TCFlag := false

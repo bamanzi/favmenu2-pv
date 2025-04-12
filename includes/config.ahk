@@ -105,7 +105,7 @@ FavMenu_FindCommander()
 	RegRead FavMenu_fmExe, HKEY_CURRENT_USER, Software\Ghisler\Total Commander, InstallDir
 	RegRead FavMenu_fmIni, HKEY_CURRENT_USER, Software\Ghisler\Total Commander, IniFileName
 
-	FavMenu_fmExe = %FavMenu_fmExe%\TotalCmd.exe
+	FavMenu_fmExe = %FavMenu_fmExe%\TotalCmd64.exe
 
 	if (FileExist(FavMenu_fmExe)) && (FileExist(FavMenu_fmIni))
 	return true
