@@ -15,6 +15,7 @@
 
 #include dialogs\gtk.ahk
 #include dialogs\emacs.ahk
+#include dialogs\everything.ahk
 
 FavMenu_DialogHandlers_Init()
 {
@@ -92,7 +93,7 @@ FavMenu_DialogGetActive(hw=0)
 		{
 			FavMenu_dlgType := "Cygwin"
 			return 1
-		} else 
+		} else
 		;; it may be SSH session, but we don't need FavMenu2 on SSH session
 		{
 			;; FIXME: what if WSL?
@@ -163,7 +164,7 @@ FavMenu_DialogSetPath(path, bTab = false)
 		FavMenu_DialogSetPath_OpenSave(path)
 		return
 	}
-	
+
 	dlgType := FavMenu_dlgType
 	funcName := "Favmenu_DialogSetPath_" . dlgType
 	fn := Func(funcName)

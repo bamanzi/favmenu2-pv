@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
+;   3.06 Add support for Everything (only 'Get current path' of 1st selected item)
 ;   3.05 Fix some bugs.
 ;   3.04 Fix support for Total Commander >= 9.0 (WIP)
 ;		(and enabled support for both TC 32bit & 64bit)
@@ -74,7 +75,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "3.04"
+	Favmenu_version    := "3.06"
 	Favmenu_configFile := "favmenu.ini"
 
 	;set GUIs
