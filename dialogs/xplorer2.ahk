@@ -48,15 +48,19 @@ FavMenu_DialogGetAllPaths_Xplorer2()
 	Loop,%id%
 	{
 		this_id := id%A_Index%
-		if this_id == hwnd_active
+		if (this_id == hwnd_active)
 			continue
 
 		WinGetTitle, this_title, ahk_id %this_id%
 
 		curDir := FavMenu_DialogGetPath_Xplorer2_bg(this_id)
-		OutputDebug,enum_all_paths: xplorer window=%this_id%`, title=%this_title%`, path=%curDir%    
-		if curDir
+		OutputDebug,enum_all_paths: xplorer window=%this_id%`, title=%this_title%`, path=%curDir%
+		if (curDir)
+		{
+			;; in case in archive (e.g. zip)
+			curDir := Favmenu_get_parent_folder_until_dir(curDir)
 			arr.Insert(curDir)
+		}
 	}
 
 	return arr

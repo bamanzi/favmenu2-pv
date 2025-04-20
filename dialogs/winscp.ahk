@@ -15,12 +15,12 @@ Favmenu_DialogIsType_WinSCP(hwnd, klass, title)
 
 Favmenu_DialogGetPath_WinSCP()
 {
-	local title
-	WinGetTitle,title,ahk_id %Favmenu_dlgHwnd%  
+	global Favmenu_dlgHwnd
+	WinGetTitle,title,ahk_id %Favmenu_dlgHwnd%
 
 	;; if current pane is the remote filesystem, activate the other pane
-	;; (only works when option 'Path in window title' set to 'Show full path')  
-	if ("/" == SubStr(title, 1, 1)) 
+	;; (only works when option 'Path in window title' set to 'Show full path')
+	if ("/" == SubStr(title, 1, 1))
 	{
 		WinActivate,ahk_id %Favmenu_dlgHwnd%
 		Send,{Tab}
@@ -37,24 +37,23 @@ Favmenu_DialogGetPath_WinSCP()
 	else
 	{
 		;; full path not shown in title, thus use Open Directory dialog to get current directory
-		local title
 		WinActivate,ahk_id %Favmenu_dlgHwnd%
 		Send,^o
 		Sleep 500
 
 		ControlGetText, curDir, TIEComboBox1, ahk_class TOpenDirectoryDialog
 		return curDir
-	}	
-} 
+	}
+}
 
 Favmenu_DialogSetPath_WinSCP(targetpath)
 {
-	local title
-	WinGetTitle,title,ahk_id %Favmenu_dlgHwnd%  
+	global Favmenu_dlgHwnd
+	WinGetTitle,title,ahk_id %Favmenu_dlgHwnd%
 
 	;; if current pane is the remote filesystem, activate the other pane
 	;; (require option set: (Options->Preferences->Window->Path in window title)
-	if ("/" == SubStr(title, 1, 1)) 
+	if ("/" == SubStr(title, 1, 1))
 	{
 		WinActivate,ahk_id %Favmenu_dlgHwnd%
 		Send,{Tab}

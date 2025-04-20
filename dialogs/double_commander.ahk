@@ -40,7 +40,7 @@ FavMenu_DialogSetPath_DoubleCommander(path, bTab = false)
 		Send,^t
 
 	;; FIXME: this reply on default keybindings. it won't work if user changed it
-	;; and it won't work if user choose to hide the 'command line'
+	;; (if user choose to hide the 'command line', this command would make it visible temporarily)
 	Send,+{F2}   ;;focus command line
 
 	Send,{Home}+{End}{Delete}

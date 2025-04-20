@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
+;   3.05 Fix some bugs.
 ;   3.04 Fix support for Total Commander >= 9.0 (WIP)
 ;		(and enabled support for both TC 32bit & 64bit)
 ;   3.03 Add support for 7zFM; switch to ComObj to fetch all opened paths in Windows Explorer
@@ -117,8 +118,11 @@ FavMenu_Create()
 	if FavMenu_dlgType = Office03
 		t := FavMenu_Options_IOpenSave
 	if (0 == t)
+	{
+		OutputDebug,INFO: don't show menu as FavMenu_Options_I%FavMenu_dlgType%==0
 		return
-	
+	}
+
 	;ok, show the menu
 	FavMenu_CreateFullMenu()
 	FavMenu_Show()
@@ -285,21 +289,21 @@ FavMenu_skip:
 		submenu_id	= Favmenu_sub%Favmenu_subCnt%
 
 		infomenu_title := "[INFO] current window type: generic"
-		if (Favmenu_dlgHwnd<>0)
+		if (Favmenu_dlgHwnd)
 		{
 			infomenu_title := "[INFO] current window type: " + FavMenu_dlgType
 		}
-		Menu, %submenu_id%, add, %infomenu_title%, FavMenu_FullMenuHandlerWinType
+		Menu, %submenu_id%, add, %infomenu_title%, FavMenu_MenuHandlerCurrentPathDispatch
 		Menu, %submenu_id%, Default, %infomenu_title%
 
-		Menu, %submenu_id%, add, &Add current path to FavMenu, FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, &Add current path to FavMenu, FavMenu_MenuHandlerCurrentPathDispatch
 
 		; copy current dir
-		Menu, %submenu_id%, add, &Copy current path, FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, &Copy current path, FavMenu_MenuHandlerCurrentPathDispatch
 
-		Menu, %submenu_id%, add, Command &Prompt here, FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, Command &Prompt here, FavMenu_MenuHandlerCurrentPathDispatch
 
-		Menu, %submenu_id%, add, Open current path in File &Manager, FavMenu_FullMenuHandlerDispatch
+		Menu, %submenu_id%, add, Open current path in File &Manager, FavMenu_MenuHandlerCurrentPathDispatch
 
 		Menu, Favmenu_sub1, add, Current path in %app_exe%, % ":" . submenu_id
 	}
@@ -380,22 +384,9 @@ FavMenu_FullMenuHandler()
 		return
 	}
 
-	; handle add current dir
-	if (FavMenu_Options_ShowAddDirs && A_ThisMenuItem = "&Add current path to FavMenu")
-		return FavMenu_AddCurrentDir()
-
-	if ( A_ThisMenuItem = "&Copy current path")
-		return FavMenu_CopyCurrentPath()
-
-	if ( A_ThisMenuItem = "Open current path in File &Manager")
-		return FavMenu_OpenCurrentPathInFM()
-
-	if ( A_ThisMenuItem = "Command &Prompt here")
-		return FavMenu_CommandPromptHere()
-
-	if InStr(A_ThisMenuItem, "&Locate ")=1
+	WinGet, app_exe, ProcessName, A
+	if (InStr(A_ThisMenuItem, "&Locate " . app_exe) = 1)
 	{
-		local prcpath, stateS
 		GetKeyState, stateS, Shift
 
 		WinGet, prcpath, ProcessPath, A
@@ -453,10 +444,6 @@ FavMenu_FullMenuHandlerDispatch:
 	FavMenu_FullMenuHandler()
 return
 
-FavMenu_FullMenuHandlerWinType:
-	if InStr(A_ThisMenuItem, " type: generic")
-		MsgBox,Current window not recognized by FavMenu2. The commands in submenu may not applicable for current window.
-return
 ;--------------------------------------------------------------------------
 ; Handle menu defintion without extra items
 ;
@@ -545,7 +532,46 @@ FavMenu_MenuHandlerDispatch:
 	FavMenu_MenuHandler()
 return
 
+FaveMenu_MenuHandlerCurrentPath()
+{
+	mbIconInfo := 64
+	mbIconExclamation := 48
 
+	WinGet, app_exe, ProcessName, A
+	if InStr(A_ThisMenuItem, " type: generic")
+		MsgBox, mbIconExclamation, %A_ThisMenuItem%,
+(
+Current window NOT recognized by FavMenu2.
+
+The commands in submenu 'Current path in %app_exe%' may NOT applicable for current window.
+
+But if a FULL PATH of open file showed in the window title, those commands would probably work.
+)
+else if InStr(A_ThisMenuItem, " type: ")
+		MsgBox, mbIconInfo, %A_ThisMenuItem%,
+(
+Current window recognized by FavMenu.
+
+The commands in submenu 'Current path in %app_exe%' would WORK for current window.
+)
+
+	; handle add current dir
+	if (A_ThisMenuItem = "&Add current path to FavMenu")
+		return FavMenu_AddCurrentDir()
+
+	if ( A_ThisMenuItem = "&Copy current path")
+		return FavMenu_CopyCurrentPath()
+
+	if ( A_ThisMenuItem = "Open current path in File &Manager")
+		return FavMenu_OpenCurrentPathInFM()
+
+	if ( A_ThisMenuItem = "Command &Prompt here")
+		return FavMenu_CommandPromptHere()
+}
+
+FavMenu_MenuHandlerCurrentPathDispatch:
+	FaveMenu_MenuHandlerCurrentPath()
+return
 ;---------------------------------------------------------------------------
 
 FavMenu_IsQuoted(str)

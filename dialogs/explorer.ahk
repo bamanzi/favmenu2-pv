@@ -46,10 +46,13 @@ Favmenu_DialogGetAllPaths_Explorer()
 	{
 		hwnd1 := _instance.hwnd
 		path1 := _instance.Document.Folder.Self.Path
-		OutputDebug, opened path in explorer: [%hwnd1%] %path1%
+		OutputDebug, enum_all_paths for explorer: [%hwnd1%] %path1%
 
-		if (hwnd_active + 1 = hwnd1)
+		if (hwnd_active + 0 = hwnd1)
 			continue
+
+		if (IsDir(path1))
+			arr.Insert(path1)
 	}
 
 	return arr

@@ -244,7 +244,7 @@ FavMenu_AddAllFMCurrentPathsToMenu(submenu_id)
 		if (subcnt>0)
 		{
 			; add separator
-			Menu, submenu_id, add
+			Menu, %submenu_id%, add
 			cnt += subcnt + 1
 		}
 	}
@@ -256,7 +256,7 @@ FavMenu_AddAllFMCurrentPathsToMenu(submenu_id)
 		if (subcnt>0)
 		{
 			; add separator
-			Menu, submenu_id, add
+			Menu, %submenu_id%, add
 			cnt += subcnt + 1
 		}
 	}

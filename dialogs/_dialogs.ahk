@@ -11,10 +11,10 @@
 #include dialogs\xyplorer.ahk
 #include dialogs\double_commander.ahk
 #include dialogs\winscp.ahk
+#include dialogs\7zfm.ahk
 
 #include dialogs\gtk.ahk
 #include dialogs\emacs.ahk
-;;TODO: 7-Zip FM
 
 FavMenu_DialogHandlers_Init()
 {
@@ -109,7 +109,7 @@ FavMenu_DialogGetActive(hw=0)
 		if fn.Name
 		{
 			okey := fn.Call(Favmenu_dlgHwnd, class, title)
-			OutputDebug,INFO: Function '%funcName%' returns '%okey%'
+			;OutputDebug,INFO: Function '%funcName%' returns '%okey%'
 			if okey
 			{
 				FavMenu_dlgType := dlgType
@@ -128,7 +128,7 @@ FavMenu_DialogGetActive(hw=0)
 
 FavMenu_DialogGetPath()
 {
-	global Favmenu_dlgType, FavMenu_dlgTypes
+	global Favmenu_dlgType, FavMenu_dlgTypes, Favmenu_dlgHwnd
 	OutputDebug,FavMenu_DialogGetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
 
@@ -148,13 +148,15 @@ FavMenu_DialogGetPath()
 		OutputDebug,WARN: Function '%funcName%' not exist
 	}
 
+	if (!Favmenu_dlgHwnd)
+		Favmenu_dlgHwnd := WinActive("A")
 	return Favmenu_DialogGetPath_fromTitle(Favmenu_dlgHwnd)
 }
 
 FavMenu_DialogSetPath(path, bTab = false)
 {
 	global FavMenu_dlgType
-	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%
+	OutputDebug,FavMenu_DialogSetPath called with Favmenu_dlgType = %Favmenu_dlgType%, path=%path%
 
 	if FavMenu_dlgType contains OpenSave,Office03
 	{
@@ -199,6 +201,10 @@ Favmenu_get_parent_folder_until_dir(filepath)
 	curpath := filepath
 	Loop {
 		if isdir(curpath) {
+			;; add trailing \ to 'C:'
+			if (StrLen(curpath)=2)
+				curpath := curpath . "\"
+
 			return curpath
 		} else {
 			SplitPath,curpath,,outDir
