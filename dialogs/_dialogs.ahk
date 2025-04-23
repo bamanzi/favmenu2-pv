@@ -217,54 +217,58 @@ Favmenu_get_parent_folder_until_dir(filepath)
 Favmenu_extract_path_from_title(title)
 {
 
-	If title contains :\,\\
+	If title not contains :\,\\
 	{
-		;local fstart, fend1, fend2, fend3, curDir
-		fstart := InStr(title, ":\") -1
-		if fstart <=0
-		{
-			fstart := InStr(title, "\\")
-			if fstart <=0
-				return
-		}
-
-		fend1 := InStr(title, " - ", fstart + 2) ;; mostly used
-		fend2 := InStr(title, " * ", fstart + 2) ;; SciTE (SciTE4AHK)
-		fend3 := InStr(title, "]",   fstart + 2)
-		fend4 := InStr(title, ")",   fstart + 2)
-
-		;local fname1, fname2, fname3, fname4
-		fname1 := SubStr(title, fstart, fend1 - fstart)
-		fname2 := SubStr(title, fstart, fend2 - fstart)
-		fname3 := SubStr(title, fstart, fend3 - fstart)
-		fname4 := SubStr(title, fstart, fend4 - fstart)
-		fname5 := SubStr(title, fstart)
-
-		OutputDebug,Favmenu_extract_path_from_title: fname1=%fname1%, fname2=%fname2%, fname3=%fname3%
-		If FileExist(fname1)
-			curDir := fname1
-		else if FileExist(fname2)
-			curDir := fname2
-		else if FileExist(fname3)
-			curDir := fname3
-		else if FileExist(fname4)
-			curDir := fname4
-		else if FileExist(fname5)
-			curDir := fname5
-		else
-			return
-
-		;; if it is not a directory
-		If InStr(FileExist(curDir), "D")<=0
-		{
-			Splitpath,curDir,,dirpart
-			;; add a trailing slash as SplitPath would return 'd:' for file 'd:\test.txt'
-			if (StrLen(dirpart) = 2)
-				dirpart = %dirpart%\
-			return dirpart
-		}
-		else
-			return curDir
+		return
 	}
+
+	OutputDebug,Favmenu_extract_path_from_title called with title: %title%
+
+	;local fstart, fend1, fend2, fend3, curDir
+	fstart := InStr(title, ":\") -1
+	if fstart <=0
+	{
+		fstart := InStr(title, "\\")
+		if fstart <=0
+			return
+	}
+
+	fend1 := InStr(title, " - ", fstart + 2) ;; mostly used
+	fend2 := InStr(title, " * ", fstart + 2) ;; SciTE (SciTE4AHK)
+	fend3 := InStr(title, "]",   fstart + 2)
+	fend4 := InStr(title, ")",   fstart + 2)
+
+	;local fname1, fname2, fname3, fname4
+	fname1 := SubStr(title, fstart, fend1 - fstart)
+	fname2 := SubStr(title, fstart, fend2 - fstart)
+	fname3 := SubStr(title, fstart, fend3 - fstart)
+	fname4 := SubStr(title, fstart, fend4 - fstart)
+	fname5 := SubStr(title, fstart)
+
+	;OutputDebug,DEBUG: Favmenu_extract_path_from_title: fname1=%fname1%, fname2=%fname2%, fname3=%fname3%
+	If FileExist(fname1)
+		curDir := fname1
+	else if FileExist(fname2)
+		curDir := fname2
+	else if FileExist(fname3)
+		curDir := fname3
+	else if FileExist(fname4)
+		curDir := fname4
+	else if FileExist(fname5)
+		curDir := fname5
+	else
+		return
+
+	;; if it is not a directory
+	If InStr(FileExist(curDir), "D")<=0
+	{
+		Splitpath,curDir,,dirpart
+		;; add a trailing slash as SplitPath would return 'd:' for file 'd:\test.txt'
+		if (StrLen(dirpart) = 2)
+			dirpart = %dirpart%\
+		return dirpart
+	}
+	else
+		return curDir
 }
 

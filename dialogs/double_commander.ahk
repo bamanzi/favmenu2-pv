@@ -61,6 +61,11 @@ Favmenu_DialogGetPath_DC_fg(hwndDC)
 	Sleep,100
 
 	ControlGetText, curpath, Edit1, ahk_id %hwndDC%
+	if curpath not contains :\
+	{
+		OutputDebug, [Double Commander] ControlGetText('Edit1') returns empty, it seems Ctrl+P not working
+		OutputDebug, ADVICE: [Double Commander] please check whether Ctrl+P bound to cm_AddPathToCmdLine (in Options > Hot Keys)
+	}
 
 	if (oldcmd) {
 		ControlSetText, Edit1, oldcmd, ahk_id %hwndDC%
@@ -93,13 +98,13 @@ FavMenu_DialogGetAllPaths_DC()
 
 Favmenu_DialogGetPath_DC_bg(hwndDC)
 {
-	;; FIXME: by default, Double Commander won't show current path in its title
-	;; you need to enable it in Options > Miscellaneous > Show current directory in the main window title bar
+	;; NOTE: by default, Double Commander won't show current path in its title
 	path := Favmenu_DialogGetPath_fromTitle(hwndDC)
-	;; if (path=)
-	;; {
-		;; TODO: any other way?
-	;;}
+	if (!path)
+	{
+		OutputDebug, [Double Commander] Favmenu_DialogGetPath_fromTitle() returns empty.
+		OutputDebug, ADVICE: [Double Commander] FavMenu2 recommend you turn on option 'Show current directory in the main window title bar' (in Options > Miscellaneous)
+	}
 	return path
 }
 

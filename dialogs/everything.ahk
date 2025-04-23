@@ -22,6 +22,10 @@ FavMenu_DialogGetPath_Everything()
 	path1 := Favmenu_extract_path_from_title(msg)
 	if (path1) {
 		return path1
+	} else
+	{
+		OutputDebug,[Everything] no path found in statusbar
+		OutputDebug,ADVICE: [Everything] it is adviced to turn on option 'Show selected item in statusbar' (in Option > General > View)
 	}
 
 	;; method 2: try to get the selected item and parse path from column Path

@@ -106,7 +106,7 @@ FavMenu_GetTCPanels64(hwnd_tc, ByRef pLeft, ByRef pRight)
 	ControlGetText pLeft,  Window10, ahk_id %hwnd_tc%
 	ControlGetText pRight, Window15, ahk_id %hwnd_tc%
 
-	;; remove trailing filter
+	;; remove trailing wildcards (e.g. *.* or abc*.docx) and in-archive parts
 	;;pLeft := StrReplace(pLeft, "*.*")
 	;;pRight := StrReplace(pRight, "*.*")
 	pLeft := Favmenu_get_parent_folder_until_dir(pLeft)
@@ -143,6 +143,7 @@ FavMenu_GetCurrentTCDir32(hwnd_tc)
 
     ControlGetText curpath, TMyPanel3, ahk_id %hwnd_tc%
 
+	;; remove trailing '>'
 	curpath := StrReplace(curpath, ">")
 	return curpath
 }
