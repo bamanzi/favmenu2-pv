@@ -166,9 +166,11 @@ FavMenu_GetConfigData()
 	IniRead Favmenu_Options_IXplorer2,		%Favmenu_configFile%, TcFavMenu, IXplorer2,		1
  	IniRead Favmenu_Options_IXYplorer,		%Favmenu_configFile%, TcFavMenu, IXYplorer,		1
 
+	IniRead FavMenu_Options_GitBashPath,	%Favmenu_configFile%, TcFavMenu, GitBashPath,	git-bash.exe
+
 	if (FavMenu_fmExe = "&") || (FavMenu_fmIni = "&") || (FavMenu_fmKey = "&")
 		return false
-	else	
+	else
 		return true
 }
 

@@ -79,6 +79,20 @@ FavMenu_CommandPromptHere()
 	Run,cmd /k "cd /d `%cd`%",%curDir%
 }
 
+FavMenu_GitBashHere()
+{
+	global FavMenu_Options_GitBashPath
+
+	curDir := FavMenu_DialogGetPath()
+	If curDir =
+	{
+		MsgBox Can not get the folder name.`nYou probably selected virtual folder.
+		return
+	}
+
+	Run, %FavMenu_Options_GitBashPath%, %curDir%
+}
+
 FavMenu_OpenCurrentPathInFM()
 {
 	curDir := FavMenu_DialogGetPath()

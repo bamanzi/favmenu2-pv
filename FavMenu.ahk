@@ -8,10 +8,11 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
+;   3.08 Add 'Git Bash here' command
 ;   3.07 Add a workaround for Open/Save dialog (by parsing text from control ToolbarWindow32 directly)
 ;   3.06 Add support for Everything (only 'Get current path' of 1st selected item)
 ;   3.05 Fix some bugs.
-;   3.04 Fix support for Total Commander >= 9.0 (WIP)
+;   3.04 Fix support for Total Commander >= 9.0
 ;		(and enabled support for both TC 32bit & 64bit)
 ;   3.03 Add support for 7zFM; switch to ComObj to fetch all opened paths in Windows Explorer
 ;   3.02 Move 'Current paths in FM' & 'Current path in current app' to submenu
@@ -305,6 +306,8 @@ FavMenu_skip:
 
 		Menu, %submenu_id%, add, Command &Prompt here, FavMenu_MenuHandlerCurrentPathDispatch
 
+		Menu, %submenu_id%, add, Git &Bash here, FavMenu_MenuHandlerCurrentPathDispatch
+
 		Menu, %submenu_id%, add, Open current path in File &Manager, FavMenu_MenuHandlerCurrentPathDispatch
 
 		Menu, Favmenu_sub1, add, Current path in %app_exe%, % ":" . submenu_id
@@ -569,6 +572,9 @@ The commands in submenu 'Current path in %app_exe%' would WORK for current windo
 
 	if ( A_ThisMenuItem = "Command &Prompt here")
 		return FavMenu_CommandPromptHere()
+
+	if ( A_ThisMenuItem = "Git &Bash here")
+		return FavMenu_GitBashHere()
 }
 
 FavMenu_MenuHandlerCurrentPathDispatch:
