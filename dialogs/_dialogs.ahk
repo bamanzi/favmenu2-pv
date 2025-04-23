@@ -133,8 +133,8 @@ FavMenu_DialogGetPath()
 	OutputDebug,FavMenu_DialogGetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
 
-	if Favmenu_dlgType = OpenSave
-		return Favmenu_DialogGetPath_OS()
+	;if Favmenu_dlgType = OpenSave
+	;	return Favmenu_DialogGetPath_OS()
 
 	dlgType := FavMenu_dlgType
 	funcName := "Favmenu_DialogGetPath_" . dlgType

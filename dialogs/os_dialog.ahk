@@ -73,6 +73,27 @@ FavMenu_DialogSetPath_BFF( path )
 
 FavMenu_DialogGetPath_OpenSave()
 {
+	;; for most cases, parse from ToolbarWindow32 would be more robust than FavMenu_DialogGetPath_OS()
+	global FavMenu_dlgHWND, FavMenu_msctls_progress32
+	if (FavMenu_msctls_progress32)
+	{
+		bread := FavMenu_FindWindowExID(FavMenu_msctls_progress32, "Breadcrumb Parent", 0)
+		rebar := FavMenu_FindWindowExID(bread, "ToolbarWindow32", 0)
+		if (bread && rebar)
+		{
+			ControlGetText, addressBandText, , ahk_id %rebar%
+			if (addressBandText)
+			{
+				curpath := Favmenu_extract_path_from_title(addressBandText)
+				if (curpath)
+				{
+					return curpath
+				}
+				;; TODO: handle some special address (e.g. Downloads
+			}
+		}
+	}
+
 	return FavMenu_DialogGetPath_OS()
 }
 
