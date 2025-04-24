@@ -8,6 +8,7 @@
 ;   Hacked by Ba Manzi <bamanzi@gmail.com>      2011 - 2025
 ;
 ; Change Log
+;   3.09 Fix support for newer WinSCP versions (5.15 - 6.4)
 ;   3.08 Add 'Git Bash here' command
 ;   3.07 Add a workaround for Open/Save dialog (by parsing text from control ToolbarWindow32 directly)
 ;   3.06 Add support for Everything (only 'Get current path' of 1st selected item)
@@ -77,7 +78,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 
 	; for the world
 	Favmenu_title	   := "FavMenu"
-	Favmenu_version    := "3.07"
+	Favmenu_version    := "3.09"
 	Favmenu_configFile := "favmenu.ini"
 
 	;set GUIs

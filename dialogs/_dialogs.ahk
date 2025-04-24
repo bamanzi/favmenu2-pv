@@ -132,7 +132,6 @@ FavMenu_DialogGetPath()
 	global Favmenu_dlgType, FavMenu_dlgTypes, Favmenu_dlgHwnd
 	OutputDebug,FavMenu_DialogGetPath called with Favmenu_dlgType = %Favmenu_dlgType%`n
 
-
 	;if Favmenu_dlgType = OpenSave
 	;	return Favmenu_DialogGetPath_OS()
 
@@ -239,10 +238,10 @@ Favmenu_extract_path_from_title(title)
 	fend4 := InStr(title, ")",   fstart + 2)
 
 	;local fname1, fname2, fname3, fname4
-	fname1 := SubStr(title, fstart, fend1 - fstart)
-	fname2 := SubStr(title, fstart, fend2 - fstart)
-	fname3 := SubStr(title, fstart, fend3 - fstart)
-	fname4 := SubStr(title, fstart, fend4 - fstart)
+	fname1 := fend1 > 0 ? SubStr(title, fstart, fend1 - fstart) : ""
+	fname2 := fend2 > 0 ? SubStr(title, fstart, fend2 - fstart) : ""
+	fname3 := fend3 > 0 ? SubStr(title, fstart, fend3 - fstart) : ""
+	fname4 := fend4 > 0 ? SubStr(title, fstart, fend4 - fstart) : ""
 	fname5 := SubStr(title, fstart)
 
 	;OutputDebug,DEBUG: Favmenu_extract_path_from_title: fname1=%fname1%, fname2=%fname2%, fname3=%fname3%

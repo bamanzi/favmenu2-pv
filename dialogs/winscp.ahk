@@ -1,14 +1,24 @@
 ;; WinSCP (ahk_class TScpCommanderForm)
 
-;; tested in WinSCP 5.7
-;; NOTE: Things would be easier if option 'Path in window title' set to 'Show full path'
+;; tested in WinSCP 5.15.4, 5.17, 5.21, 6.1,x, 6.3.x
+;;
+;; NOTE:
+;;   - For GetPath, things would be easier if option 'Path in window title' set to 'Show full path'
 ;;	   (Options->Preferences->Window->Path in window title)
+;;   - Only works in local panels of Commander mode (because only remote panels show up in Explorer mode)
 
 Favmenu_DialogIsType_WinSCP(hwnd, klass, title)
 {
 	If (klass = "TScpCommanderForm")
 	{
-		;FavMenu_dlgType	 := "Console"
+		;FavMenu_dlgType	 := "WinSCP"
+
+		if ("/" <> SubStr(title, 1, 1)) and (":\" <> SubStr(title, 2, 2))
+		{
+			OutputDebug,winscp: can't determine is current panel local or remote by window title: %title%
+			OutputDebug,ADVICE: [WinSCP] it is HIGHLY adviced to set option 'Path in window title' to 'Show full path' (in Options > Preferences > Window)
+		}
+
 		return 1
 	}
 }
@@ -20,7 +30,7 @@ Favmenu_DialogGetPath_WinSCP()
 
 	;; if current pane is the remote filesystem, activate the other pane
 	;; (only works when option 'Path in window title' set to 'Show full path')
-	if ("/" == SubStr(title, 1, 1))
+	if ("/" <> SubStr(title, 1, 1))
 	{
 		WinActivate,ahk_id %Favmenu_dlgHwnd%
 		Send,{Tab}
@@ -32,16 +42,22 @@ Favmenu_DialogGetPath_WinSCP()
 	;; (only works when option 'Path in window title' set to 'Show full path')
 	if (":" == SubStr(title, 2, 1))
 	{
+        ;; workaround for WinSCP 6.x which use EN DASH (–) as separator
+        ;; (old versions use normal dash '-' (HYPHEN-MINUS))
+        sep := InStr(title, " – ")
+        if (sep > 0)
+            title := SubStr(title, 1, sep)
 		return Favmenu_DialogGetPath_FromTitle(Favmenu_dlgHwnd)
 	}
 	else
 	{
 		;; full path not shown in title, thus use Open Directory dialog to get current directory
-		WinActivate,ahk_id %Favmenu_dlgHwnd%
+		WinActivate, ahk_id %Favmenu_dlgHwnd%
 		Send,^o
 		Sleep 500
 
-		ControlGetText, curDir, TIEComboBox1, ahk_class TOpenDirectoryDialog
+		ControlGetText, curDir, Edit2, ahk_class TOpenDirectoryDialog
+		Send, {Esc}, ahk_class TOpenDirectoryDialog
 		return curDir
 	}
 }
@@ -65,9 +81,9 @@ Favmenu_DialogSetPath_WinSCP(targetpath)
 	Send,^o
 	Sleep 500
 
-	;ControlSetText, TIEComboBox1, %path%, ahk_class TOpenDirectoryDialog
-	;ControlFocus,TIEComboBox1, ahk_class TOpenDirectoryDialog
-	;Send {Enter}
+	;ControlSetText, Edit2, %targetpath%, ahk_class TOpenDirectoryDialog
+	;ControlFocus, Edit2, ahk_class TOpenDirectoryDialog
+	;ControlSend, Edit2, {Enter}, ahk_class TOpenDirectoryDialog
 
 	;; focus directory combobox
 	Send,!o
