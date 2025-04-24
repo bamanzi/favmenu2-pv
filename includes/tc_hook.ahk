@@ -5,6 +5,11 @@
 +Lbutton::	Favmenu_OnTCClick()
 +LButton up::	Click up
 
+#IfWinActive ahk_class TTOTAL_CMD ahk_exe totalcmd.exe
+
++Lbutton::	Favmenu_OnTCClick()
++LButton up::	Click up
+
 #IfWinActive
 
 Favmenu_OnTCClick()
