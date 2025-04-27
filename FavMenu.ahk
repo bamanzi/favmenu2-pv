@@ -53,10 +53,9 @@
 ;   2.03 Added target support for XEmacs & MicroEmacs-jasspa
 ;   2.02 Added target support for GNU Emacs
 ;   2.01 Fixed getting current paths of Total Commander >= 7.5
-; TODO:
-;   + Add support for 7-zip file manager
 ;**************************************************************************
 #NoEnv
+#Requires AutoHotKey v1.1.33+
 #SingleInstance force
 
 	;prefixes: FavMenu, Setup, Properties, CM, WM, CSIDL, TV
@@ -77,7 +76,7 @@ FAVMENU_Init( lastGUI=0, subMenu="", bStandalone=true )
 	#include includes\tc_cmnds.ahk
 
 	; for the world
-	Favmenu_title	   := "FavMenu"
+	Favmenu_title	   := "FavMenu3"
 	Favmenu_version    := "3.09"
 	Favmenu_configFile := "favmenu.ini"
 

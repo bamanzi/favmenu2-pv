@@ -1,31 +1,31 @@
-# FavMenu2 patched version #
+# FavMenu3
 
-FavMenu2 stores a list of your favorite folders, and let you quickly
+FavMenu3 stores a list of your favorite folders, and let you quickly
 jump to them within system dialogs (Open/Save, Browse For Folder,
 Office2003 dialogs), Console (cmd.exe), Windows Explorer and Total
 Commander.
 
 ![screenshot](http://att.newsmth.net/nForum/att/TotalCommander/45716/754)
 
-Original Author: Miodrag Milic
-
-Download the orignal version: <http://www.totalcmd.net/plugring/TC_FavMenu2.html>
+It is based on the code of [Miodrag Milic's FavMenu2](http://www.totalcmd.net/plugring/TC_FavMenu2.html ).
 
 ## About this fork ##
 
 This version has the following enhancements:
 
-* Fix support for Total Commander > 7.0
+* Fix support for Total Commander >= 9.0
+* Add support for explorer of Windows 7/10/11
+* Add support for open/save dialog of Windows Vista/7
+* Add support for Double Commander >= 0.9.6
+* Add support for Xplorer2 (lite) & XYplorerFree
+* Add support for WinSCP
+* Add support for 7zFM
 * Add support for GNU Emacs, XEmacs & MicroEmacs-jasspa
 * Add support for mintty/rxvt on Cygwin/Msys (only SetPath, no GetPath)
-* Add support for explorer & open/save dialog of Windows Vista/7
-* Add support for 
-* Add menu item 'Copy current path'
-* Add menu item 'Command Prompt Here'
-* For unsupported applications/dialogs, try to parse window title to get
-  current path
+* For unsupported applications/dialogs, try to parse window title to get current path
+* Add some actions for 'current path': 'Copy current path', 'Command Prompt Here', 'Open in File Manager'
 
-If you have any question about this fork, please concat me <http://bitbucket.org/bamanzi>
+If you have any question about this fork, please concat me <http://github.com/bamanzi/favmenu2-pv>
 
 ## Usage ##
 
@@ -59,7 +59,7 @@ that folder in the default file manager (which is configurable in
 ### Advanced Usage ###
 
 **The menu**:
-   
+
   * `Ctrl+Enter` on menu item: open properties dialog for the menu item
   * `Shift+Enter` on menu item: open selected folder in new tab (if target
     application supports this)
