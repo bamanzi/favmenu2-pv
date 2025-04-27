@@ -63,7 +63,7 @@ Favmenu_DialogGetPath_DC_fg(hwndDC)
 	ControlGetText, curpath, Edit1, ahk_id %hwndDC%
 	if curpath not contains :\
 	{
-		OutputDebug, [Double Commander] ControlGetText('Edit1') returns empty, it seems Ctrl+P not working
+		OutputDebug, [Double Commander] ControlGetText('Edit1') returns invalid path, it seems Ctrl+P not working: Edit1=%curpath%
 		OutputDebug, ADVICE: [Double Commander] please check whether Ctrl+P bound to cm_AddPathToCmdLine (in Options > Hot Keys)
 	}
 
@@ -98,11 +98,13 @@ FavMenu_DialogGetAllPaths_DC()
 
 Favmenu_DialogGetPath_DC_bg(hwndDC)
 {
-	;; NOTE: by default, Double Commander won't show current path in its title
-	path := Favmenu_DialogGetPath_fromTitle(hwndDC)
-	if (!path)
+	WinGetTitle,title,ahk_id %hwndDC%
+	curpath := Favmenu_parse_path_from_string(title, ")")
+	;; no need to call Favmenu_get_parent_folder_until_dir(), as DC won't show subpath inside archive
+	if (!curpath)
 	{
-		OutputDebug, [Double Commander] Favmenu_DialogGetPath_fromTitle() returns empty.
+		;; NOTE: by default, Double Commander won't show current path in its title
+		OutputDebug, [Double Commander] Favmenu_DialogGetPath_DC_bg() returns no valid path: title=%title%
 		OutputDebug, ADVICE: [Double Commander] FavMenu2 recommend you turn on option 'Show current directory in the main window title bar' (in Options > Miscellaneous)
 	}
 	return path

@@ -1,5 +1,5 @@
 ;; - BFF (BrowseForFolder)
-;; - OpenSave (Open/Save dialog) 
+;; - OpenSave (Open/Save dialog)
 ;;       - special handling: Office 2003 Open/Save dialog
 
 ;; FIXME: GetPath_OpenSave not work on windows 10 open/save dialog
@@ -15,7 +15,7 @@ FavMenu_DialogIsType_BFF(dlg, klass, title)
 	tree	:= FavMenu_FindWindowExID(dlg, "SysTreeView32", 14145)
 	bOK		:= FavMenu_FindWindowExID(dlg, "Button", 1)
 	bCancel := FavMenu_FindWindowExID(dlg, "Button", 2)
-	
+
 	if static1 * static2 * tree * bOK * bCancel = 0
 	{
 		;check for new browse for folder dialog
@@ -84,10 +84,11 @@ FavMenu_DialogGetPath_OpenSave()
 			ControlGetText, addressBandText, , ahk_id %rebar%
 			if (addressBandText)
 			{
-				curpath := Favmenu_extract_path_from_title(addressBandText)
+				;; e.g. '地址: D:\devtools\AutoHotkey'
+				curpath := Favmenu_parse_path_from_string(addressBandText, "")
 				if (curpath)
 				{
-					return curpath
+					return Favmenu_get_parent_folder_until_dir(curpath)
 				}
 				;; TODO: handle some special address (e.g. Downloads
 			}
@@ -107,7 +108,7 @@ FavMenu_DialogSetPath_OpenSave(path, bTab=false)
 FavMenu_IsOpenSave(dlg)
 {
 	global FavMenu_dlgInput, FavMenu_dlgType, FavMenu_msctls_progress32, bread
-   
+
 	FavMenu_dlgType =
 
 	toolbar := FavMenu_FindWindowExID(dlg, "ToolbarWindow32", 0x440)   ;windows XP
@@ -123,13 +124,13 @@ FavMenu_IsOpenSave(dlg)
 	rebar := FavMenu_FindWindowExID(rebar, "Breadcrumb Parent", 0)
 	bread := rebar
 	rebar := FavMenu_FindWindowExID(rebar, "ToolbarWindow32", 0)
-	 
+
 	combo  := FavMenu_FindWindowExID(dlg, "ComboBoxEx32", 0x47C) ; comboboxex field
 	button := FavMenu_FindWindowExID(dlg, "Button", 0x001)		; second button
-	 
+
 	edit := FavMenu_FindWindowExID(dlg, "Edit", 0x480)			; edit field
-	 
-	if ((rebar || (toolbar && (combo || edit))) && button) 
+
+	if ((rebar || (toolbar && (combo || edit))) && button)
 	{
 		FavMenu_dlgInput   := combo + edit
 		if rebar
@@ -155,8 +156,8 @@ FavMenu_IsOffice03(dlg)
 		FavMenu_dlgInput := FavMenu_FindWindowExID(dlg, "RichEdit20W", 54)
 
 		if ! (snake && FavMenu_dlgInput)
-			return 0	
-			
+			return 0
+
 		FavMenu_dlgType	:= "Office03"
 		return 1
 	}
@@ -168,7 +169,7 @@ FavMenu_DialogGetPath_OS()
 {
 	global Favmenu_dlgHwnd
 
-	WM_USER = 0x400 
+	WM_USER = 0x400
 	CDM_FIRST := WM_USER + 100
 	CDM_GETFOLDERPATH := CDM_FIRST + 0x0002
 
@@ -184,20 +185,20 @@ FavMenu_DialogGetPath_OS()
 	RemoteBuf_Close(bufID)
 
 	VarSetCapacity(ansiString, textSize, 0)
-	
+
 	;Check if Windows returned unicode string. Sine drive letter is first char, it will be ANSI
 	; so unicode can be check by comparing next char to 0
 	if *(&buf+1) = 0
 			return FavMenu_GetAnsiStringFromUnicodePointer(&buf)
 	else	return buf
-	
+
 }
 
 FavMenu_DialogSetPath_OS(path)
 {
-	global 
+	global
 	local d_text, d_f
-	
+
 	WinWaitActive ahk_id %FavMenu_dlgHWND%
 
 	ControlGetFocus d_f, ahk_id %FavMenu_dlgHWND%

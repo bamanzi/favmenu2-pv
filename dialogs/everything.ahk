@@ -19,7 +19,7 @@ FavMenu_DialogGetPath_Everything()
 	;; FIXME: it won't work if user hide the statusbar
 	;; FIXME: it won't work if user unchecked Options/General/View/Show selected item in statusbar
 	ControlGetText, msg, msctls_statusbar321, ahk_id %FavMenu_dlgHWND%
-	path1 := Favmenu_extract_path_from_title(msg)
+	path1 := Favmenu_parse_path_from_string(msg, "")
 	if (path1) {
 		return path1
 	} else

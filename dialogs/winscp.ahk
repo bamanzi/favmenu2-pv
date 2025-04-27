@@ -42,12 +42,20 @@ Favmenu_DialogGetPath_WinSCP()
 	;; (only works when option 'Path in window title' set to 'Show full path')
 	if (":" == SubStr(title, 2, 1))
 	{
-        ;; workaround for WinSCP 6.x which use EN DASH (–) as separator
-        ;; (old versions use normal dash '-' (HYPHEN-MINUS))
-        sep := InStr(title, " – ")
-        if (sep > 0)
-            title := SubStr(title, 1, sep)
-		return Favmenu_DialogGetPath_FromTitle(Favmenu_dlgHwnd)
+		;; workaround for WinSCP 6.x which use EN DASH (–) as separator
+		;; (old versions use normal dash '-' (HYPHEN-MINUS))
+		sep := InStr(title, " – ")
+		if (sep == 0)
+		{
+			sep := InStr(title, " - ")
+		}
+
+		if (sep)
+		{
+			curpath := SubStr(title, 1, sep)
+			If (InStr(FileExist(curpath), "D")>0)
+				return curpath
+		}
 	}
 	else
 	{
@@ -58,7 +66,10 @@ Favmenu_DialogGetPath_WinSCP()
 
 		ControlGetText, curDir, Edit2, ahk_class TOpenDirectoryDialog
 		Send, {Esc}, ahk_class TOpenDirectoryDialog
-		return curDir
+
+		;; in case we're in a remote panel
+		if IsDir(curDir)
+			return curDir
 	}
 }
 

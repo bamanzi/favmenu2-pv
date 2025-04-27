@@ -21,7 +21,10 @@ FavMenu_DialogGetPath_7zFM()
 
 FavMenu_DialogGetPath_7zFM_bg(hwnd)
 {
-	return Favmenu_DialogGetPath_fromTitle(hwnd)
+	WinGetTitle, title, ahk_id %hwnd%
+
+	;; in case title pointing to an archive file, or path inside archive
+	return Favmenu_get_parent_folder_until_dir(title)
 }
 
 FavMenu_DialogSetPath_7zFM(path1, bTab = false)

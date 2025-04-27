@@ -148,9 +148,14 @@ FavMenu_DialogGetPath()
 		OutputDebug,WARN: Function '%funcName%' not exist
 	}
 
-	if (!Favmenu_dlgHwnd)
-		Favmenu_dlgHwnd := WinActive("A")
-	return Favmenu_DialogGetPath_fromTitle(Favmenu_dlgHwnd)
+	hwndCurrent := Favmenu_dlgHwnd
+	if (!hwndCurrent)
+		hwndCurrent := WinActive("A")
+	curpath := Favmenu_DialogGetPath_guessFromTitle(hwndCurrent)
+	if (curpath)
+	{
+		return curpath
+	}
 }
 
 FavMenu_DialogSetPath(path, bTab = false)
@@ -177,17 +182,25 @@ FavMenu_DialogSetPath(path, bTab = false)
 }
 
 ;--------------------------------------------------------------------------
-Favmenu_DialogGetPath_fromTitle(hwnd)
+Favmenu_DialogGetPath_guessFromTitle(hwnd)
 {
 	WinGetTitle,title,ahk_id %hwnd%
 	OutputDebug, try to parse directory from title: %title%`n
 
-	path1 := Favmenu_extract_path_from_title(title)
+	path1 := Favmenu_guess_path_from_title_with_check(title)
 	if (path1) {
 		;; in case title pointing to a file, or a path within archive
-		return Favmenu_get_parent_folder_until_dir(path1)
+		return path1
 	}
 	;; else return ""
+}
+
+Favmenu_DialogGetPath_fromTitle(hwnd, endSep)
+{
+	WinGetTitle,title,ahk_id %hwnd%
+	curpath := Favmenu_parse_path_from_string(title, ")")
+	If (InStr(FileExist(curpath), "D")>0)
+		return curpath
 }
 
 isdir(filepath)
@@ -208,12 +221,43 @@ Favmenu_get_parent_folder_until_dir(filepath)
 			return curpath
 		} else {
 			SplitPath,curpath,,outDir
+			if (!outDir)
+			{
+				return ""
+			}
 			curpath := outDir
 		}
 	}
 }
 
-Favmenu_extract_path_from_title(title)
+
+Favmenu_parse_path_from_string(title, endSep)
+{
+	If title not contains :\,\\
+	{
+		return
+	}
+
+	OutputDebug,Favmenu_parse_path_from_string() called with title: %title%
+
+	fstart := InStr(title, ":\") -1
+	if (fstart <=0)
+		return
+
+	if endSep<>
+	{
+		fend1 := InStr(title, endSep, true, fstart + 2)
+		if (fend)
+		{
+			return SubStr(title, fstart, fend1 - fstart)
+		}
+	}else
+	{
+		return SubStr(title, fstart)
+	}
+}
+
+Favmenu_guess_path_from_title_with_check(title)
 {
 
 	If title not contains :\,\\
@@ -221,21 +265,21 @@ Favmenu_extract_path_from_title(title)
 		return
 	}
 
-	OutputDebug,Favmenu_extract_path_from_title called with title: %title%
+	OutputDebug,Favmenu_guess_path_from_title() called with title: %title%
 
 	;local fstart, fend1, fend2, fend3, curDir
 	fstart := InStr(title, ":\") -1
-	if fstart <=0
+	if (fstart <=0)
 	{
 		fstart := InStr(title, "\\")
 		if fstart <=0
 			return
 	}
 
-	fend1 := InStr(title, " - ", fstart + 2) ;; mostly used
-	fend2 := InStr(title, " * ", fstart + 2) ;; SciTE (SciTE4AHK)
-	fend3 := InStr(title, "]",   fstart + 2)
-	fend4 := InStr(title, ")",   fstart + 2)
+	fend1 := InStr(title, " - ", true, fstart + 2) ;; mostly used
+	fend2 := InStr(title, " * ", true, fstart + 2) ;; SciTE (SciTE4AHK)
+	fend3 := InStr(title, "]",   true, fstart + 2)
+	fend4 := InStr(title, ")",   true, fstart + 2)
 
 	;local fname1, fname2, fname3, fname4
 	fname1 := fend1 > 0 ? SubStr(title, fstart, fend1 - fstart) : ""

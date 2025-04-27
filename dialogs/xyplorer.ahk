@@ -16,15 +16,15 @@ FavMenu_DialogGetPath_XYplorer()
 
 	;; FIXME: this relies on the title bar template, by default it's '<path> - <app> <ver>'
 	;; (menu Tools -> Configuration -> Colors and Styles -> Templates -> Titlebar)
-	path := Favmenu_DialogGetPath_FromTitle(FavMenu_dlgHwnd)
+	path := Favmenu_DialogGetPath_FromTitle(FavMenu_dlgHwnd, " - ")
 
 	if FileExist(path)
 	{
 		OutputDebug, FavMenu_DialogGetPath_XYplorer returns: title=%path%
-	} else 
+	} else
 	{
-		;; if Favmenu_DialogGetPath_FromTitle failed, try another way   
-		;; NOTE: if you changed XYplorer's title bar template, the app recognition method 
+		;; if Favmenu_DialogGetPath_FromTitle failed, try another way
+		;; NOTE: if you changed XYplorer's title bar template, the app recognition method
 		;;       in FavMenu_DialogGetActive() should be updated correspondingly.
 		WinActivate, ahk_id %FavMenu_dlgHwnd%
 		Send,!d  ;;focus to address bar

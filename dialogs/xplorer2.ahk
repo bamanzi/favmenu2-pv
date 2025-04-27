@@ -53,12 +53,11 @@ FavMenu_DialogGetAllPaths_Xplorer2()
 
 		WinGetTitle, this_title, ahk_id %this_id%
 
+		;; TODO: find a way to get the titles of both panel (which shows the current path) from xplorer2
 		curDir := FavMenu_DialogGetPath_Xplorer2_bg(this_id)
 		OutputDebug,enum_all_paths: xplorer window=%this_id%`, title=%this_title%`, path=%curDir%
 		if (curDir)
 		{
-			;; in case in archive (e.g. zip)
-			curDir := Favmenu_get_parent_folder_until_dir(curDir)
 			arr.Insert(curDir)
 		}
 	}
@@ -72,13 +71,15 @@ FavMenu_DialogGetAllPaths_Xplorer2()
 
 FavMenu_DialogGetPath_Xplorer2_bg(hwnd_x2)
 {
-	rebar := Favmenu_FindWindowExId(hwnd_x2,  "ReBarWindow32", 0) 
-	toolwin := Favmenu_FindWindowExID(rebar, "ToolbarWindow32", 60160) 
+	rebar := Favmenu_FindWindowExId(hwnd_x2,  "ReBarWindow32", 0)
+	toolwin := Favmenu_FindWindowExID(rebar, "ToolbarWindow32", 60160)
 	combo := Favmenu_FindWindowExID(toolwin, "ComboBox", 0)
-	
+
 	if (combo)
 	{
 		ControlGetText, result, ComboBox1, ahk_id %hwnd_x2%
-		return result
+
+		;; in case in archive (e.g. zip)
+		return Favmenu_get_parent_folder_until_dir(result)
 	}
 }
