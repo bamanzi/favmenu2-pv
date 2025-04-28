@@ -27,7 +27,7 @@ FavMenu_DialogGetPath_Msys()
 ;; Currently cmd.exe and console2/consolez supported
 ;; TODO: support other front-ends (such as ConEmu, Mintty, ColorConsole...)
 
-FavMenu_DialogSetPath_Msys(path, bTab = false)
+FavMenu_DialogSetPath_Msys(path1, bTab = false)
 {
 	;;other front-ends: cmd, rxvt, mintty, conemu
 	WinGetClass,klass,A
@@ -36,13 +36,13 @@ FavMenu_DialogSetPath_Msys(path, bTab = false)
 	
 	If klass = Console_2_Main
 	{
-		OutputDebug,put clipboard content: "pushd %path1%"
+		OutputDebug,put clipboard content: [pushd '%path1%']
 		;;Console2 has problems when SendInput (it would change : to ;)
-		Clipboard = pushd "%path1%"
+		Clipboard = pushd '%path1%'
 		SendInput, +{Insert}{Enter}
 	}
 	else
 	{
-		 SendInput pushd "%path%"{ENTER}
+		 SendInput pushd '%path1%'{ENTER}
 	}
 }

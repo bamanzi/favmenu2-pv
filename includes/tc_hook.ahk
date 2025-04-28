@@ -19,7 +19,7 @@ Favmenu_OnTCClick()
 	WinGetActiveTitle, tcTitle
 	MouseGetPos X, Y, ,tcCtrl
 
-	if tcTitle contains Commander (64)
+	if tcTitle contains Commander (x64)
  	{
 		if tcCtrl not contains Window10,Window15
 		{

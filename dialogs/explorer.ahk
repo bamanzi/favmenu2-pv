@@ -48,6 +48,7 @@ Favmenu_DialogGetAllPaths_Explorer()
 		path1 := _instance.Document.Folder.Self.Path
 		OutputDebug, enum_all_paths for explorer: [%hwnd1%] %path1%
 
+		;; convert hwnd_active from octal format to normal number
 		if (hwnd_active + 0 = hwnd1)
 			continue
 

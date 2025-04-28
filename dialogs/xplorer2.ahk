@@ -19,7 +19,7 @@ FavMenu_DialogGetPath_Xplorer2()
 	}
 }
 
-FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
+FavMenu_DialogSetPath_Xplorer2(path1, bTab = false)
 {
 	global FavMenu_dlgHwnd
 	WinActivate, ahk_id %FavMenu_dlgHwnd%
@@ -27,15 +27,19 @@ FavMenu_DialogSetPath_Xplorer2(path, bTab = false)
 	if (bTab)
 	{
 		SendInput,^{Ins}
+		Sleep 200
 	}
-	
-	Sleep 100
-	
-	SendInput, {F10}{HOME}+{END} ;;{DELETE}
-	SendInput,%path%{ENTER}
-	
-	Sleep 100
-	
+
+	;; focus the address bar (and it should force address bar visible)
+	SendInput, {F10} ;;{HOME}+{END} ;;{DELETE}
+	;;;SendInput,%path1%{ENTER}
+
+	;; but sometimes F10 can't successfully set focus to address bar.
+    ;; thus ControlSetText is reliable than SendInput
+	Sleep 200
+	ControlSetText, Edit1, %path1%, ahk_id %FavMenu_dlgHwnd%
+	ControlFocus, Edit1, ahk_id %FavMenu_dlgHwnd%
+	ControlSend, Edit1, {Enter}, ahk_id %FavMenu_dlgHwnd%
 }
 
 FavMenu_DialogGetAllPaths_Xplorer2()
@@ -77,6 +81,14 @@ FavMenu_DialogGetPath_Xplorer2_bg(hwnd_x2)
 
 	if (combo)
 	{
+		ControlGet, comboVisible, Visible,, ComboBox1, ahk_id %hwnd_x2%
+		if (!comboVisible)
+		{
+			OutputDebug, WARN [xplorer2] address bar not visible, in which case xplorer2 won't update the address
+			OutputDebug, ADVICE [xplorer2] it is adviced to make the address bar visible
+			return
+		}
+		
 		ControlGetText, result, ComboBox1, ahk_id %hwnd_x2%
 
 		;; in case in archive (e.g. zip)

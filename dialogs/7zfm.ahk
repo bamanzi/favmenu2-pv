@@ -1,3 +1,7 @@
+;; 7zFM
+;;
+;; tested with 7-zip 19.00, 22.01, 23.01, 24.09
+
 Favmenu_DialogIsType_7zFM(hwnd, klass, title)
 {
 	;; window class name changed to "7-Zip::FM" since 23.01
@@ -33,6 +37,7 @@ FavMenu_DialogSetPath_7zFM(path1, bTab = false)
 
 	WinActivate, ahk_id %FavMenu_dlgHwnd%
 
+	;; FIXME: currently only left-panel supported
 	Send,!{F1}
 	Sleep,200
 	;; cancel dropdown, so we can input path

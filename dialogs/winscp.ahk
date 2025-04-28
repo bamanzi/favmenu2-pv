@@ -1,4 +1,4 @@
-;; WinSCP (ahk_class TScpCommanderForm)
+﻿;; WinSCP (ahk_class TScpCommanderForm)
 
 ;; tested in WinSCP 5.15.4, 5.17, 5.21, 6.1,x, 6.3.x
 ;;
@@ -44,6 +44,7 @@ Favmenu_DialogGetPath_WinSCP()
 	{
 		;; workaround for WinSCP 6.x which use EN DASH (–) as separator
 		;; (old versions use normal dash '-' (HYPHEN-MINUS))
+		;; NOTE: current script should be saved as UTF-8 with BOM!!
 		sep := InStr(title, " – ")
 		if (sep == 0)
 		{

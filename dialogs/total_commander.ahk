@@ -42,7 +42,7 @@ FavMenu_DialogSetPath_TC(path, bTab = false)
 	FavMenu_SendTCCommand(cm_editpath, FavMenu_dlgHwnd)
 	sleep,200
 
-	SendRaw, %path%
+	SendInput, %path%
 	Send, {ENTER}
 }
 
