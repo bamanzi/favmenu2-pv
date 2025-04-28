@@ -13,7 +13,7 @@ Favmenu_DialogIsType_WinSCP(hwnd, klass, title)
 	{
 		;FavMenu_dlgType	 := "WinSCP"
 
-		if ("/" <> SubStr(title, 1, 1)) and (":\" <> SubStr(title, 2, 2))
+		if ("/" <> SubStr(title, 1, 1)) and (":\" <> SubStr(title, 2, 2)) and ("\\" <> SubStr(title, 1, 2))
 		{
 			OutputDebug,winscp: can't determine is current panel local or remote by window title: %title%
 			OutputDebug,ADVICE: [WinSCP] it is HIGHLY adviced to set option 'Path in window title' to 'Show full path' (in Options > Preferences > Window)
@@ -40,7 +40,7 @@ Favmenu_DialogGetPath_WinSCP()
 
 	;; current pane is the local filesystem
 	;; (only works when option 'Path in window title' set to 'Show full path')
-	if (":" == SubStr(title, 2, 1))
+	if (":" == SubStr(title, 2, 1)) or ("\\" == SubStr(title, 1, 2))
 	{
 		;; workaround for WinSCP 6.x which use EN DASH (–) as separator
 		;; (old versions use normal dash '-' (HYPHEN-MINUS))

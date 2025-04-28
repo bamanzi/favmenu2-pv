@@ -40,7 +40,7 @@ FavMenu_DialogGetPath_Everything()
 		Loop % cols.Length()
 		{
 			path := cols[A_Index]
-			if SubStr(path, 2, 1)=":"
+			if SubStr(path, 2, 2)=":\"
 			{
 				OutputDebug,found Everything column: COL%A_Index%: %path%
 				return path

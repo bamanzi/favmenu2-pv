@@ -242,7 +242,12 @@ Favmenu_parse_path_from_string(title, endSep)
 
 	fstart := InStr(title, ":\") -1
 	if (fstart <=0)
-		return
+	{
+		;; for UNC path
+		fstart := InStr(title, "\\")
+		if (fstart <= 0)
+			return
+	}
 
 	if endSep<>
 	{

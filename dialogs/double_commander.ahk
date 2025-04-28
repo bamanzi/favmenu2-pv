@@ -61,7 +61,7 @@ Favmenu_DialogGetPath_DC_fg(hwndDC)
 	Sleep,100
 
 	ControlGetText, curpath, Edit1, ahk_id %hwndDC%
-	if curpath not contains :\
+	if curpath not contains :\,\\
 	{
 		OutputDebug, [Double Commander] ControlGetText('Edit1') returns invalid path, it seems Ctrl+P not working: Edit1=%curpath%
 		OutputDebug, ADVICE: [Double Commander] please check whether Ctrl+P bound to cm_AddPathToCmdLine (in Options > Hot Keys)
