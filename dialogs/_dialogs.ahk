@@ -34,9 +34,9 @@ FavMenu_DialogHandlers_Init()
 	FavMenu_dlgTypes.Push("TC")		; Total Commander
 	FavMenu_dlgTypes.Push("DoubleCommander") ; Double Commander
 
-	FavMenu_dlgTypes.Push("Console")	; cmd
 	FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
 	FavMenu_dlgTypes.Push("Cygwin")		; multiple front-ends (mintty,cmd...)
+	FavMenu_dlgTypes.Push("Console")	; cmd
 
 	FavMenu_dlgTypes.Push("XYplorer")
 	FavMenu_dlgTypes.Push("Xplorer2")
@@ -87,7 +87,7 @@ FavMenu_DialogGetActive(hw=0)
 	;;MobaXterm (FIXME: besides Cygwin session, current session could also be CMD session or SSH session)
 	if  (class = "TMobaXtermForm") or (class = "TFormDetachedTab")
 	{
-		;;FIXME: this is 100% accurate, but in most cases it works, as by default Cygwin would update path to title
+		;; FIXME: this is not 100% accurate, but in most cases it works, as by default Cygwin would update path to title
 		;; title example  '2. /home/mobaxterm'	'6. /drives/d
 		if title contains MobaXterm,. /
 		{
