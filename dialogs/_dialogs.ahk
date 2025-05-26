@@ -34,21 +34,19 @@ FavMenu_DialogHandlers_Init()
 	FavMenu_dlgTypes.Push("TC")		; Total Commander
 	FavMenu_dlgTypes.Push("DoubleCommander") ; Double Commander
 
+	FavMenu_dlgTypes.Push("XYplorer")
+	FavMenu_dlgTypes.Push("Xplorer2")
+	FavMenu_dlgTypes.Push("FreeCommander")
+	
 	FavMenu_dlgTypes.Push("Msys")		; multiple front-end (mintty,cmd,console2...)
 	FavMenu_dlgTypes.Push("Cygwin")		; multiple front-ends (mintty,cmd...)
 	FavMenu_dlgTypes.Push("Console")	; cmd
 
-	FavMenu_dlgTypes.Push("XYplorer")
-	FavMenu_dlgTypes.Push("Xplorer2")
-	FavMenu_dlgTypes.Push("FreeCommander")
-
 	FavMenu_dlgTypes.Push("WinSCP")
 	FavMenu_dlgTypes.Push("7zFM")
-
 	FavMenu_dlgTypes.Push("Emacs")
 	FavMenu_dlgTypes.Push("GTK")
-
-
+	FavMenu_dlgTypes.Push("Everything")
 }
 
 ; Explorer is seen as dialog if there is another app set as a file manager
@@ -252,7 +250,7 @@ Favmenu_parse_path_from_string(title, endSep)
 	if endSep<>
 	{
 		fend1 := InStr(title, endSep, true, fstart + 2)
-		if (fend)
+		if (fend1)
 		{
 			return SubStr(title, fstart, fend1 - fstart)
 		}
