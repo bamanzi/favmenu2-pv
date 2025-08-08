@@ -166,8 +166,10 @@ FavMenu_GetConfigData()
 	IniRead Favmenu_Options_IXplorer2,		%Favmenu_configFile%, TcFavMenu, IXplorer2,		1
  	IniRead Favmenu_Options_IXYplorer,		%Favmenu_configFile%, TcFavMenu, IXYplorer,		1
 
+    ;; some hidden options (not visible on Setup dialog)
 	IniRead FavMenu_Options_GitBashPath,	%Favmenu_configFile%, TcFavMenu, GitBashPath,	git-bash.exe
 	IniRead FavMenu_Options_MsysRootMount,	%Favmenu_configFile%, TcFavMenu, MsysRootMount,	/
+	IniRead FavMenu_Options_ExplorerSetPathWithKey,	%Favmenu_configFile%, TcFavMenu, ExplorerSetPathWithKey,  ;; choices: ^l or !d
 
 	if (FavMenu_fmExe = "&") || (FavMenu_fmIni = "&") || (FavMenu_fmKey = "&")
 		return false

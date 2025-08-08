@@ -17,23 +17,39 @@ Favmenu_DialogGetPath_Explorer()
 	return Favmenu_DialogGetPath_Explorer_bg(FavMenu_dlgHwnd)
 }
 
-FavMenu_DialogSetPath_Explorer(path, bTab = false)
+FavMenu_DialogSetPath_Explorer(path1, bTab = false)
 {
 	global
-	
+
+	;; possible value: ^l (Ctrl+L) or !d (Alt+D)
+	If FavMenu_Options_ExplorerSetPathWithKey
+	{
+		if (A_OSVersion = "WIN_11" and bTab)
+		{
+			Send,^t
+			Sleep,100
+		}
+		Send,%FavMenu_Options_ExplorerSetPathWithKey%
+		Sleep,100
+		SendInput,%path1%
+		Sleep,100
+		Send,{Enter}
+		return
+	}
+
 	If FavMenu_msctls_progress32
 	{
-		FavMenu_DialogSetPath_OS(path)
+		FavMenu_DialogSetPath_OS(path1)
 		Return
 	}
-	
+
 	if (Favmenu_dlgInput = 0)
 	{
 		MsgBox To use FavMenu with Windows Explorer you must enable Address Bar.`nEnable it in View->Toolbars.
-		return 
+		return
 	}
 
-	ControlSetText, ,%path%, ahk_id %Favmenu_dlgInput%
+	ControlSetText, ,%path1%, ahk_id %Favmenu_dlgInput%
 	ControlSend, ,{ENTER},ahk_id %Favmenu_dlgInput%
 }
 
