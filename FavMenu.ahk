@@ -57,6 +57,7 @@
 #NoEnv
 #Requires AutoHotKey v1.1.33+
 #SingleInstance force
+;@Ahk2Exe-SetMainIcon res/enable.ico
 
 	;prefixes: FavMenu, Setup, Properties, CM, WM, CSIDL, TV
 	FAVMENU_Init()
