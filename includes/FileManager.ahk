@@ -58,7 +58,7 @@ FavMenu_FM_OpenExplorer( p_path )
 
 FavMenu_FM_OpenTC(p_path, p_tab)
 {
-	global FavMenu_fmExe, cm_editpath
+	global FavMenu_fmExe, FavMenu_dlgHwnd
 
 	SplitPath, FavMenu_fmExe, exename
 	is_tc64 := InStr(exename, "totalcmd64.exe") > 0
@@ -77,8 +77,8 @@ FavMenu_FM_OpenTC(p_path, p_tab)
 ; Double Commander
 
 FavMenu_FM_OpenDC(p_path, p_tab)
-{	
-	global FavMenu_fmExe, cm_editpath
+{
+	global FavMenu_dlgHwnd
 
 	if not WinExist("ahk_class TTOTAL_CMD ahk_exe doublecmd.exe")
 		 FavMenu_FM_Run()
@@ -92,8 +92,8 @@ FavMenu_FM_OpenDC(p_path, p_tab)
 ;--------------------------------------------------------------------------
 
 FavMenu_FM_OpenXplorer2(p_path, p_tab)
-{	
-	global FavMenu_fmExe, cm_editpath
+{
+	global FavMenu_dlgHwnd
 
 	if not WinExist("ahk_class ATL:ExplorerFrame")
 		 FavMenu_FM_Run()
@@ -106,11 +106,11 @@ FavMenu_FM_OpenXplorer2(p_path, p_tab)
 ;--------------------------------------------------------------------------
 
 FavMenu_FM_OpenXYplorer(p_path, p_tab)
-{	
-	global FavMenu_fmExe, cm_editpath
+{
+	global FavMenu_dlgHwnd
 
 	;;FIXME: title
-	if not WinExist("ahk_class ThunderRT6FormDC")
+	if not WinExist("ahk_class ThunderRT6FormDC ahk_exe XYplorerFree.exe")
 		 FavMenu_FM_Run()
 
 	WinActivate,ahk_class ThunderRT6FormDC
