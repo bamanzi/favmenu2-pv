@@ -107,6 +107,6 @@ Favmenu_DialogGetPath_DC_bg(hwndDC)
 		OutputDebug, [Double Commander] Favmenu_DialogGetPath_DC_bg() returns no valid path: title=%title%
 		OutputDebug, ADVICE: [Double Commander] FavMenu2 recommend you turn on option 'Show current directory in the main window title bar' (in Options > Miscellaneous)
 	}
-	return path
+	return curpath
 }
 
