@@ -67,16 +67,19 @@ Favmenu_DialogGetAllPaths_Explorer()
 Favmenu_DialogGetPath_Explorer_bg(hwnd_explorer)
 {
 	;;global Favmenu_dlgInput, FavMenu_msctls_progress32
-	tv := Favmenu_FindWindowExId(hwnd_explorer,  "BaseBar", 0) 
-	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0) 
+
+	;; method 1
+	tv := Favmenu_FindWindowExId(hwnd_explorer,  "BaseBar", 0)
+	tv := Favmenu_FindWindowExID(tv, "ReBarWindow32", 0)
 	tv := Favmenu_FindWindowExID(tv, "SysTreeView32", 100)
 
 	TV_Initialise(hwnd_explorer, tv)
 	returnedPath := TV_GetPath()
-	if returnedPath <> 
-		return returnedPath 
-   
-	;Nothing was returned. Perhaps Vista    
+	if returnedPath <>
+		return returnedPath
+	;Nothing was returned. Perhaps Vista
+
+    ;; method 2
 	FavMenu_GetExplorerInput(hwnd_explorer, Favmenu_dlgInput, FavMenu_msctls_progress32)
 
 	If FavMenu_msctls_progress32
@@ -101,26 +104,42 @@ Favmenu_DialogGetPath_Explorer_bg(hwnd_explorer)
 		ControlGetText, EditCtrlPath, , ahk_id %Favmenu_dlgInput%
 		;Msgbox, %EditCtrlPath%
 	}
-	return  %EditCtrlPath%
-}
+	if  EditCtrlPath
+		return %EditCtrlPath%
 
+	;; method 3
+	for _instance in ComObjCreate("Shell.Application").Windows
+	{
+		hwnd1 := _instance.hwnd
+		path1 := _instance.Document.Folder.Self.Path
+		OutputDebug, ComObjCreate("Shell.Application"): [%hwnd1%] %path1%
+
+		;; we need to convert hwnd to int before comparing
+		if (hwnd_explorer + 0 == hwnd1) {
+			if IsDir(path1)
+				return path1
+			else
+				MsgBox,Sorry, not a valid path: `n`n%path1%
+		}
+	}
+}
 
 
 FavMenu_GetExplorerInput(hwnd_explorer, byref Favmenu_dlgInput, byref FavMenu_msctls_progress32)
 {
 	;global
-	Favmenu_dlgInput := Favmenu_FindWindowExId(hwnd_explorer,  "WorkerW", 0) 
-	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ReBarWindow32", 0) 
+	Favmenu_dlgInput := Favmenu_FindWindowExId(hwnd_explorer,  "WorkerW", 0)
+	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ReBarWindow32", 0)
 	;Remember last good value. If Vista, we need the value to retry
 	Favmenu_dlgInputOriginal := Favmenu_dlgInput
 
 	;Try Combobox. If Vista, that command fails
 	Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "ComboBoxEx32", 0)
-	
+
 	if Favmenu_dlgInput = 0
 	{
 		;Perhaps Vista... ??? Use Favmenu_dlgInputOriginal
-		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInputOriginal, "Address Band Root", 0)   
+		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInputOriginal, "Address Band Root", 0)
 		Favmenu_dlgInput := Favmenu_FindWindowExID(Favmenu_dlgInput, "msctls_progress32", 0)
 		FavMenu_msctls_progress32 := Favmenu_dlgInput
 		Return
